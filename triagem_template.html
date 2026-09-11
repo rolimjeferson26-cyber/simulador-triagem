@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Triagem — Simulador de Treino</title>
+<style>
+  :root{
+    --bg: #000000; --panel: #3D0000; --panel-2: #4A0000; --header-1: #000000; --header-2: #3D0000; --ink: #F3ECE3; --ink-soft: #C9AFAF; --line: #5C1010;
+    /* --red é reservado EXCLUSIVAMENTE pra bandeira clínica de urgência real —
+       nunca usar em botões, chips selecionados ou qualquer destaque de marca */
+    --red: #FF0000; --red-soft: #550000;
+    --teal: #5FD1C0; --teal-soft: #12302D;
+    --amber: #FFB703; --amber-soft: #3D2B08;
+    /* cor de marca/destaque (vermelho-sangue) — deliberadamente mais escura
+       que --red, pra nunca ser confundida com bandeira de urgência */
+    --brand: #950101; --brand-2: #950101; --brand-soft: #2A0000;
+    --success: #4ADE80;
+    --radius: 4px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .display{ font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-weight: 800; letter-spacing: -0.01em; }
+  button{ font-family: inherit; }
+  [data-instrutor-only]{ display:none; }
+  body.is-instrutor [data-instrutor-only]{ display:block; }
+  body.is-instrutor [data-instrutor-only].inline{ display:inline-flex; }
+
+  /* ---------- faixa de treino (sempre visível) ---------- */
+  #trainingBanner{ position:sticky; top:0; z-index:30; background:var(--amber); color:#241A00;
+    font-size:11px; font-weight:800; text-align:center; padding:6px 10px; letter-spacing:.03em; }
+
+  .view{ min-height:100vh; display:flex; flex-direction:column; }
+  .view[hidden]{ display:none; }
+
+  header{ position: sticky; top:26px; z-index: 20; background: linear-gradient(120deg, var(--header-1), var(--header-2)); color: #fff;
+    padding: 12px 16px 12px; border-bottom: 3px solid rgba(0,0,0,.18); flex:0 0 auto; overflow:hidden; }
+  header::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><path d='M0,30 H40 L46,30 L50,14 L54,30 L64,30 L70,30 L74,50 L78,4 L82,44 L86,30 L96,30 L102,22 L108,30 H150' fill='none' stroke='%23950101' stroke-width='2.5' stroke-linejoin='round' stroke-linecap='round'/></svg>"); background-repeat:repeat-x; background-position:0 center;
+    background-size:150px 60%; opacity:.5; }
+  .back-row{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:#C9CFD6;
+    margin-bottom:8px; font-weight:600; cursor:pointer; text-decoration:none; width:fit-content; }
+  .back-row svg{ width:14px; height:14px; flex:0 0 auto; }
+  .consulta-btn{ display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.14);
+    border:1.5px solid rgba(255,255,255,.4); color:#fff; text-decoration:none; padding:8px 13px 8px 11px;
+    border-radius:999px; font-size:12px; font-weight:800; flex:0 0 auto; }
+  .consulta-btn svg{ width:15px; height:15px; flex:0 0 auto; }
+  .consulta-btn:active{ background:rgba(255,255,255,.24); }
+  .casos-header-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:2px; }
+  .casos-header-row h1{ margin:0; }
+  .top-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  header h1{ margin:0; font-size: 19px; line-height:1.15; }
+  header .tag{ font-size: 10.5px; letter-spacing: .04em; color: #C9CFD6; margin-top:2px; }
+  .badge-count{ font-size:11px; color:#0E1013; background:#D8DBDE; padding:3px 8px;
+    border-radius: 999px; white-space:nowrap; font-weight:700; flex:0 0 auto; }
+  .mode-indicator{ font-size:10.5px; color:#C9CFD6; margin-top:6px; display:flex; align-items:center; gap:6px; }
+  .mode-indicator b{ color:#fff; }
+  .mode-indicator a{ color:#fff; text-decoration:underline; cursor:pointer; }
+
+  main{ flex:1 1 auto; padding: 14px 14px 24px; max-width:640px; width:100%; margin:0 auto; }
+
+  /* ---------- ecrã de aviso de treino ---------- */
+  .gate-main{ display:flex; align-items:center; justify-content:center; flex:1; padding:24px 18px; }
+  .gate-box{ max-width:420px; text-align:center; }
+  .gate-box svg{ width:40px; height:40px; margin-bottom:14px; }
+  .gate-box h1{ margin:0 0 12px; font-size:21px; }
+  .gate-box p{ font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0 0 22px; }
+  .gate-box .cta-btn{ padding:15px 22px; }
+
+  /* ---------- seleção de modo ---------- */
+  .mode-intro{ text-align:center; padding:8px 4px 20px; }
+  .mode-intro h2{ margin:0 0 6px; font-size:18px; }
+  .mode-intro p{ font-size:13px; color:var(--ink-soft); margin:0; line-height:1.5; }
+  .mode-btn-row{ display:flex; flex-direction:column; gap:10px; }
+  .mode-btn{ padding:18px; border-radius:var(--radius); border:1.5px solid var(--line); background:var(--panel);
+    font-size:15px; font-weight:800; color:var(--ink); cursor:pointer; text-align:left; display:flex; align-items:center; gap:12px; }
+  .mode-btn svg{ width:22px; height:22px; flex:0 0 auto; color:var(--brand); }
+  .mode-btn .mode-btn-sub{ font-size:11.5px; font-weight:600; color:var(--ink-soft); margin-top:2px; }
+  .pin-box{ margin-top:14px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px; }
+  .pin-error{ font-size:12px; color:var(--red); font-weight:700; margin:6px 2px 10px; }
+
+  /* ---------- campos genéricos (formulário / editor) ---------- */
+  .field-label{ display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-soft); font-weight:700; margin:16px 2px 7px; }
+  .field-label:first-child{ margin-top:0; }
+  .field-input{ width:100%; padding:11px 12px; border-radius:var(--radius); border:1px solid var(--line);
+    font-size:14.5px; background:var(--panel-2); color:var(--ink); font-family:inherit; }
+  .field-input:focus{ outline:2px solid var(--brand); outline-offset:-1px; }
+  .field-textarea{ resize:vertical; line-height:1.5; }
+
+  /* ---------- casos ---------- */
+  .caso-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 15px; margin-bottom:9px; cursor:pointer; }
+  .caso-card.livre{ border-style:dashed; border-color:var(--ink-soft); }
+  .caso-card-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .caso-titulo{ font-size:14.5px; font-weight:800; line-height:1.3; }
+  .caso-badge{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+    padding:2px 8px; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); white-space:nowrap; }
+  .caso-cat{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; }
+  .caso-del{ font-size:11px; font-weight:700; color:var(--red); margin-top:8px; cursor:pointer; display:inline-block; }
+  .casos-tools{ display:flex; gap:8px; margin-top:16px; }
+  .mini-btn{ flex:1; padding:10px; border-radius:var(--radius); border:1px solid var(--line); background:var(--panel-2);
+    font-size:12.5px; font-weight:700; color:var(--ink); text-align:center; cursor:pointer; }
+
+  /* ---------- vinheta ---------- */
+  .vinheta-box{ background:var(--panel); border:1.5px solid var(--brand); border-radius:var(--radius); padding:14px 15px; margin-bottom:16px; }
+  .vinheta-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--ink-soft); margin-bottom:6px; }
+  .vinheta-label span{ color:var(--ink); }
+  .vinheta-texto{ font-size:13.5px; line-height:1.6; color:var(--ink); font-style:italic; }
+  .vinheta-instrutor-tools{ display:flex; gap:8px; margin-top:12px; }
+  .gabarito-box{ margin-top:12px; background:var(--panel-2); border:1.5px dashed var(--ink-soft); border-radius:var(--radius); padding:12px 13px; }
+  .gabarito-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--ink-soft); margin-bottom:8px; }
+  .gabarito-resposta{ font-size:14px; font-weight:800; color:var(--ink); margin-bottom:4px; }
+  .gabarito-nota{ font-size:12.5px; color:var(--ink); line-height:1.5; margin-top:8px; }
+  .gabarito-check{ display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:800; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
+  .gabarito-check svg{ width:15px; height:15px; flex:0 0 auto; }
+  .gabarito-check.ok{ color:var(--success); }
+  .gabarito-check.parcial{ color:var(--amber); }
+  .gabarito-check.falhou{ color:var(--red); }
+
+  /* ---------- formulário ---------- */
+  .cat-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;
+    color: var(--ink-soft); margin: 18px 2px 9px; font-weight:700; display:flex; align-items:center; gap:6px; }
+  .cat-label:first-child{ margin-top:2px; }
+  .cat-label svg{ width:13px; height:13px; opacity:.7; }
+
+  .vitals-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  @media (min-width:480px){ .vitals-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  .vital-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:10px 12px 11px; }
+  .vital-label{ font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; }
+  .vital-input-row{ display:flex; align-items:baseline; gap:4px; margin-top:4px; }
+  .vital-input-row input{ width:100%; border:none; background:transparent; font-size:22px; font-weight:800;
+    color:var(--ink); padding:2px 0; font-family:inherit; -moz-appearance:textfield; }
+  .vital-input-row input::-webkit-outer-spin-button, .vital-input-row input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .vital-input-row input:focus{ outline:none; }
+  .vital-unit{ font-size:11.5px; color:var(--ink-soft); font-weight:600; white-space:nowrap; }
+  .vital-hint{ display:inline-block; margin-top:6px; font-size:10.5px; font-weight:700; padding:2px 7px;
+    border-radius:999px; background:var(--amber-soft); color:var(--amber); min-height:19px; }
+  .vital-hint:empty{ visibility:hidden; }
+
+  .search-wrap{ position:relative; margin: 2px 0 10px; }
+  .sym-search{ width:100%; padding:10px 12px 10px 36px; border-radius: var(--radius);
+    border:1px solid var(--line); font-size:14.5px; background:var(--panel-2); color:var(--ink); }
+  .sym-search:focus{ outline:2px solid var(--brand); outline-offset:-1px; }
+  .search-icon{ position:absolute; left:11px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.45; pointer-events:none; }
+
+  .legend{ font-size:11px; color:var(--ink-soft); margin:0 2px 12px; display:flex; align-items:center; gap:5px; }
+  .legend .dot{ width:7px; height:7px; border-radius:50%; background:var(--red); flex:0 0 auto; }
+
+  .sym-card{ background:var(--panel); border:1px solid var(--line); border-radius: var(--radius); margin-bottom:8px; overflow:hidden; }
+  .sym-card-head{ padding: 11px 13px; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; }
+  .sym-card-head h3{ font-size:13.5px; margin:0; font-weight:700; }
+  .sym-count-pill{ font-size:10.5px; font-weight:700; color:var(--ink-soft); background:var(--panel-2); padding:2px 7px; border-radius:999px; margin-left:auto; margin-right:8px; }
+  .chevron{ width:9px; height:9px; border-right:2px solid var(--ink-soft); border-bottom:2px solid var(--ink-soft);
+    transform: rotate(-45deg); transition: transform .15s ease; flex:0 0 auto; }
+  .sym-card.open .chevron{ transform: rotate(45deg); }
+  .sym-card-body{ display:none; padding: 2px 13px 13px; }
+  .sym-card.open .sym-card-body{ display:block; }
+
+  .chips-wrap{ display:flex; flex-wrap:wrap; gap:8px; }
+  .sym-chip{ position:relative; flex:0 0 auto; font-size:13px; font-weight:600; padding:11px 14px; border-radius:999px;
+    background:var(--panel-2); color:var(--ink); border:1.5px solid var(--line); min-height:44px; display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none; }
+  .sym-chip .flagdot{ width:6px; height:6px; border-radius:50%; background:var(--red); position:absolute; top:8px; right:9px; }
+  .sym-chip.selected{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .sym-chip .chk{ width:13px; height:13px; display:none; flex:0 0 auto; }
+  .sym-chip.selected .chk{ display:block; }
+  .sym-chip.selected.flagged{ border-color:var(--red); box-shadow:0 0 0 1.5px var(--red) inset; }
+
+  .cta-wrap{ position:sticky; bottom:0; flex:0 0 auto; padding:10px 14px 16px;
+    background:linear-gradient(to top, var(--bg) 65%, transparent); }
+  .cta-inner{ max-width:640px; margin:0 auto; }
+  .cta-count{ text-align:center; font-size:11.5px; color:var(--ink-soft); margin-bottom:8px; font-weight:600; }
+  .cta-count b{ color:var(--ink); }
+  .cta-btn{ width:100%; background:linear-gradient(120deg, var(--brand-2), var(--brand)); color:#fff; border:none; border-radius:var(--radius);
+    padding:15px; font-size:15px; font-weight:800; text-align:center; cursor:pointer; }
+  .cta-btn:disabled{ opacity:.45; }
+
+  .context-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;
+    color: var(--ink-soft); margin: 2px 2px 8px; font-weight:700; }
+  .context-toggle{ display:flex; gap:8px; margin-bottom:4px; }
+  .context-btn{ flex:1; padding:13px 8px; border-radius:var(--radius); border:1.5px solid var(--line);
+    background:var(--panel-2); font-size:13.5px; font-weight:800; text-align:center; cursor:pointer; color:var(--ink);
+    min-height:48px; display:flex; align-items:center; justify-content:center; gap:7px; }
+  .context-btn svg{ width:16px; height:16px; flex:0 0 auto; }
+  .context-btn.active{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .context-btn.active.trauma-on{ background:var(--red); border-color:var(--red); }
+  .context-note{ font-size:11px; color:var(--ink-soft); margin:8px 2px 0; line-height:1.4; }
+
+  /* ---------- resultado ---------- */
+  .hero{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 15px; margin-bottom:14px; }
+  .hero.sev-red{ border-top:5px solid var(--red); }
+  .hero.sev-teal{ border-top:5px solid var(--teal); }
+  .hero-flag{ display:flex; align-items:center; gap:7px; font-size:12px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.03em; margin-bottom:9px; }
+  .hero.sev-red .hero-flag{ color:var(--red); }
+  .hero.sev-teal .hero-flag{ color:var(--teal); }
+  .hero-flag svg{ width:15px; height:15px; }
+  .hero h2{ margin:0 0 10px; font-size:20px; line-height:1.2; }
+  .hero-meta{ display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  .conf-badge{ font-size:13px; font-weight:800; padding:4px 10px; border-radius:999px; }
+  .hero.sev-red .conf-badge{ background:var(--red-soft); color:var(--red); }
+  .hero.sev-teal .conf-badge{ background:var(--teal-soft); color:var(--teal); }
+  .conf-label{ font-size:12px; color:var(--ink-soft); font-weight:600; }
+
+  .criteria-title{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:8px; }
+  .criteria-wrap{ display:flex; flex-wrap:wrap; gap:7px; }
+  .crit-chip{ font-size:12.5px; font-weight:600; padding:6px 11px; border-radius:999px; background:var(--panel-2); color:var(--ink); }
+  .crit-chip.flag{ background:var(--red-soft); color:var(--red); display:flex; align-items:center; gap:5px; font-weight:800; }
+  .crit-chip.flag svg{ width:11px; height:11px; }
+
+  .section-box{ margin-top:14px; background:var(--teal-soft); border-left:3px solid var(--teal);
+    border-radius:0 var(--radius) var(--radius) 0; padding:12px 13px; }
+  .section-box-title{ display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:var(--teal);
+    text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px; }
+  .section-box-title svg{ width:13px; height:13px; }
+  ul.at-list{ margin:0; padding:0; list-style:none; }
+  ul.at-list li{ font-size:13.5px; line-height:1.5; padding:5px 0 5px 16px; position:relative; color:var(--ink); }
+  ul.at-list li::before{ content:""; position:absolute; left:2px; top:12px; width:5px; height:5px; background:var(--teal); border-radius:1px; }
+  .at-group-label{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--teal); margin:10px 0 2px; }
+  .at-group-label:first-child{ margin-top:0; }
+
+  .warn-box{ background:var(--amber-soft); border:1.5px solid var(--amber); border-radius:var(--radius); padding:13px 14px; margin-bottom:16px; }
+  .warn-top{ display:flex; align-items:flex-start; gap:9px; }
+  .warn-top svg{ width:20px; height:20px; flex:0 0 auto; margin-top:1px; }
+  .warn-title{ font-size:14.5px; font-weight:800; color:var(--ink); line-height:1.3; margin-bottom:4px; }
+  .warn-body{ font-size:12.5px; line-height:1.5; color:var(--ink); }
+  .warn-body b{ font-weight:800; }
+
+  .tied-label, .outras-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft);
+    font-weight:700; margin:16px 2px 10px; }
+  .tied-label:first-child, .outras-label:first-child{ margin-top:4px; }
+
+  .tied-card{ background:var(--panel); border:1.5px solid var(--line); border-radius:var(--radius); padding:13px 14px; margin-bottom:10px; }
+  .tied-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:9px; }
+  .tied-name{ font-size:15px; font-weight:800; line-height:1.25; }
+  .tied-name .sub{ font-weight:600; color:var(--ink-soft); font-size:12.5px; }
+  .tied-pct{ font-size:12.5px; font-weight:800; padding:3px 9px; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); white-space:nowrap; }
+  .tied-criteria{ display:flex; flex-wrap:wrap; gap:6px; }
+  .crit-chip-sm{ font-size:11.5px; font-weight:600; padding:5px 9px; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); }
+  .crit-chip-sm.flag{ background:var(--red-soft); color:var(--red); font-weight:800; }
+
+  .empty-state{ text-align:center; color:var(--ink-soft); padding:50px 20px; font-size:14px; line-height:1.6; }
+  .empty-state svg{ width:34px; height:34px; opacity:.4; margin-bottom:10px; }
+
+  .footer-note{ margin-top:20px; text-align:center; color:var(--ink-soft); font-size:11px; line-height:1.5; padding:0 6px; }
+  .footer-note b{ color:var(--red); }
+</style>
+</head>
+<body>
+
+<div id="trainingBanner">MODO TREINO — simulação para formação, não usar em ocorrência real</div>
+
+<div id="app">
+
+  <!-- ========================= GATE DE AVISO ========================= -->
+  <div class="view" id="view-gate">
+    <main class="gate-main">
+      <div class="gate-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFB703" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>
+        <h1 class="display">Simulador de Treino</h1>
+        <p>Esta aplicação é um <b>simulador para formação</b>. Não substitui os protocolos oficiais em vigor, não deve ser usada para apoio a decisão em ocorrência real, e os resultados não constituem orientação clínica válida fora do contexto de sala de aula.</p>
+        <button class="cta-btn" id="btnAckTreino">Compreendi, continuar</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================= SELEÇÃO DE MODO ========================= -->
+  <div class="view" id="view-mode" hidden>
+    <header><h1 class="display">Quem está a usar?</h1><div class="tag">Escolha o seu perfil nesta sessão</div></header>
+    <main>
+      <div class="mode-btn-row">
+        <button class="mode-btn" id="btnSouAluno">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.42A9 9 0 0121 12v3.5"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+          <div><div>Sou Aluno</div><div class="mode-btn-sub">Vejo só o resultado do motor, sem gabarito</div></div>
+        </button>
+        <button class="mode-btn" id="btnSouInstrutor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+          <div><div>Sou Instrutor</div><div class="mode-btn-sub">Vejo gabarito e posso criar casos</div></div>
+        </button>
+      </div>
+      <div class="pin-box" id="pinBox" hidden>
+        <label class="field-label">Código do dia (fornecido pelo instrutor responsável)</label>
+        <input id="pinInput" class="field-input" type="tel" inputmode="numeric" maxlength="4" placeholder="____">
+        <div class="pin-error" id="pinError" hidden>Código incorreto.</div>
+        <button class="cta-btn" id="btnConfirmarPin" style="margin-top:6px;">Confirmar</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================= LISTA DE CASOS ========================= -->
+  <div class="view" id="view-casos" hidden>
+    <header>
+      <div class="casos-header-row">
+        <a class="consulta-btn" href="emergencias_medicas.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          Consultas
+        </a>
+        <h1 class="display">Casos de Treino</h1>
+      </div>
+      <div class="mode-indicator">Modo: <b id="modoLabel">—</b> · <a id="linkTrocarModo">trocar</a></div>
+    </header>
+    <main>
+      <div class="caso-card livre" id="casoLivre">
+        <div class="caso-titulo">Uso livre (sem caso)</div>
+        <div class="caso-cat">Explorar o motor com achados à sua escolha</div>
+      </div>
+      <div id="casosList"></div>
+      <div class="casos-tools" data-instrutor-only>
+        <button type="button" class="mini-btn" id="btnNovoCaso">+ Criar novo caso</button>
+        <button type="button" class="mini-btn" id="btnExportarCasos">Exportar</button>
+        <button type="button" class="mini-btn" id="btnImportarCasos">Importar</button>
+        <input type="file" id="inputImportar" accept="application/json" hidden>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================= EDITOR DE CASO (instrutor) ========================= -->
+  <div class="view" id="view-editor" hidden>
+    <header>
+      <div class="back-row" id="btnCancelarEditor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9CFD6" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        Cancelar
+      </div>
+      <h1 class="display">Novo Caso Fictício</h1>
+    </header>
+    <main>
+      <label class="field-label">Título</label>
+      <input id="edTitulo" class="field-input" type="text" placeholder="Ex: Dispneia súbita com sibilos">
+
+      <label class="field-label">Categoria alvo (opcional)</label>
+      <select id="edCategoria" class="field-input"><option value="">—</option></select>
+
+      <label class="field-label">Nível de dificuldade</label>
+      <select id="edNivel" class="field-input">
+        <option value="iniciante">Iniciante</option>
+        <option value="intermediario">Intermediário</option>
+        <option value="avancado">Avançado</option>
+      </select>
+
+      <label class="field-label">Vinheta (o que o aluno vai ler)</label>
+      <textarea id="edVinheta" class="field-input field-textarea" rows="5" placeholder="Descreva o cenário que o aluno deve interpretar..."></textarea>
+
+      <label class="field-label">Tipo de gabarito</label>
+      <div class="context-toggle" id="edTipoGabarito">
+        <button type="button" class="context-btn active" data-tipo="definido">Diagnóstico definido</button>
+        <button type="button" class="context-btn" data-tipo="ambiguo">Caso ambíguo (2+ válidos)</button>
+      </div>
+
+      <div id="edGabaritoDefinido">
+        <label class="field-label">Ficha correta</label>
+        <select id="edFichaId" class="field-input"></select>
+        <label class="field-label">Variante (se houver)</label>
+        <select id="edVariante" class="field-input"><option value="">—</option></select>
+      </div>
+
+      <div id="edGabaritoAmbiguo" hidden>
+        <label class="field-label">Candidatos válidos (marque 2 ou mais)</label>
+        <div id="edCandidatosList" style="max-height:260px; overflow-y:auto; border:1px solid var(--line); border-radius:var(--radius); padding:8px;"></div>
+      </div>
+
+      <label class="field-label" style="margin-top:20px;">Vitais esperados (opcional)</label>
+      <div class="vitals-grid" id="edVitalsGrid"></div>
+
+      <label class="field-label" style="margin-top:16px;">Sinais/sintomas esperados (opcional)</label>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#F3ECE3" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="edSymSearch" class="sym-search" type="text" placeholder="Pesquisar sinal ou sintoma...">
+      </div>
+      <div id="edSymGroups"></div>
+
+      <label class="field-label">Nota para o instrutor (opcional)</label>
+      <textarea id="edNota" class="field-input field-textarea" rows="3" placeholder="Objetivo pedagógico, pontos de discussão..."></textarea>
+
+      <button class="cta-btn" id="btnSalvarCaso" style="margin-top:20px;">Guardar Caso</button>
+    </main>
+  </div>
+
+  <!-- ========================= FORMULÁRIO ========================= -->
+  <div class="view" id="view-form" hidden>
+    <header>
+      <div class="back-row" id="btnVoltarCasos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9CFD6" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        Trocar de caso
+      </div>
+      <div class="top-row">
+        <div>
+          <h1 class="display">Nova Avaliação</h1>
+          <div class="tag">Sinais vitais e sintomas observados</div>
+        </div>
+        <div class="badge-count" id="selCount">0 selec.</div>
+      </div>
+    </header>
+
+    <main>
+      <div class="vinheta-box" id="vinhetaBox" hidden>
+        <div class="vinheta-label">Cenário: <span id="vinhetaTitulo"></span></div>
+        <div class="vinheta-texto" id="vinhetaTexto"></div>
+        <div class="vinheta-instrutor-tools" data-instrutor-only>
+          <button type="button" class="mini-btn" id="btnVerGabarito">Ver gabarito</button>
+          <button type="button" class="mini-btn" id="btnPreencherDemo">Preencher c/ dados esperados</button>
+        </div>
+        <div class="gabarito-box" id="gabaritoInline" hidden></div>
+      </div>
+
+      <div class="context-label">Contexto</div>
+      <div class="context-toggle" id="contextToggle">
+        <button type="button" class="context-btn active" data-trauma="nao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Sem trauma
+        </button>
+        <button type="button" class="context-btn" data-trauma="sim">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a1 1 0 00.86 1.5h18.64a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.72 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          Houve trauma
+        </button>
+      </div>
+      <div class="context-note" id="contextNote">Fichas de trauma (torácico, TCE, queimaduras, etc.) só entram na análise com mecanismo confirmado.</div>
+
+      <div class="context-label" style="margin-top:14px;">Faixa etária</div>
+      <div class="context-toggle" id="idadeToggle">
+        <button type="button" class="context-btn active" data-idade="adulto">Adulto</button>
+        <button type="button" class="context-btn" data-idade="pediatrico">Pediátrico</button>
+      </div>
+      <div class="context-note" id="idadeNote">Fichas de Pediatria só entram na análise quando a vítima é pediátrica. Os valores de referência dos sinais vitais continuam calibrados para adultos em ambos os modos.</div>
+
+      <div class="cat-label" style="margin-top:20px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#B4A493" stroke-width="2"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>
+        Sinais Vitais
+      </div>
+      <div class="vitals-grid" id="vitalsGrid"></div>
+
+      <div class="cat-label" style="margin-top:22px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#B4A493" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Sinais e Sintomas
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#F3ECE3" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="symSearch" class="sym-search" type="text" placeholder="Pesquisar sinal ou sintoma..." autocomplete="off">
+      </div>
+      <div class="legend"><span class="dot"></span> achado de alta relevância clínica</div>
+      <div id="symGroups"></div>
+    </main>
+
+    <div class="cta-wrap">
+      <div class="cta-inner">
+        <div class="cta-count" id="ctaCount">0 achados selecionados</div>
+        <button class="cta-btn" id="btnAnalisar" disabled>Analisar Sintomas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= RESULTADO ========================= -->
+  <div class="view" id="view-result" hidden>
+    <header>
+      <div class="back-row" id="btnVoltar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9CFD6" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        Editar achados
+      </div>
+      <h1 class="display">Resultado da Triagem</h1>
+      <div class="tag" id="resultTag"></div>
+    </header>
+    <main id="resultMain"></main>
+  </div>
+
+</div>
+
+<script type="application/json" id="taxonomia-source">__TAXONOMIA_JSON__</script>
+<script type="application/json" id="criterios-source">__CRITERIOS_JSON__</script>
+<script type="application/json" id="atuacoes-source">__ATUACOES_JSON__</script>
+<script type="application/json" id="casos-source">__CASOS_JSON__</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var taxonomia = JSON.parse(document.getElementById("taxonomia-source").textContent);
+  var fichas = JSON.parse(document.getElementById("criterios-source").textContent);
+  var atuacoes = JSON.parse(document.getElementById("atuacoes-source").textContent);
+  var CASOS_EMBUTIDOS = JSON.parse(document.getElementById("casos-source").textContent);
+
+  var BONUS_BANDEIRA = 2;
+  var LIMIAR_DIFERENCIACAO_PONTOS = 12;
+  var GRUPOS_ORDEM = ["Geral","Respiratório","Cardiovascular","Neurológico","Endócrino",
+    "Gastrointestinal","Sistêmico","Intoxicações","Trauma","Obstetrícia","Pediatria"];
+
+  var ICON_FLAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 21V4a1 1 0 011-1h13.5a.5.5 0 01.4.8L15 9l3.9 5.2a.5.5 0 01-.4.8H5v6"/></svg>';
+  var ICON_CHECK = '<svg class="chk" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+  var ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="#FFB703" stroke-width="2.2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>';
+  var ICON_STEP = '<svg viewBox="0 0 24 24" fill="none" stroke="#5FD1C0" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>';
+  var ICON_EMPTY = '<svg viewBox="0 0 24 24" fill="none" stroke="#B4A493" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+  function normalizar(s){
+    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  function formatarVariante(v){
+    if (!v) return "";
+    return v.split("_").map(function(w){ return w.charAt(0).toUpperCase() + w.slice(1); }).join(" ");
+  }
+
+  // ------------------------------------------------------------------
+  // Motor de pontuação — porte direto de motor_pontuacao.py
+  // ------------------------------------------------------------------
+  function tagsDosVitais(vitais){
+    var ativas = new Set();
+    taxonomia.sinais_vitais.forEach(function(regra){
+      var v = vitais[regra.parametro];
+      if (v === undefined || v === null || isNaN(v)) return;
+      if (regra.min !== null && v < regra.min) return;
+      if (regra.max !== null && v > regra.max) return;
+      ativas.add(regra.tag);
+    });
+    return ativas;
+  }
+
+  function pontuarLista(criterios, tagsPresentes){
+    var totalPeso = 0, obtidoPeso = 0, bateram = [];
+    criterios.forEach(function(c){
+      var pesoEfetivo = c.peso * (c.bandeira_vermelha ? BONUS_BANDEIRA : 1);
+      totalPeso += pesoEfetivo;
+      if (tagsPresentes.has(c.tag)){
+        obtidoPeso += pesoEfetivo;
+        bateram.push(c);
+      }
+    });
+    var precisao = totalPeso ? obtidoPeso / totalPeso : 0;
+    var cobertura = tagsPresentes.size ? bateram.length / tagsPresentes.size : 0;
+    var f1 = (precisao + cobertura) ? (2 * precisao * cobertura) / (precisao + cobertura) : 0;
+    return { precisao: precisao, cobertura: cobertura, f1: f1, bateram: bateram };
+  }
+
+  function variantesDaFicha(ficha){
+    if (ficha.formato === "plano") return [[null, ficha.criterios]];
+    if (ficha.formato === "por_gravidade") return Object.keys(ficha.niveis_gravidade).map(function(k){ return [k, ficha.niveis_gravidade[k]]; });
+    if (ficha.formato === "por_subtipo") return Object.keys(ficha.subtipos).map(function(k){ return [k, ficha.subtipos[k]]; });
+    return [];
+  }
+
+  // Portões de contexto clínico:
+  // - Trauma: fichas de Trauma só competem se houver mecanismo confirmado.
+  // - Pediátrico: fichas de Pediatria só competem se a vítima for pediátrica
+  //   (sem isso, sinais autonómicos genéricos — taquicardia, palidez, sudorese —
+  //   fazem fichas pediátricas pequenas "roubarem" o ranking de vítimas adultas,
+  //   já que o motor não tem noção de idade por si só).
+  var contextoTrauma = false;
+  var contextoPediatrico = false;
+
+  function rankear(tagsPresentes, opts){
+    opts = opts || {};
+    // topN=4, não 3: se um candidato genuinamente empatado com o líder (dentro
+    // de LIMIAR_DIFERENCIACAO_PONTOS) ficasse na 4ª posição, um corte em 3
+    // o excluiria da avaliação de empate silenciosamente.
+    var topN = opts.topN || 4, limiar = opts.limiar != null ? opts.limiar : 0.25, minimoCriterios = opts.minimoCriterios || 2;
+    var candidatos = [];
+    Object.keys(fichas).forEach(function(fid){
+      var ficha = fichas[fid];
+      if (ficha.categoria === "Trauma" && !contextoTrauma) return;
+      if (ficha.categoria === "Pediatria" && !contextoPediatrico) return;
+      variantesDaFicha(ficha).forEach(function(par){
+        var variante = par[0], criterios = par[1];
+        var r = pontuarLista(criterios, tagsPresentes);
+        if (r.bateram.length < minimoCriterios) return;
+        candidatos.push({ fid: fid, nome: ficha.nome, variante: variante, precisao: r.precisao, cobertura: r.cobertura, f1: r.f1, bateram: r.bateram });
+      });
+    });
+    candidatos.sort(function(a,b){ return b.f1 - a.f1; });
+    return candidatos.filter(function(c){ return c.f1 >= limiar; }).slice(0, topN);
+  }
+
+  function avaliarDiferenciacao(candidatos){
+    if (!candidatos.length) return { empatados: [], liderF1: 0 };
+    var liderF1 = candidatos[0].f1;
+    var empatados = candidatos.filter(function(c){ return (liderF1 - c.f1) * 100 < LIMIAR_DIFERENCIACAO_PONTOS; });
+    return { empatados: empatados, liderF1: liderF1 };
+  }
+
+  var TAGS_BANDEIRA = new Set();
+  Object.keys(fichas).forEach(function(fid){
+    variantesDaFicha(fichas[fid]).forEach(function(par){
+      par[1].forEach(function(c){ if (c.bandeira_vermelha) TAGS_BANDEIRA.add(c.tag); });
+    });
+  });
+
+  // ------------------------------------------------------------------
+  // Componentes reutilizáveis: grelha de vitais e seletor de tags
+  // (usados tanto no formulário principal como no editor de casos)
+  // ------------------------------------------------------------------
+  var PARAM_ORDEM = ["FC","FR","PAS","PAD","SpO2","Temp","Glicemia","Glasgow"];
+  var regrasPorParametro = {};
+  taxonomia.sinais_vitais.forEach(function(r){
+    (regrasPorParametro[r.parametro] = regrasPorParametro[r.parametro] || []).push(r);
+  });
+
+  function criarVitalsGrid(container, comHints){
+    var inputs = {};
+    var hints = {};
+    PARAM_ORDEM.forEach(function(param){
+      var regras = regrasPorParametro[param];
+      if (!regras) return;
+      var unidade = regras[0].unidade;
+      var card = document.createElement("div");
+      card.className = "vital-card";
+      card.innerHTML =
+        '<div class="vital-label">' + param + '</div>' +
+        '<div class="vital-input-row"><input type="number" inputmode="decimal" step="any"><span class="vital-unit">' + unidade + '</span></div>' +
+        (comHints ? '<div class="vital-hint"></div>' : '');
+      container.appendChild(card);
+      inputs[param] = card.querySelector("input");
+      if (comHints) hints[param] = card.querySelector(".vital-hint");
+    });
+    return {
+      valores: function(){
+        var v = {};
+        Object.keys(inputs).forEach(function(p){ var raw = inputs[p].value; if (raw !== "") v[p] = parseFloat(raw); });
+        return v;
+      },
+      setValores: function(v){
+        v = v || {};
+        Object.keys(inputs).forEach(function(p){ inputs[p].value = (v[p] !== undefined) ? v[p] : ""; });
+      },
+      limpar: function(){ Object.keys(inputs).forEach(function(p){ inputs[p].value = ""; }); },
+      atualizarHints: function(){
+        if (!comHints) return;
+        var ativas = tagsDosVitais(this.valores());
+        PARAM_ORDEM.forEach(function(param){
+          var regras = regrasPorParametro[param];
+          if (!regras || !hints[param]) return;
+          var achado = regras.find(function(r){ return ativas.has(r.tag); });
+          hints[param].textContent = achado ? achado.label.replace(/\s*\(.*\)$/, "") : "";
+        });
+      },
+      onChange: function(fn){ Object.keys(inputs).forEach(function(p){ inputs[p].addEventListener("input", fn); }); }
+    };
+  }
+
+  function criarPickerTags(container, searchInput){
+    var gruposMap = {};
+    taxonomia.sinais_sintomas.forEach(function(t){ (gruposMap[t.categoria] = gruposMap[t.categoria] || []).push(t); });
+
+    GRUPOS_ORDEM.forEach(function(grupo){
+      var tags = gruposMap[grupo];
+      if (!tags || !tags.length) return;
+      var card = document.createElement("div");
+      card.className = "sym-card" + (grupo === "Geral" ? " open" : "");
+      card.dataset.grupo = grupo;
+      var chipsHtml = tags.map(function(t){
+        var flagged = TAGS_BANDEIRA.has(t.tag);
+        return '<div class="sym-chip" data-tag="' + t.tag + '" data-label="' + normalizar(t.label) + '">' +
+          (flagged ? '<span class="flagdot"></span>' : '') + ICON_CHECK + '<span>' + t.label + '</span></div>';
+      }).join("");
+      card.innerHTML =
+        '<div class="sym-card-head"><h3>' + grupo + '</h3><span class="sym-count-pill" data-count="' + grupo + '"></span><div class="chevron"></div></div>' +
+        '<div class="sym-card-body"><div class="chips-wrap">' + chipsHtml + '</div></div>';
+      container.appendChild(card);
+      card.querySelector(".sym-card-head").addEventListener("click", function(){ card.classList.toggle("open"); });
+    });
+
+    container.addEventListener("click", function(e){
+      var chip = e.target.closest(".sym-chip");
+      if (!chip) return;
+      chip.classList.toggle("selected");
+      var isFlagged = !!chip.querySelector(".flagdot");
+      chip.classList.toggle("flagged", isFlagged && chip.classList.contains("selected"));
+      atualizarContagens();
+    });
+
+    function atualizarContagens(){
+      GRUPOS_ORDEM.forEach(function(grupo){
+        var card = container.querySelector('.sym-card[data-grupo="' + grupo + '"]');
+        if (!card) return;
+        var n = card.querySelectorAll(".sym-chip.selected").length;
+        var pill = card.querySelector('[data-count="' + grupo + '"]');
+        pill.textContent = n > 0 ? n + " selec." : "";
+      });
+    }
+
+    if (searchInput){
+      searchInput.addEventListener("input", function(){
+        var termo = normalizar(searchInput.value.trim());
+        var buscando = termo.length > 0;
+        container.querySelectorAll(".sym-card").forEach(function(card){
+          var algumVisivel = false;
+          card.querySelectorAll(".sym-chip").forEach(function(chip){
+            var visivel = !buscando || chip.dataset.label.indexOf(termo) !== -1;
+            chip.style.display = visivel ? "" : "none";
+            if (visivel) algumVisivel = true;
+          });
+          card.style.display = (buscando && !algumVisivel) ? "none" : "";
+          if (buscando && algumVisivel) card.classList.add("open");
+          else if (!buscando) card.classList.toggle("open", card.dataset.grupo === "Geral");
+        });
+      });
+    }
+
+    return {
+      getSelected: function(){
+        var tags = new Set();
+        container.querySelectorAll(".sym-chip.selected").forEach(function(chip){ tags.add(chip.dataset.tag); });
+        return tags;
+      },
+      setSelected: function(tagsArray){
+        var set = new Set(tagsArray || []);
+        container.querySelectorAll(".sym-chip").forEach(function(chip){
+          var sel = set.has(chip.dataset.tag);
+          chip.classList.toggle("selected", sel);
+          var isFlagged = !!chip.querySelector(".flagdot");
+          chip.classList.toggle("flagged", isFlagged && sel);
+        });
+        atualizarContagens();
+      },
+      limpar: function(){ this.setSelected([]); }
+    };
+  }
+
+  // ------------------------------------------------------------------
+  // Navegação entre views
+  // ------------------------------------------------------------------
+  var TODAS_VIEWS = ["view-gate","view-mode","view-casos","view-editor","view-form","view-result"];
+  function mostrarView(id){
+    TODAS_VIEWS.forEach(function(v){ document.getElementById(v).hidden = (v !== id); });
+    window.scrollTo(0,0);
+  }
+
+  // ------------------------------------------------------------------
+  // Estado: modo instrutor/aluno + casos personalizados (localStorage)
+  // ------------------------------------------------------------------
+  var LS_MODO = "bombeiros_modo_instrutor";
+  var LS_CASOS = "bombeiros_casos_custom";
+  var modoInstrutor = false;
+  var casoAtivo = null;
+
+  function aplicarModoUI(){
+    document.body.classList.toggle("is-instrutor", modoInstrutor);
+    document.querySelectorAll("#modoLabel").forEach(function(el){ el.textContent = modoInstrutor ? "Instrutor" : "Aluno"; });
+  }
+
+  function carregarCasosCustom(){
+    try { return JSON.parse(localStorage.getItem(LS_CASOS) || "[]"); } catch(e){ return []; }
+  }
+  function salvarCasosCustom(lista){
+    localStorage.setItem(LS_CASOS, JSON.stringify(lista));
+  }
+  function todosCasos(){
+    return CASOS_EMBUTIDOS.concat(carregarCasosCustom());
+  }
+
+  function codigoDoDia(){
+    var d = new Date();
+    return String(d.getDate()).padStart(2,"0") + String(d.getMonth()+1).padStart(2,"0");
+  }
+
+  // ---- gate de treino ----
+  document.getElementById("btnAckTreino").addEventListener("click", function(){
+    var salvo = localStorage.getItem(LS_MODO);
+    if (salvo === null){
+      mostrarView("view-mode");
+    } else {
+      modoInstrutor = salvo === "1";
+      aplicarModoUI();
+      renderCasosList();
+      mostrarView("view-casos");
+    }
+  });
+
+  // ---- seleção de modo ----
+  function escolherModo(instrutor){
+    modoInstrutor = instrutor;
+    localStorage.setItem(LS_MODO, instrutor ? "1" : "0");
+    aplicarModoUI();
+    renderCasosList();
+    mostrarView("view-casos");
+    document.getElementById("pinBox").hidden = true;
+    document.getElementById("pinInput").value = "";
+    document.getElementById("pinError").hidden = true;
+  }
+  document.getElementById("btnSouAluno").addEventListener("click", function(){ escolherModo(false); });
+  document.getElementById("btnSouInstrutor").addEventListener("click", function(){
+    document.getElementById("pinBox").hidden = false;
+    document.getElementById("pinInput").focus();
+  });
+  document.getElementById("btnConfirmarPin").addEventListener("click", function(){
+    if (document.getElementById("pinInput").value === codigoDoDia()){
+      escolherModo(true);
+    } else {
+      document.getElementById("pinError").hidden = false;
+    }
+  });
+  document.getElementById("linkTrocarModo").addEventListener("click", function(){ mostrarView("view-mode"); });
+
+  // ---- lista de casos ----
+  function renderCasosList(){
+    var el = document.getElementById("casosList");
+    var embutidosN = CASOS_EMBUTIDOS.length;
+    var casos = todosCasos();
+    el.innerHTML = casos.map(function(c, i){
+      var custom = i >= embutidosN;
+      return '<div class="caso-card" data-idx="' + i + '">' +
+        '<div class="caso-card-top"><div class="caso-titulo">' + c.titulo + '</div>' +
+        (c.nivel_dificuldade ? '<span class="caso-badge">' + c.nivel_dificuldade + '</span>' : '') + '</div>' +
+        (c.categoria_alvo ? '<div class="caso-cat">' + c.categoria_alvo + '</div>' : '') +
+        (custom ? '<div class="caso-del" data-del="' + i + '" data-instrutor-only style="display:' + (modoInstrutor ? 'inline-block':'none') + '">Eliminar caso</div>' : '') +
+        '</div>';
+    }).join("");
+  }
+  document.getElementById("casoLivre").addEventListener("click", function(){
+    casoAtivo = null;
+    prepararFormularioParaCaso();
+    mostrarView("view-form");
+  });
+  document.getElementById("casosList").addEventListener("click", function(e){
+    var delBtn = e.target.closest("[data-del]");
+    if (delBtn){
+      e.stopPropagation();
+      if (!modoInstrutor) return;
+      var idx = parseInt(delBtn.dataset.del, 10);
+      var custom = carregarCasosCustom();
+      var customIdx = idx - CASOS_EMBUTIDOS.length;
+      if (customIdx >= 0){
+        custom.splice(customIdx, 1);
+        salvarCasosCustom(custom);
+        renderCasosList();
+      }
+      return;
+    }
+    var card = e.target.closest(".caso-card");
+    if (!card) return;
+    var idx = parseInt(card.dataset.idx, 10);
+    casoAtivo = todosCasos()[idx];
+    prepararFormularioParaCaso();
+    mostrarView("view-form");
+  });
+
+  // ---- exportar / importar casos personalizados ----
+  document.getElementById("btnExportarCasos").addEventListener("click", function(){
+    var dados = JSON.stringify(carregarCasosCustom(), null, 2);
+    var a = document.createElement("a");
+    a.href = "data:application/json;charset=utf-8," + encodeURIComponent(dados);
+    a.download = "casos_ficticios_custom.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+  document.getElementById("btnImportarCasos").addEventListener("click", function(){
+    document.getElementById("inputImportar").click();
+  });
+  document.getElementById("inputImportar").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var novos = JSON.parse(reader.result);
+        if (!Array.isArray(novos)) throw new Error("formato inválido");
+        var atuais = carregarCasosCustom();
+        var idsExistentes = new Set(atuais.map(function(c){ return c.id; }));
+        novos.forEach(function(c){ if (!idsExistentes.has(c.id)) atuais.push(c); });
+        salvarCasosCustom(atuais);
+        renderCasosList();
+      } catch(err){
+        alert("Não foi possível importar este arquivo: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  });
+
+  // ------------------------------------------------------------------
+  // Formulário principal
+  // ------------------------------------------------------------------
+  var vitals = criarVitalsGrid(document.getElementById("vitalsGrid"), true);
+  vitals.onChange(atualizarTudo);
+
+  var symPicker = criarPickerTags(document.getElementById("symGroups"), document.getElementById("symSearch"));
+  document.getElementById("symGroups").addEventListener("click", atualizarTudo);
+
+  function atualizarTudo(){
+    vitals.atualizarHints();
+    var total = tagsDosVitais(vitals.valores()).size + symPicker.getSelected().size;
+    document.getElementById("selCount").textContent = total + " selec.";
+    document.getElementById("ctaCount").innerHTML = "<b>" + total + "</b> achado" + (total === 1 ? "" : "s") + " selecionado" + (total === 1 ? "" : "s");
+    document.getElementById("btnAnalisar").disabled = total === 0;
+  }
+  atualizarTudo();
+
+  document.getElementById("contextToggle").addEventListener("click", function(e){
+    var btn = e.target.closest(".context-btn");
+    if (!btn) return;
+    document.querySelectorAll("#contextToggle .context-btn").forEach(function(b){ b.classList.remove("active","trauma-on"); });
+    btn.classList.add("active");
+    contextoTrauma = btn.dataset.trauma === "sim";
+    if (contextoTrauma) btn.classList.add("trauma-on");
+    document.getElementById("contextNote").textContent = contextoTrauma
+      ? "Fichas de trauma incluídas na análise."
+      : "Fichas de trauma (torácico, TCE, queimaduras, etc.) só entram na análise com mecanismo confirmado.";
+  });
+
+  document.getElementById("idadeToggle").addEventListener("click", function(e){
+    var btn = e.target.closest(".context-btn");
+    if (!btn) return;
+    document.querySelectorAll("#idadeToggle .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    contextoPediatrico = btn.dataset.idade === "pediatrico";
+    document.getElementById("idadeNote").textContent = contextoPediatrico
+      ? "Fichas de Pediatria incluídas na análise. Os valores de referência dos sinais vitais continuam calibrados para adultos."
+      : "Fichas de Pediatria só entram na análise quando a vítima é pediátrica. Os valores de referência dos sinais vitais continuam calibrados para adultos em ambos os modos.";
+  });
+
+  function resetFormulario(){
+    vitals.limpar();
+    symPicker.limpar();
+    document.querySelectorAll("#contextToggle .context-btn").forEach(function(b){ b.classList.remove("active","trauma-on"); });
+    document.querySelector('#contextToggle [data-trauma="nao"]').classList.add("active");
+    contextoTrauma = false;
+    document.getElementById("contextNote").textContent = "Fichas de trauma (torácico, TCE, queimaduras, etc.) só entram na análise com mecanismo confirmado.";
+
+    document.querySelectorAll("#idadeToggle .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    document.querySelector('#idadeToggle [data-idade="adulto"]').classList.add("active");
+    contextoPediatrico = false;
+    document.getElementById("idadeNote").textContent = "Fichas de Pediatria só entram na análise quando a vítima é pediátrica. Os valores de referência dos sinais vitais continuam calibrados para adultos em ambos os modos.";
+
+    atualizarTudo();
+  }
+
+  function prepararFormularioParaCaso(){
+    resetFormulario();
+    var box = document.getElementById("vinhetaBox");
+    if (casoAtivo){
+      document.getElementById("vinhetaTitulo").textContent = casoAtivo.titulo;
+      document.getElementById("vinhetaTexto").textContent = casoAtivo.vinheta;
+      document.getElementById("gabaritoInline").hidden = true;
+      box.hidden = false;
+    } else {
+      box.hidden = true;
+    }
+  }
+
+  document.getElementById("btnVerGabarito").addEventListener("click", function(){
+    var el = document.getElementById("gabaritoInline");
+    if (!casoAtivo) return;
+    if (el.hidden){
+      el.innerHTML = renderGabaritoConteudo(casoAtivo.gabarito);
+      el.hidden = false;
+    } else {
+      el.hidden = true;
+    }
+  });
+  document.getElementById("btnPreencherDemo").addEventListener("click", function(){
+    if (!casoAtivo || !casoAtivo.gabarito) return;
+    vitals.setValores(casoAtivo.gabarito.vitais_esperados);
+    symPicker.setSelected(casoAtivo.gabarito.tags_esperadas);
+    atualizarTudo();
+  });
+
+  document.getElementById("btnVoltarCasos").addEventListener("click", function(){
+    renderCasosList();
+    mostrarView("view-casos");
+  });
+
+  // ------------------------------------------------------------------
+  // Resultado
+  // ------------------------------------------------------------------
+  var viewForm = document.getElementById("view-form");
+  var viewResult = document.getElementById("view-result");
+  var resultMain = document.getElementById("resultMain");
+  var resultTag = document.getElementById("resultTag");
+
+  function tagInfo(tag){
+    return taxonomia.sinais_sintomas.concat(taxonomia.sinais_vitais).find(function(x){ return x.tag === tag; });
+  }
+
+  function renderCriteriaChips(bateram){
+    return bateram.map(function(c){
+      var t = tagInfo(c.tag);
+      var label = t ? (t.label || "").replace(/\s*\(.*\)$/, "") : c.tag;
+      if (c.bandeira_vermelha) return '<div class="crit-chip flag">' + ICON_FLAG + '<span>' + label + '</span></div>';
+      return '<div class="crit-chip">' + label + '</div>';
+    }).join("");
+  }
+  function renderCriteriaChipsSm(bateram){
+    return bateram.map(function(c){
+      var t = tagInfo(c.tag);
+      var label = t ? (t.label || "").replace(/\s*\(.*\)$/, "") : c.tag;
+      return '<div class="crit-chip-sm' + (c.bandeira_vermelha ? " flag" : "") + '">' + label + '</div>';
+    }).join("");
+  }
+
+  function atuacaoDe(candidato){
+    var entry = atuacoes[candidato.fid];
+    if (!entry) return null;
+    var lista = Array.isArray(entry) ? entry : (candidato.variante ? entry[candidato.variante] : null);
+    return (lista && lista.length) ? lista : null;
+  }
+  function renderAtuacao(lista){
+    var ultimoGrupo = null, html = "";
+    lista.forEach(function(item){
+      if (item.grupo && item.grupo !== ultimoGrupo){
+        html += '<div class="at-group-label">' + item.grupo + '</div>';
+        ultimoGrupo = item.grupo;
+      }
+      html += '<li>' + item.texto + '</li>';
+    });
+    return '<ul class="at-list">' + html + '</ul>';
+  }
+  function nomeCompleto(c){
+    return c.nome + (c.variante ? ' <span class="sub">(' + formatarVariante(c.variante) + ')</span>' : "");
+  }
+  function nomeDoAlvo(alvo){
+    var f = fichas[alvo.ficha_id];
+    var nome = f ? f.nome : alvo.ficha_id;
+    return nome + (alvo.variante ? " (" + formatarVariante(alvo.variante) + ")" : "");
+  }
+
+  function renderGabaritoConteudo(gabarito){
+    var html = '<div class="gabarito-label">Gabarito (só instrutor)</div>';
+    if (gabarito.tipo === "ambiguo"){
+      html += '<div class="gabarito-resposta">Caso ambíguo — válidos: ' +
+        gabarito.candidatos_validos.map(nomeDoAlvo).join(" · ") + '</div>';
+    } else {
+      html += '<div class="gabarito-resposta">' + nomeDoAlvo({ficha_id: gabarito.ficha_id, variante: gabarito.variante}) + '</div>';
+    }
+    if (gabarito.nota_instrutor) html += '<div class="gabarito-nota">' + gabarito.nota_instrutor + '</div>';
+    return html;
+  }
+
+  function candidatoCorresponde(c, alvo){
+    return c.fid === alvo.ficha_id && (alvo.variante ? c.variante === alvo.variante : true);
+  }
+
+  function renderGabaritoResultado(gabarito, candidatos){
+    var alvos = gabarito.tipo === "ambiguo" ? gabarito.candidatos_validos : [{ficha_id: gabarito.ficha_id, variante: gabarito.variante}];
+    var achadoIdx = -1;
+    for (var i = 0; i < candidatos.length; i++){
+      if (alvos.some(function(a){ return candidatoCorresponde(candidatos[i], a); })){ achadoIdx = i; break; }
+    }
+    var status, statusClass, statusIcon;
+    if (achadoIdx === 0){ status = "O motor identificou corretamente como principal"; statusClass = "ok"; statusIcon = ICON_OK; }
+    else if (achadoIdx > 0){ status = "Apareceu no ranking, mas não como principal"; statusClass = "parcial"; statusIcon = ICON_WARN; }
+    else { status = "O motor não encontrou a ficha esperada entre os candidatos mostrados"; statusClass = "falhou"; statusIcon = ICON_X; }
+
+    var html = '<div class="gabarito-box">' + renderGabaritoConteudo(gabarito) +
+      '<div class="gabarito-check ' + statusClass + '">' + statusIcon + '<span>' + status + '</span></div></div>';
+    return html;
+  }
+
+  function renderResultado(totalAchados){
+    var tagsPresentes = new Set();
+    tagsDosVitais(vitals.valores()).forEach(function(t){ tagsPresentes.add(t); });
+    symPicker.getSelected().forEach(function(t){ tagsPresentes.add(t); });
+
+    resultTag.textContent = "Baseado em " + totalAchados + " achado" + (totalAchados === 1 ? "" : "s") + " informado" + (totalAchados === 1 ? "" : "s") +
+      (contextoTrauma ? " · trauma" : " · sem trauma") + (contextoPediatrico ? " · pediátrico" : " · adulto");
+
+    var candidatos = rankear(tagsPresentes);
+    var html = "";
+
+    if (!candidatos.length){
+      html = '<div class="empty-state">' + ICON_EMPTY +
+        '<div><b>Nenhuma correspondência com confiança suficiente.</b><br>Volte e selecione mais achados (sinais vitais e/ou sintomas) para a análise.</div></div>';
+    } else {
+      var diff = avaliarDiferenciacao(candidatos);
+
+      if (diff.empatados.length > 1){
+        var margem = Math.round((diff.liderF1 - diff.empatados[diff.empatados.length-1].f1) * 100);
+        var nomesEmp = diff.empatados.map(function(c){ return c.nome + (c.variante ? " (" + formatarVariante(c.variante) + ")" : ""); }).join(", ");
+        html += '<div class="warn-box"><div class="warn-top">' + ICON_WARN +
+          '<div><div class="warn-title">Achados insuficientes para diferenciar</div>' +
+          '<div class="warn-body">' + diff.empatados.length + ' hipóteses ficaram próximas entre si (diferença ≤ ' + margem + ' pontos). ' +
+          '<b>Candidatos:</b> ' + nomesEmp + '. Considere avaliar achados adicionais antes de decidir conduta.</div></div></div>';
+
+        html += '<div class="tied-label">' + diff.empatados.length + ' hipóteses empatadas — nenhuma destacada</div>';
+        diff.empatados.forEach(function(c){
+          html += '<div class="tied-card"><div class="tied-top"><div class="tied-name">' + nomeCompleto(c) + '</div>' +
+            '<div class="tied-pct">' + Math.round(c.f1*100) + '%</div></div>' +
+            '<div class="tied-criteria">' + renderCriteriaChipsSm(c.bateram) + '</div></div>';
+        });
+
+        var resto = candidatos.filter(function(c){ return diff.empatados.indexOf(c) === -1; });
+        if (resto.length){
+          html += '<div class="outras-label">Outras hipóteses consideradas</div>';
+          resto.forEach(function(c){
+            html += '<div class="tied-card"><div class="tied-top"><div class="tied-name">' + nomeCompleto(c) + '</div>' +
+              '<div class="tied-pct">' + Math.round(c.f1*100) + '%</div></div>' +
+              '<div class="tied-criteria">' + renderCriteriaChipsSm(c.bateram) + '</div></div>';
+          });
+        }
+      } else {
+        var vencedor = candidatos[0];
+        var temBandeira = vencedor.bateram.some(function(c){ return c.bandeira_vermelha; });
+        var nBandeiras = vencedor.bateram.filter(function(c){ return c.bandeira_vermelha; }).length;
+
+        html += '<div class="hero ' + (temBandeira ? "sev-red" : "sev-teal") + '">';
+        html += '<div class="hero-flag">' + (temBandeira ? ICON_FLAG : ICON_STEP) +
+          '<span>' + (temBandeira ? (nBandeiras + " bandeira" + (nBandeiras===1?"":"s") + " vermelha" + (nBandeiras===1?"":"s")) : "Sem bandeiras vermelhas") + '</span></div>';
+        html += '<h2 class="display">' + nomeCompleto(vencedor) + '</h2>';
+        html += '<div class="hero-meta"><span class="conf-badge">' + Math.round(vencedor.f1*100) + '% compatibilidade</span>' +
+          '<span class="conf-label">' + (vencedor.f1 >= 0.6 ? "alta confiança" : "confiança moderada") + '</span></div>';
+        html += '<div class="criteria-title">Achados que bateram</div>';
+        html += '<div class="criteria-wrap">' + renderCriteriaChips(vencedor.bateram) + '</div>';
+        html += '</div>';
+
+        var lista = atuacaoDe(vencedor);
+        if (lista){
+          html += '<div class="section-box"><div class="section-box-title">' + ICON_STEP + '<span>Atuação recomendada</span></div>' + renderAtuacao(lista) + '</div>';
+        }
+
+        var outros = candidatos.slice(1);
+        if (outros.length){
+          html += '<div class="outras-label">Outras hipóteses consideradas (menor compatibilidade)</div>';
+          outros.forEach(function(c){
+            html += '<div class="tied-card"><div class="tied-top"><div class="tied-name">' + nomeCompleto(c) + '</div>' +
+              '<div class="tied-pct">' + Math.round(c.f1*100) + '%</div></div>' +
+              '<div class="tied-criteria">' + renderCriteriaChipsSm(c.bateram) + '</div></div>';
+          });
+        }
+      }
+    }
+
+    if (casoAtivo && modoInstrutor && casoAtivo.gabarito){
+      html += renderGabaritoResultado(casoAtivo.gabarito, candidatos);
+    }
+
+    html += '<div class="footer-note"><b>Simulador de treino</b> — não substitui protocolos oficiais nem avaliação clínica real. Não usar para apoio a decisão em ocorrência. Regras de sinais vitais calibradas para adultos.</div>';
+    resultMain.innerHTML = html;
+  }
+
+  document.getElementById("btnAnalisar").addEventListener("click", function(){
+    var total = tagsDosVitais(vitals.valores()).size + symPicker.getSelected().size;
+    if (total === 0) return;
+    renderResultado(total);
+    mostrarView("view-result");
+  });
+  document.getElementById("btnVoltar").addEventListener("click", function(){ mostrarView("view-form"); });
+
+  // ------------------------------------------------------------------
+  // Editor de casos fictícios (só instrutor)
+  // ------------------------------------------------------------------
+  var edVitals = criarVitalsGrid(document.getElementById("edVitalsGrid"), false);
+  var edSymPicker = criarPickerTags(document.getElementById("edSymGroups"), document.getElementById("edSymSearch"));
+
+  // categoria alvo
+  var edCategoria = document.getElementById("edCategoria");
+  GRUPOS_ORDEM.forEach(function(g){
+    var o = document.createElement("option"); o.value = g; o.textContent = g; edCategoria.appendChild(o);
+  });
+
+  // ficha correta (ordenado por nome)
+  var fichaIdsOrdenados = Object.keys(fichas).sort(function(a,b){ return fichas[a].nome.localeCompare(fichas[b].nome); });
+  var edFichaId = document.getElementById("edFichaId");
+  fichaIdsOrdenados.forEach(function(fid){
+    var o = document.createElement("option"); o.value = fid; o.textContent = fichas[fid].nome; edFichaId.appendChild(o);
+  });
+  function atualizarVariantesEditor(){
+    var edVariante = document.getElementById("edVariante");
+    edVariante.innerHTML = '<option value="">—</option>';
+    var ficha = fichas[edFichaId.value];
+    if (!ficha) return;
+    variantesDaFicha(ficha).forEach(function(par){
+      if (!par[0]) return;
+      var o = document.createElement("option"); o.value = par[0]; o.textContent = formatarVariante(par[0]);
+      edVariante.appendChild(o);
+    });
+  }
+  edFichaId.addEventListener("change", atualizarVariantesEditor);
+  atualizarVariantesEditor();
+
+  // candidatos válidos (caso ambíguo) — todas as variantes de todas as fichas
+  var edCandidatosList = document.getElementById("edCandidatosList");
+  fichaIdsOrdenados.forEach(function(fid){
+    variantesDaFicha(fichas[fid]).forEach(function(par){
+      var label = fichas[fid].nome + (par[0] ? " (" + formatarVariante(par[0]) + ")" : "");
+      var row = document.createElement("label");
+      row.style.cssText = "display:flex; align-items:center; gap:8px; padding:6px 4px; font-size:13px;";
+      row.innerHTML = '<input type="checkbox" data-fid="' + fid + '" data-variante="' + (par[0]||"") + '"> ' + label;
+      edCandidatosList.appendChild(row);
+    });
+  });
+
+  document.getElementById("edTipoGabarito").addEventListener("click", function(e){
+    var btn = e.target.closest(".context-btn");
+    if (!btn) return;
+    document.querySelectorAll("#edTipoGabarito .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    var ambiguo = btn.dataset.tipo === "ambiguo";
+    document.getElementById("edGabaritoDefinido").hidden = ambiguo;
+    document.getElementById("edGabaritoAmbiguo").hidden = !ambiguo;
+  });
+
+  document.getElementById("btnNovoCaso").addEventListener("click", function(){
+    document.getElementById("edTitulo").value = "";
+    document.getElementById("edCategoria").value = "";
+    document.getElementById("edNivel").value = "iniciante";
+    document.getElementById("edVinheta").value = "";
+    document.getElementById("edNota").value = "";
+    document.querySelectorAll("#edTipoGabarito .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    document.querySelector('#edTipoGabarito [data-tipo="definido"]').classList.add("active");
+    document.getElementById("edGabaritoDefinido").hidden = false;
+    document.getElementById("edGabaritoAmbiguo").hidden = true;
+    edCandidatosList.querySelectorAll("input").forEach(function(cb){ cb.checked = false; });
+    edVitals.limpar();
+    edSymPicker.limpar();
+    mostrarView("view-editor");
+  });
+  document.getElementById("btnCancelarEditor").addEventListener("click", function(){ mostrarView("view-casos"); });
+
+  document.getElementById("btnSalvarCaso").addEventListener("click", function(){
+    var titulo = document.getElementById("edTitulo").value.trim();
+    var vinheta = document.getElementById("edVinheta").value.trim();
+    if (!titulo || !vinheta){ alert("Preencha pelo menos o título e a vinheta."); return; }
+
+    var tipoAmbiguo = document.querySelector('#edTipoGabarito [data-tipo="ambiguo"]').classList.contains("active");
+    var gabarito;
+    if (tipoAmbiguo){
+      var candidatosValidos = [];
+      edCandidatosList.querySelectorAll("input:checked").forEach(function(cb){
+        candidatosValidos.push({ ficha_id: cb.dataset.fid, variante: cb.dataset.variante || null });
+      });
+      if (candidatosValidos.length < 2){ alert("Marque pelo menos 2 candidatos válidos para um caso ambíguo."); return; }
+      gabarito = { tipo: "ambiguo", candidatos_validos: candidatosValidos };
+    } else {
+      var fid = document.getElementById("edFichaId").value;
+      var variante = document.getElementById("edVariante").value || null;
+      gabarito = { tipo: "definido", ficha_id: fid, variante: variante };
+    }
+    gabarito.vitais_esperados = edVitals.valores();
+    gabarito.tags_esperadas = Array.from(edSymPicker.getSelected());
+    var nota = document.getElementById("edNota").value.trim();
+    if (nota) gabarito.nota_instrutor = nota;
+
+    var novoCaso = {
+      id: "custom_" + Date.now(),
+      titulo: titulo,
+      categoria_alvo: document.getElementById("edCategoria").value || null,
+      nivel_dificuldade: document.getElementById("edNivel").value,
+      vinheta: vinheta,
+      gabarito: gabarito
+    };
+
+    var custom = carregarCasosCustom();
+    custom.push(novoCaso);
+    salvarCasosCustom(custom);
+    renderCasosList();
+    mostrarView("view-casos");
+  });
+
+  // ------------------------------------------------------------------
+  // Arranque
+  // ------------------------------------------------------------------
+  mostrarView("view-gate");
+})();
+</script>
+</body>
+</html>

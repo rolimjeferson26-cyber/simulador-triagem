@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Triagem — Simulador de Treino</title>
+<style>
+  :root{
+    --bg: #000000; --panel: #3D0000; --panel-2: #4A0000; --header-1: #000000; --header-2: #3D0000; --ink: #F3ECE3; --ink-soft: #C9AFAF; --line: #5C1010;
+    /* --red é reservado EXCLUSIVAMENTE pra bandeira clínica de urgência real —
+       nunca usar em botões, chips selecionados ou qualquer destaque de marca */
+    --red: #FF0000; --red-soft: #550000;
+    --teal: #5FD1C0; --teal-soft: #12302D;
+    --amber: #FFB703; --amber-soft: #3D2B08;
+    /* cor de marca/destaque (vermelho-sangue) — deliberadamente mais escura
+       que --red, pra nunca ser confundida com bandeira de urgência */
+    --brand: #950101; --brand-2: #950101; --brand-soft: #2A0000;
+    --success: #4ADE80;
+    --radius: 4px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .display{ font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-weight: 800; letter-spacing: -0.01em; }
+  button{ font-family: inherit; }
+  [data-instrutor-only]{ display:none; }
+  body.is-instrutor [data-instrutor-only]{ display:block; }
+  body.is-instrutor [data-instrutor-only].inline{ display:inline-flex; }
+
+  /* ---------- faixa de treino (sempre visível) ---------- */
+  #trainingBanner{ position:sticky; top:0; z-index:30; background:var(--amber); color:#241A00;
+    font-size:11px; font-weight:800; text-align:center; padding:6px 10px; letter-spacing:.03em; }
+
+  .view{ min-height:100vh; display:flex; flex-direction:column; }
+  .view[hidden]{ display:none; }
+
+  header{ position: sticky; top:26px; z-index: 20; background: linear-gradient(120deg, var(--header-1), var(--header-2)); color: #fff;
+    padding: 12px 16px 12px; border-bottom: 3px solid rgba(0,0,0,.18); flex:0 0 auto; overflow:hidden; }
+  header::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><path d='M0,30 H40 L46,30 L50,14 L54,30 L64,30 L70,30 L74,50 L78,4 L82,44 L86,30 L96,30 L102,22 L108,30 H150' fill='none' stroke='%23950101' stroke-width='2.5' stroke-linejoin='round' stroke-linecap='round'/></svg>"); background-repeat:repeat-x; background-position:0 center;
+    background-size:150px 60%; opacity:.5; }
+  .back-row{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:#C9CFD6;
+    margin-bottom:8px; font-weight:600; cursor:pointer; text-decoration:none; width:fit-content; }
+  .back-row svg{ width:14px; height:14px; flex:0 0 auto; }
+  .consulta-btn{ display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.14);
+    border:1.5px solid rgba(255,255,255,.4); color:#fff; text-decoration:none; padding:8px 13px 8px 11px;
+    border-radius:999px; font-size:12px; font-weight:800; flex:0 0 auto; }
+  .consulta-btn svg{ width:15px; height:15px; flex:0 0 auto; }
+  .consulta-btn:active{ background:rgba(255,255,255,.24); }
+  .casos-header-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:2px; }
+  .casos-header-row h1{ margin:0; }
+  .top-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  header h1{ margin:0; font-size: 19px; line-height:1.15; }
+  header .tag{ font-size: 10.5px; letter-spacing: .04em; color: #C9CFD6; margin-top:2px; }
+  .badge-count{ font-size:11px; color:#0E1013; background:#D8DBDE; padding:3px 8px;
+    border-radius: 999px; white-space:nowrap; font-weight:700; flex:0 0 auto; }
+  .mode-indicator{ font-size:10.5px; color:#C9CFD6; margin-top:6px; display:flex; align-items:center; gap:6px; }
+  .mode-indicator b{ color:#fff; }
+  .mode-indicator a{ color:#fff; text-decoration:underline; cursor:pointer; }
+
+  main{ flex:1 1 auto; padding: 14px 14px 24px; max-width:640px; width:100%; margin:0 auto; }
+
+  /* ---------- ecrã de aviso de treino ---------- */
+  .gate-main{ display:flex; align-items:center; justify-content:center; flex:1; padding:24px 18px; }
+  .gate-box{ max-width:420px; text-align:center; }
+  .gate-box svg{ width:40px; height:40px; margin-bottom:14px; }
+  .gate-box h1{ margin:0 0 12px; font-size:21px; }
+  .gate-box p{ font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0 0 22px; }
+  .gate-box .cta-btn{ padding:15px 22px; }
+
+  /* ---------- seleção de modo ---------- */
+  .mode-intro{ text-align:center; padding:8px 4px 20px; }
+  .mode-intro h2{ margin:0 0 6px; font-size:18px; }
+  .mode-intro p{ font-size:13px; color:var(--ink-soft); margin:0; line-height:1.5; }
+  .mode-btn-row{ display:flex; flex-direction:column; gap:10px; }
+  .mode-btn{ padding:18px; border-radius:var(--radius); border:1.5px solid var(--line); background:var(--panel);
+    font-size:15px; font-weight:800; color:var(--ink); cursor:pointer; text-align:left; display:flex; align-items:center; gap:12px; }
+  .mode-btn svg{ width:22px; height:22px; flex:0 0 auto; color:var(--brand); }
+  .mode-btn .mode-btn-sub{ font-size:11.5px; font-weight:600; color:var(--ink-soft); margin-top:2px; }
+  .pin-box{ margin-top:14px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px; }
+  .pin-error{ font-size:12px; color:var(--red); font-weight:700; margin:6px 2px 10px; }
+
+  /* ---------- campos genéricos (formulário / editor) ---------- */
+  .field-label{ display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-soft); font-weight:700; margin:16px 2px 7px; }
+  .field-label:first-child{ margin-top:0; }
+  .field-input{ width:100%; padding:11px 12px; border-radius:var(--radius); border:1px solid var(--line);
+    font-size:14.5px; background:var(--panel-2); color:var(--ink); font-family:inherit; }
+  .field-input:focus{ outline:2px solid var(--brand); outline-offset:-1px; }
+  .field-textarea{ resize:vertical; line-height:1.5; }
+
+  /* ---------- casos ---------- */
+  .caso-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 15px; margin-bottom:9px; cursor:pointer; }
+  .caso-card.livre{ border-style:dashed; border-color:var(--ink-soft); }
+  .caso-card-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .caso-titulo{ font-size:14.5px; font-weight:800; line-height:1.3; }
+  .caso-badge{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+    padding:2px 8px; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); white-space:nowrap; }
+  .caso-cat{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; }
+  .caso-del{ font-size:11px; font-weight:700; color:var(--red); margin-top:8px; cursor:pointer; display:inline-block; }
+  .casos-tools{ display:flex; gap:8px; margin-top:16px; }
+  .mini-btn{ flex:1; padding:10px; border-radius:var(--radius); border:1px solid var(--line); background:var(--panel-2);
+    font-size:12.5px; font-weight:700; color:var(--ink); text-align:center; cursor:pointer; }
+
+  /* ---------- vinheta ---------- */
+  .vinheta-box{ background:var(--panel); border:1.5px solid var(--brand); border-radius:var(--radius); padding:14px 15px; margin-bottom:16px; }
+  .vinheta-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--ink-soft); margin-bottom:6px; }
+  .vinheta-label span{ color:var(--ink); }
+  .vinheta-texto{ font-size:13.5px; line-height:1.6; color:var(--ink); font-style:italic; }
+  .vinheta-instrutor-tools{ display:flex; gap:8px; margin-top:12px; }
+  .gabarito-box{ margin-top:12px; background:var(--panel-2); border:1.5px dashed var(--ink-soft); border-radius:var(--radius); padding:12px 13px; }
+  .gabarito-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--ink-soft); margin-bottom:8px; }
+  .gabarito-resposta{ font-size:14px; font-weight:800; color:var(--ink); margin-bottom:4px; }
+  .gabarito-nota{ font-size:12.5px; color:var(--ink); line-height:1.5; margin-top:8px; }
+  .gabarito-check{ display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:800; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
+  .gabarito-check svg{ width:15px; height:15px; flex:0 0 auto; }
+  .gabarito-check.ok{ color:var(--success); }
+  .gabarito-check.parcial{ color:var(--amber); }
+  .gabarito-check.falhou{ color:var(--red); }
+
+  /* ---------- formulário ---------- */
+  .cat-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;
+    color: var(--ink-soft); margin: 18px 2px 9px; font-weight:700; display:flex; align-items:center; gap:6px; }
+  .cat-label:first-child{ margin-top:2px; }
+  .cat-label svg{ width:13px; height:13px; opacity:.7; }
+
+  .vitals-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  @media (min-width:480px){ .vitals-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  .vital-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:10px 12px 11px; }
+  .vital-label{ font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; }
+  .vital-input-row{ display:flex; align-items:baseline; gap:4px; margin-top:4px; }
+  .vital-input-row input{ width:100%; border:none; background:transparent; font-size:22px; font-weight:800;
+    color:var(--ink); padding:2px 0; font-family:inherit; -moz-appearance:textfield; }
+  .vital-input-row input::-webkit-outer-spin-button, .vital-input-row input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .vital-input-row input:focus{ outline:none; }
+  .vital-unit{ font-size:11.5px; color:var(--ink-soft); font-weight:600; white-space:nowrap; }
+  .vital-hint{ display:inline-block; margin-top:6px; font-size:10.5px; font-weight:700; padding:2px 7px;
+    border-radius:999px; background:var(--amber-soft); color:var(--amber); min-height:19px; }
+  .vital-hint:empty{ visibility:hidden; }
+
+  .search-wrap{ position:relative; margin: 2px 0 10px; }
+  .sym-search{ width:100%; padding:10px 12px 10px 36px; border-radius: var(--radius);
+    border:1px solid var(--line); font-size:14.5px; background:var(--panel-2); color:var(--ink); }
+  .sym-search:focus{ outline:2px solid var(--brand); outline-offset:-1px; }
+  .search-icon{ position:absolute; left:11px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.45; pointer-events:none; }
+
+  .legend{ font-size:11px; color:var(--ink-soft); margin:0 2px 12px; display:flex; align-items:center; gap:5px; }
+  .legend .dot{ width:7px; height:7px; border-radius:50%; background:var(--red); flex:0 0 auto; }
+
+  .sym-card{ background:var(--panel); border:1px solid var(--line); border-radius: var(--radius); margin-bottom:8px; overflow:hidden; }
+  .sym-card-head{ padding: 11px 13px; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; }
+  .sym-card-head h3{ font-size:13.5px; margin:0; font-weight:700; }
+  .sym-count-pill{ font-size:10.5px; font-weight:700; color:var(--ink-soft); background:var(--panel-2); padding:2px 7px; border-radius:999px; margin-left:auto; margin-right:8px; }
+  .chevron{ width:9px; height:9px; border-right:2px solid var(--ink-soft); border-bottom:2px solid var(--ink-soft);
+    transform: rotate(-45deg); transition: transform .15s ease; flex:0 0 auto; }
+  .sym-card.open .chevron{ transform: rotate(45deg); }
+  .sym-card-body{ display:none; padding: 2px 13px 13px; }
+  .sym-card.open .sym-card-body{ display:block; }
+
+  .chips-wrap{ display:flex; flex-wrap:wrap; gap:8px; }
+  .sym-chip{ position:relative; flex:0 0 auto; font-size:13px; font-weight:600; padding:11px 14px; border-radius:999px;
+    background:var(--panel-2); color:var(--ink); border:1.5px solid var(--line); min-height:44px; display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none; }
+  .sym-chip .flagdot{ width:6px; height:6px; border-radius:50%; background:var(--red); position:absolute; top:8px; right:9px; }
+  .sym-chip.selected{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .sym-chip .chk{ width:13px; height:13px; display:none; flex:0 0 auto; }
+  .sym-chip.selected .chk{ display:block; }
+  .sym-chip.selected.flagged{ border-color:var(--red); box-shadow:0 0 0 1.5px var(--red) inset; }
+
+  .cta-wrap{ position:sticky; bottom:0; flex:0 0 auto; padding:10px 14px 16px;
+    background:linear-gradient(to top, var(--bg) 65%, transparent); }
+  .cta-inner{ max-width:640px; margin:0 auto; }
+  .cta-count{ text-align:center; font-size:11.5px; color:var(--ink-soft); margin-bottom:8px; font-weight:600; }
+  .cta-count b{ color:var(--ink); }
+  .cta-btn{ width:100%; background:linear-gradient(120deg, var(--brand-2), var(--brand)); color:#fff; border:none; border-radius:var(--radius);
+    padding:15px; font-size:15px; font-weight:800; text-align:center; cursor:pointer; }
+  .cta-btn:disabled{ opacity:.45; }
+
+  .context-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;
+    color: var(--ink-soft); margin: 2px 2px 8px; font-weight:700; }
+  .context-toggle{ display:flex; gap:8px; margin-bottom:4px; }
+  .context-btn{ flex:1; padding:13px 8px; border-radius:var(--radius); border:1.5px solid var(--line);
+    background:var(--panel-2); font-size:13.5px; font-weight:800; text-align:center; cursor:pointer; color:var(--ink);
+    min-height:48px; display:flex; align-items:center; justify-content:center; gap:7px; }
+  .context-btn svg{ width:16px; height:16px; flex:0 0 auto; }
+  .context-btn.active{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .context-btn.active.trauma-on{ background:var(--red); border-color:var(--red); }
+  .context-note{ font-size:11px; color:var(--ink-soft); margin:8px 2px 0; line-height:1.4; }
+
+  /* ---------- resultado ---------- */
+  .hero{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 15px; margin-bottom:14px; }
+  .hero.sev-red{ border-top:5px solid var(--red); }
+  .hero.sev-teal{ border-top:5px solid var(--teal); }
+  .hero-flag{ display:flex; align-items:center; gap:7px; font-size:12px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.03em; margin-bottom:9px; }
+  .hero.sev-red .hero-flag{ color:var(--red); }
+  .hero.sev-teal .hero-flag{ color:var(--teal); }
+  .hero-flag svg{ width:15px; height:15px; }
+  .hero h2{ margin:0 0 10px; font-size:20px; line-height:1.2; }
+  .hero-meta{ display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  .conf-badge{ font-size:13px; font-weight:800; padding:4px 10px; border-radius:999px; }
+  .hero.sev-red .conf-badge{ background:var(--red-soft); color:var(--red); }
+  .hero.sev-teal .conf-badge{ background:var(--teal-soft); color:var(--teal); }
+  .conf-label{ font-size:12px; color:var(--ink-soft); font-weight:600; }
+
+  .criteria-title{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:8px; }
+  .criteria-wrap{ display:flex; flex-wrap:wrap; gap:7px; }
+  .crit-chip{ font-size:12.5px; font-weight:600; padding:6px 11px; border-radius:999px; background:var(--panel-2); color:var(--ink); }
+  .crit-chip.flag{ background:var(--red-soft); color:var(--red); display:flex; align-items:center; gap:5px; font-weight:800; }
+  .crit-chip.flag svg{ width:11px; height:11px; }
+
+  .section-box{ margin-top:14px; background:var(--teal-soft); border-left:3px solid var(--teal);
+    border-radius:0 var(--radius) var(--radius) 0; padding:12px 13px; }
+  .section-box-title{ display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:var(--teal);
+    text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px; }
+  .section-box-title svg{ width:13px; height:13px; }
+  ul.at-list{ margin:0; padding:0; list-style:none; }
+  ul.at-list li{ font-size:13.5px; line-height:1.5; padding:5px 0 5px 16px; position:relative; color:var(--ink); }
+  ul.at-list li::before{ content:""; position:absolute; left:2px; top:12px; width:5px; height:5px; background:var(--teal); border-radius:1px; }
+  .at-group-label{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--teal); margin:10px 0 2px; }
+  .at-group-label:first-child{ margin-top:0; }
+
+  .warn-box{ background:var(--amber-soft); border:1.5px solid var(--amber); border-radius:var(--radius); padding:13px 14px; margin-bottom:16px; }
+  .warn-top{ display:flex; align-items:flex-start; gap:9px; }
+  .warn-top svg{ width:20px; height:20px; flex:0 0 auto; margin-top:1px; }
+  .warn-title{ font-size:14.5px; font-weight:800; color:var(--ink); line-height:1.3; margin-bottom:4px; }
+  .warn-body{ font-size:12.5px; line-height:1.5; color:var(--ink); }
+  .warn-body b{ font-weight:800; }
+
+  .tied-label, .outras-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft);
+    font-weight:700; margin:16px 2px 10px; }
+  .tied-label:first-child, .outras-label:first-child{ margin-top:4px; }
+
+  .tied-card{ background:var(--panel); border:1.5px solid var(--line); border-radius:var(--radius); padding:13px 14px; margin-bottom:10px; }
+  .tied-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:9px; }
+  .tied-name{ font-size:15px; font-weight:800; line-height:1.25; }
+  .tied-name .sub{ font-weight:600; color:var(--ink-soft); font-size:12.5px; }
+  .tied-pct{ font-size:12.5px; font-weight:800; padding:3px 9px; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); white-space:nowrap; }
+  .tied-criteria{ display:flex; flex-wrap:wrap; gap:6px; }
+  .crit-chip-sm{ font-size:11.5px; font-weight:600; padding:5px 9px; border-radius:999px; background:var(--panel-2); color:var(--ink-soft); }
+  .crit-chip-sm.flag{ background:var(--red-soft); color:var(--red); font-weight:800; }
+
+  .empty-state{ text-align:center; color:var(--ink-soft); padding:50px 20px; font-size:14px; line-height:1.6; }
+  .empty-state svg{ width:34px; height:34px; opacity:.4; margin-bottom:10px; }
+
+  .footer-note{ margin-top:20px; text-align:center; color:var(--ink-soft); font-size:11px; line-height:1.5; padding:0 6px; }
+  .footer-note b{ color:var(--red); }
+</style>
+</head>
+<body>
+
+<div id="trainingBanner">MODO TREINO — simulação para formação, não usar em ocorrência real</div>
+
+<div id="app">
+
+  <!-- ========================= GATE DE AVISO ========================= -->
+  <div class="view" id="view-gate">
+    <main class="gate-main">
+      <div class="gate-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFB703" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>
+        <h1 class="display">Simulador de Treino</h1>
+        <p>Esta aplicação é um <b>simulador para formação</b>. Não substitui os protocolos oficiais em vigor, não deve ser usada para apoio a decisão em ocorrência real, e os resultados não constituem orientação clínica válida fora do contexto de sala de aula.</p>
+        <button class="cta-btn" id="btnAckTreino">Compreendi, continuar</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================= SELEÇÃO DE MODO ========================= -->
+  <div class="view" id="view-mode" hidden>
+    <header><h1 class="display">Quem está a usar?</h1><div class="tag">Escolha o seu perfil nesta sessão</div></header>
+    <main>
+      <div class="mode-btn-row">
+        <button class="mode-btn" id="btnSouAluno">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.42A9 9 0 0121 12v3.5"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+          <div><div>Sou Aluno</div><div class="mode-btn-sub">Vejo só o resultado do motor, sem gabarito</div></div>
+        </button>
+        <button class="mode-btn" id="btnSouInstrutor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+          <div><div>Sou Instrutor</div><div class="mode-btn-sub">Vejo gabarito e posso criar casos</div></div>
+        </button>
+      </div>
+      <div class="pin-box" id="pinBox" hidden>
+        <label class="field-label">Código do dia (fornecido pelo instrutor responsável)</label>
+        <input id="pinInput" class="field-input" type="tel" inputmode="numeric" maxlength="4" placeholder="____">
+        <div class="pin-error" id="pinError" hidden>Código incorreto.</div>
+        <button class="cta-btn" id="btnConfirmarPin" style="margin-top:6px;">Confirmar</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================= LISTA DE CASOS ========================= -->
+  <div class="view" id="view-casos" hidden>
+    <header>
+      <div class="casos-header-row">
+        <a class="consulta-btn" href="emergencias_medicas.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          Consultas
+        </a>
+        <h1 class="display">Casos de Treino</h1>
+      </div>
+      <div class="mode-indicator">Modo: <b id="modoLabel">—</b> · <a id="linkTrocarModo">trocar</a></div>
+    </header>
+    <main>
+      <div class="caso-card livre" id="casoLivre">
+        <div class="caso-titulo">Uso livre (sem caso)</div>
+        <div class="caso-cat">Explorar o motor com achados à sua escolha</div>
+      </div>
+      <div id="casosList"></div>
+      <div class="casos-tools" data-instrutor-only>
+        <button type="button" class="mini-btn" id="btnNovoCaso">+ Criar novo caso</button>
+        <button type="button" class="mini-btn" id="btnExportarCasos">Exportar</button>
+        <button type="button" class="mini-btn" id="btnImportarCasos">Importar</button>
+        <input type="file" id="inputImportar" accept="application/json" hidden>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================= EDITOR DE CASO (instrutor) ========================= -->
+  <div class="view" id="view-editor" hidden>
+    <header>
+      <div class="back-row" id="btnCancelarEditor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9CFD6" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        Cancelar
+      </div>
+      <h1 class="display">Novo Caso Fictício</h1>
+    </header>
+    <main>
+      <label class="field-label">Título</label>
+      <input id="edTitulo" class="field-input" type="text" placeholder="Ex: Dispneia súbita com sibilos">
+
+      <label class="field-label">Categoria alvo (opcional)</label>
+      <select id="edCategoria" class="field-input"><option value="">—</option></select>
+
+      <label class="field-label">Nível de dificuldade</label>
+      <select id="edNivel" class="field-input">
+        <option value="iniciante">Iniciante</option>
+        <option value="intermediario">Intermediário</option>
+        <option value="avancado">Avançado</option>
+      </select>
+
+      <label class="field-label">Vinheta (o que o aluno vai ler)</label>
+      <textarea id="edVinheta" class="field-input field-textarea" rows="5" placeholder="Descreva o cenário que o aluno deve interpretar..."></textarea>
+
+      <label class="field-label">Tipo de gabarito</label>
+      <div class="context-toggle" id="edTipoGabarito">
+        <button type="button" class="context-btn active" data-tipo="definido">Diagnóstico definido</button>
+        <button type="button" class="context-btn" data-tipo="ambiguo">Caso ambíguo (2+ válidos)</button>
+      </div>
+
+      <div id="edGabaritoDefinido">
+        <label class="field-label">Ficha correta</label>
+        <select id="edFichaId" class="field-input"></select>
+        <label class="field-label">Variante (se houver)</label>
+        <select id="edVariante" class="field-input"><option value="">—</option></select>
+      </div>
+
+      <div id="edGabaritoAmbiguo" hidden>
+        <label class="field-label">Candidatos válidos (marque 2 ou mais)</label>
+        <div id="edCandidatosList" style="max-height:260px; overflow-y:auto; border:1px solid var(--line); border-radius:var(--radius); padding:8px;"></div>
+      </div>
+
+      <label class="field-label" style="margin-top:20px;">Vitais esperados (opcional)</label>
+      <div class="vitals-grid" id="edVitalsGrid"></div>
+
+      <label class="field-label" style="margin-top:16px;">Sinais/sintomas esperados (opcional)</label>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#F3ECE3" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="edSymSearch" class="sym-search" type="text" placeholder="Pesquisar sinal ou sintoma...">
+      </div>
+      <div id="edSymGroups"></div>
+
+      <label class="field-label">Nota para o instrutor (opcional)</label>
+      <textarea id="edNota" class="field-input field-textarea" rows="3" placeholder="Objetivo pedagógico, pontos de discussão..."></textarea>
+
+      <button class="cta-btn" id="btnSalvarCaso" style="margin-top:20px;">Guardar Caso</button>
+    </main>
+  </div>
+
+  <!-- ========================= FORMULÁRIO ========================= -->
+  <div class="view" id="view-form" hidden>
+    <header>
+      <div class="back-row" id="btnVoltarCasos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9CFD6" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        Trocar de caso
+      </div>
+      <div class="top-row">
+        <div>
+          <h1 class="display">Nova Avaliação</h1>
+          <div class="tag">Sinais vitais e sintomas observados</div>
+        </div>
+        <div class="badge-count" id="selCount">0 selec.</div>
+      </div>
+    </header>
+
+    <main>
+      <div class="vinheta-box" id="vinhetaBox" hidden>
+        <div class="vinheta-label">Cenário: <span id="vinhetaTitulo"></span></div>
+        <div class="vinheta-texto" id="vinhetaTexto"></div>
+        <div class="vinheta-instrutor-tools" data-instrutor-only>
+          <button type="button" class="mini-btn" id="btnVerGabarito">Ver gabarito</button>
+          <button type="button" class="mini-btn" id="btnPreencherDemo">Preencher c/ dados esperados</button>
+        </div>
+        <div class="gabarito-box" id="gabaritoInline" hidden></div>
+      </div>
+
+      <div class="context-label">Contexto</div>
+      <div class="context-toggle" id="contextToggle">
+        <button type="button" class="context-btn active" data-trauma="nao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Sem trauma
+        </button>
+        <button type="button" class="context-btn" data-trauma="sim">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a1 1 0 00.86 1.5h18.64a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.72 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          Houve trauma
+        </button>
+      </div>
+      <div class="context-note" id="contextNote">Fichas de trauma (torácico, TCE, queimaduras, etc.) só entram na análise com mecanismo confirmado.</div>
+
+      <div class="context-label" style="margin-top:14px;">Faixa etária</div>
+      <div class="context-toggle" id="idadeToggle">
+        <button type="button" class="context-btn active" data-idade="adulto">Adulto</button>
+        <button type="button" class="context-btn" data-idade="pediatrico">Pediátrico</button>
+      </div>
+      <div class="context-note" id="idadeNote">Fichas de Pediatria só entram na análise quando a vítima é pediátrica. Os valores de referência dos sinais vitais continuam calibrados para adultos em ambos os modos.</div>
+
+      <div class="cat-label" style="margin-top:20px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#B4A493" stroke-width="2"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>
+        Sinais Vitais
+      </div>
+      <div class="vitals-grid" id="vitalsGrid"></div>
+
+      <div class="cat-label" style="margin-top:22px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#B4A493" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Sinais e Sintomas
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#F3ECE3" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="symSearch" class="sym-search" type="text" placeholder="Pesquisar sinal ou sintoma..." autocomplete="off">
+      </div>
+      <div class="legend"><span class="dot"></span> achado de alta relevância clínica</div>
+      <div id="symGroups"></div>
+    </main>
+
+    <div class="cta-wrap">
+      <div class="cta-inner">
+        <div class="cta-count" id="ctaCount">0 achados selecionados</div>
+        <button class="cta-btn" id="btnAnalisar" disabled>Analisar Sintomas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= RESULTADO ========================= -->
+  <div class="view" id="view-result" hidden>
+    <header>
+      <div class="back-row" id="btnVoltar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9CFD6" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        Editar achados
+      </div>
+      <h1 class="display">Resultado da Triagem</h1>
+      <div class="tag" id="resultTag"></div>
+    </header>
+    <main id="resultMain"></main>
+  </div>
+
+</div>
+
+<script type="application/json" id="taxonomia-source">{"versao":"1.0","nota":"Taxonomia expandida a partir da amostra de 4 fichas de teste (33 tags) para cobrir as 68 fichas do emergencias_medicas.json.","sinais_vitais":[{"tag":"taquicardia","label":"Taquicardia (FC elevada)","parametro":"FC","unidade":"bpm","min":101,"max":null},{"tag":"bradicardia","label":"Bradicardia (FC baixa)","parametro":"FC","unidade":"bpm","min":null,"max":59},{"tag":"taquipneia","label":"Taquipneia (FR elevada)","parametro":"FR","unidade":"cpm","min":21,"max":null},{"tag":"hipotensao","label":"Hipotensão (PAS baixa)","parametro":"PAS","unidade":"mmHg","min":null,"max":89},{"tag":"spo2_baixo","label":"SpO2 diminuída","parametro":"SpO2","unidade":"%","min":null,"max":93},{"tag":"apneia","label":"Apneia (ausência de respiração)","parametro":"FR","unidade":"cpm","min":0,"max":0},{"tag":"febre","label":"Febre","parametro":"Temp","unidade":"ºC","min":38.0,"max":null},{"tag":"hipotermia_vital","label":"Hipotermia (temperatura corporal baixa)","parametro":"Temp","unidade":"ºC","min":null,"max":34.9},{"tag":"hipertensao","label":"Hipertensão arterial","parametro":"PAS","unidade":"mmHg","min":140,"max":null},{"tag":"hipotensao_diastolica","label":"Hipotensão diastólica","parametro":"PAD","unidade":"mmHg","min":null,"max":59},{"tag":"hipertensao_diastolica","label":"Hipertensão diastólica","parametro":"PAD","unidade":"mmHg","min":90,"max":null},{"tag":"glicemia_baixa","label":"Glicemia baixa (hipoglicemia)","parametro":"Glicemia","unidade":"mg/dL","min":null,"max":59},{"tag":"glicemia_alta","label":"Glicemia alta (hiperglicemia)","parametro":"Glicemia","unidade":"mg/dL","min":201,"max":null},{"tag":"glasgow_baixo","label":"Glasgow baixo (<9)","parametro":"Glasgow","unidade":"pontos","min":null,"max":8}],"sinais_sintomas":[{"tag":"dispneia","label":"Dispneia / falta de ar","tipo":"subjetivo","categoria":"Geral"},{"tag":"dispneia_impede_falar","label":"Dispneia que impede completar frases","tipo":"objetivo","categoria":"Geral"},{"tag":"pieira","label":"Pieira (sibilos expiratórios)","tipo":"objetivo","categoria":"Geral"},{"tag":"tiragem_musculos_acessorios","label":"Uso de músculos acessórios / tiragem","tipo":"objetivo","categoria":"Geral"},{"tag":"posicao_tripe","label":"Posição de tripé","tipo":"objetivo","categoria":"Geral"},{"tag":"prostracao","label":"Prostração / desorientação","tipo":"objetivo","categoria":"Respiratório"},{"tag":"silencio_ventilatorio","label":"Silêncio ventilatório (sons inaudíveis)","tipo":"objetivo","categoria":"Geral"},{"tag":"dor_toracica_opressiva","label":"Dor/desconforto retroesternal em aperto ou peso","tipo":"subjetivo","categoria":"Geral"},{"tag":"dor_irradiada_msuperior_mandibula","label":"Dor irradiada para MS esquerdo, pescoço ou mandíbula","tipo":"subjetivo","categoria":"Cardiovascular"},{"tag":"dor_epigastrica","label":"Dor epigástrica","tipo":"subjetivo","categoria":"Cardiovascular"},{"tag":"palpitacoes","label":"Palpitações","tipo":"subjetivo","categoria":"Geral"},{"tag":"sincope_lipotimia","label":"Síncope ou lipotimia","tipo":"objetivo","categoria":"Geral"},{"tag":"fadiga_inicio_subito","label":"Cansaço de início súbito","tipo":"subjetivo","categoria":"Cardiovascular"},{"tag":"alteracao_consciencia","label":"Alteração do estado de consciência","tipo":"objetivo","categoria":"Geral"},{"tag":"pele_fria_palida_sudorese","label":"Pele pálida, fria e sudoreica","tipo":"objetivo","categoria":"Sistêmico"},{"tag":"assimetria_facial","label":"Assimetria facial / desvio da comissura labial","tipo":"objetivo","categoria":"Neurológico"},{"tag":"hemiparesia_hemiplegia","label":"Perda de força/sensibilidade num lado do corpo","tipo":"objetivo","categoria":"Geral"},{"tag":"disartria_afasia","label":"Alteração da fala (disartria/afasia)","tipo":"objetivo","categoria":"Geral"},{"tag":"alteracao_visual","label":"Alterações da visão","tipo":"subjetivo","categoria":"Geral"},{"tag":"desvio_olhar","label":"Desvio conjugado do olhar","tipo":"objetivo","categoria":"Neurológico"},{"tag":"cefaleia_intensa","label":"Cefaleia intensa","tipo":"subjetivo","categoria":"Geral"},{"tag":"ataxia","label":"Ataxia (desequilíbrio da marcha/coordenação)","tipo":"objetivo","categoria":"Geral"},{"tag":"vertigem_tonturas","label":"Vertigem / tonturas","tipo":"subjetivo","categoria":"Geral"},{"tag":"palidez","label":"Palidez","tipo":"objetivo","categoria":"Geral"},{"tag":"sudorese","label":"Sudorese","tipo":"objetivo","categoria":"Geral"},{"tag":"nauseas_vomitos","label":"Náuseas e/ou vómitos","tipo":"subjetivo","categoria":"Geral"},{"tag":"ansiedade","label":"Ansiedade / agitação","tipo":"objetivo","categoria":"Geral"},{"tag":"tosse","label":"Tosse","tipo":"objetivo","categoria":"Geral"},{"tag":"expetoracao_purulenta","label":"Expetoração purulenta","tipo":"objetivo","categoria":"Respiratório"},{"tag":"cianose","label":"Cianose","tipo":"objetivo","categoria":"Geral"},{"tag":"estridor","label":"Estridor","tipo":"objetivo","categoria":"Geral"},{"tag":"rouquidao","label":"Rouquidão / alteração da voz","tipo":"objetivo","categoria":"Geral"},{"tag":"adejo_nasal","label":"Adejo nasal","tipo":"objetivo","categoria":"Pediatria"},{"tag":"ortopneia","label":"Ortopneia (piora deitado)","tipo":"subjetivo","categoria":"Respiratório"},{"tag":"fervores_pulmonares","label":"Fervores / farfalheira pulmonar","tipo":"objetivo","categoria":"Respiratório"},{"tag":"secrecoes_rosadas_espumosas","label":"Secreções rosadas e espumosas","tipo":"objetivo","categoria":"Respiratório"},{"tag":"fuligem_mucosas","label":"Fuligem nas mucosas nasais/orais","tipo":"objetivo","categoria":"Trauma"},{"tag":"respiracao_ruidosa","label":"Respiração ruidosa","tipo":"objetivo","categoria":"Respiratório"},{"tag":"gemido_choro_fraco","label":"Gemido ou choro fraco","tipo":"objetivo","categoria":"Geral"},{"tag":"apneia_periodos","label":"Períodos de apneia","tipo":"objetivo","categoria":"Pediatria"},{"tag":"dor_abdominal","label":"Dor abdominal","tipo":"subjetivo","categoria":"Geral"},{"tag":"dor_fossa_iliaca_direita","label":"Dor na fossa ilíaca direita","tipo":"subjetivo","categoria":"Gastrointestinal"},{"tag":"dor_tipo_colica","label":"Dor tipo cólica","tipo":"subjetivo","categoria":"Geral"},{"tag":"dor_lombar","label":"Dor lombar","tipo":"subjetivo","categoria":"Gastrointestinal"},{"tag":"distensao_abdominal","label":"Distensão abdominal","tipo":"objetivo","categoria":"Geral"},{"tag":"obstipacao","label":"Obstipação","tipo":"subjetivo","categoria":"Geral"},{"tag":"diarreia","label":"Diarreia","tipo":"objetivo","categoria":"Geral"},{"tag":"hematuria","label":"Hematúria (sangue na urina)","tipo":"objetivo","categoria":"Gastrointestinal"},{"tag":"disuria","label":"Dor/ardor a urinar","tipo":"subjetivo","categoria":"Geral"},{"tag":"icterícia","label":"Icterícia (pele/olhos amarelados)","tipo":"objetivo","categoria":"Sistêmico"},{"tag":"hemorragia_digestiva_visivel","label":"Vómito ou dejeção com sangue","tipo":"objetivo","categoria":"Gastrointestinal"},{"tag":"dor_abdominal_rigidez","label":"Dor/rigidez abdominal à palpação (peritonismo)","tipo":"objetivo","categoria":"Geral"},{"tag":"rigidez_nuca","label":"Rigidez da nuca","tipo":"objetivo","categoria":"Pediatria"},{"tag":"fotofobia","label":"Fotofobia","tipo":"subjetivo","categoria":"Pediatria"},{"tag":"rash_petequial","label":"Rash petequial/hemorrágico","tipo":"objetivo","categoria":"Pediatria"},{"tag":"fontanela_hipertensa","label":"Fontanela hipertensa (abaulada)","tipo":"objetivo","categoria":"Pediatria"},{"tag":"convulsao_presente","label":"Convulsão presenciada","tipo":"objetivo","categoria":"Geral"},{"tag":"postura_anomala_membros","label":"Postura anómala dos membros (descorticação/descerebração)","tipo":"objetivo","categoria":"Trauma"},{"tag":"equimose_periorbital_retroauricular","label":"Equimose periorbital ou retroauricular","tipo":"objetivo","categoria":"Trauma"},{"tag":"perda_liquido_cefalorraquidiano","label":"Perda de líquido cefalorraquidiano","tipo":"objetivo","categoria":"Trauma"},{"tag":"letargia","label":"Letargia / menos ativo que o habitual","tipo":"objetivo","categoria":"Geral"},{"tag":"irritabilidade","label":"Irritabilidade","tipo":"objetivo","categoria":"Pediatria"},{"tag":"parestesias","label":"Parestesias / formigueiro","tipo":"subjetivo","categoria":"Geral"},{"tag":"fraqueza_muscular","label":"Fraqueza muscular","tipo":"subjetivo","categoria":"Endócrino"},{"tag":"polifagia","label":"Polifagia (fome intensa)","tipo":"subjetivo","categoria":"Geral"},{"tag":"tremores","label":"Tremores","tipo":"objetivo","categoria":"Geral"},{"tag":"midriase","label":"Midríase (pupilas dilatadas)","tipo":"objetivo","categoria":"Geral"},{"tag":"miose","label":"Miose (pupilas contraídas)","tipo":"objetivo","categoria":"Geral"},{"tag":"urticaria_eritema_prurido","label":"Urticária, eritema ou prurido","tipo":"objetivo","categoria":"Geral"},{"tag":"edema_mucosas_labios","label":"Edema de mucosas, lábios ou língua","tipo":"objetivo","categoria":"Geral"},{"tag":"sialorreia","label":"Sialorreia (salivação excessiva)","tipo":"objetivo","categoria":"Geral"},{"tag":"disfagia","label":"Disfagia (dificuldade a engolir)","tipo":"subjetivo","categoria":"Geral"},{"tag":"pele_seca_ruborizada","label":"Pele seca e ruborizada","tipo":"objetivo","categoria":"Geral"},{"tag":"halito_cetonico","label":"Hálito cetónico/adocicado","tipo":"objetivo","categoria":"Endócrino"},{"tag":"poliuria_polidipsia","label":"Poliúria e/ou polidipsia (sede excessiva)","tipo":"subjetivo","categoria":"Endócrino"},{"tag":"xerostomia","label":"Xerostomia (boca seca)","tipo":"subjetivo","categoria":"Endócrino"},{"tag":"perda_peso_inexplicada","label":"Perda de peso sem explicação","tipo":"subjetivo","categoria":"Endócrino"},{"tag":"sinais_desidratacao","label":"Sinais de desidratação (mucosas secas, prega cutânea)","tipo":"objetivo","categoria":"Pediatria"},{"tag":"fontanela_deprimida","label":"Fontanela deprimida","tipo":"objetivo","categoria":"Pediatria"},{"tag":"hemorragia_vaginal","label":"Hemorragia vaginal","tipo":"objetivo","categoria":"Obstetrícia"},{"tag":"contracoes_uterinas_frequentes","label":"Contrações uterinas frequentes/dolorosas","tipo":"subjetivo","categoria":"Obstetrícia"},{"tag":"rotura_membranas","label":"Rotura de membranas amnióticas","tipo":"objetivo","categoria":"Obstetrícia"},{"tag":"perturbacao_visual","label":"Perturbações visuais (moscas volantes/visão turva)","tipo":"subjetivo","categoria":"Geral"},{"tag":"hemorragia_externa_visivel","label":"Hemorragia externa visível","tipo":"objetivo","categoria":"Trauma"},{"tag":"deformidade_membro","label":"Deformidade de membro/osso","tipo":"objetivo","categoria":"Trauma"},{"tag":"dor_a_palpacao_local","label":"Dor à palpação ou movimentação local","tipo":"objetivo","categoria":"Trauma"},{"tag":"crepitacao_ossea","label":"Crepitação óssea","tipo":"objetivo","categoria":"Trauma"},{"tag":"impotencia_funcional","label":"Impotência funcional (mobilização limitada)","tipo":"objetivo","categoria":"Trauma"},{"tag":"edema_local","label":"Edema local","tipo":"objetivo","categoria":"Trauma"},{"tag":"equimose_local","label":"Equimose/hematoma local","tipo":"objetivo","categoria":"Trauma"},{"tag":"ferida_aspirante_torax","label":"Ferida aspirante do tórax","tipo":"objetivo","categoria":"Trauma"},{"tag":"ingurgitamento_jugular","label":"Ingurgitamento das veias jugulares","tipo":"objetivo","categoria":"Geral"},{"tag":"desvio_traqueia","label":"Desvio da traqueia","tipo":"objetivo","categoria":"Geral"},{"tag":"assimetria_toracica","label":"Assimetria/expansão assimétrica da parede torácica","tipo":"objetivo","categoria":"Trauma"},{"tag":"hipofonese_sons_cardiacos","label":"Hipofonese dos sons cardíacos","tipo":"objetivo","categoria":"Trauma"},{"tag":"ausencia_pulso_distal","label":"Ausência ou diminuição de pulso distal","tipo":"objetivo","categoria":"Trauma"},{"tag":"pulsos_assimetricos","label":"Assimetria de pulsos periféricos","tipo":"objetivo","categoria":"Cardiovascular"},{"tag":"assimetria_pressao_arterial_membros","label":"Diferença de pressão arterial entre membros","tipo":"objetivo","categoria":"Cardiovascular"},{"tag":"exteriorizacao_organo","label":"Exteriorização de órgão (evisceração)","tipo":"objetivo","categoria":"Geral"},{"tag":"objeto_empalado","label":"Objeto empalado","tipo":"objetivo","categoria":"Geral"},{"tag":"otorragia","label":"Saída de sangue pelo ouvido","tipo":"objetivo","categoria":"Trauma"},{"tag":"hemoptises","label":"Hemoptises (sangue pela boca de origem respiratória)","tipo":"objetivo","categoria":"Trauma"},{"tag":"marca_picada_local","label":"Marca de picada/injeção local","tipo":"objetivo","categoria":"Intoxicações"},{"tag":"espasmos_musculares","label":"Espasmos musculares","tipo":"objetivo","categoria":"Intoxicações"},{"tag":"perda_controlo_esfincteres","label":"Perda de controlo dos esfíncteres","tipo":"objetivo","categoria":"Neurológico"},{"tag":"pele_marmoreada","label":"Pele marmoreada","tipo":"objetivo","categoria":"Pediatria"},{"tag":"rash_hemorragico","label":"Rash hemorrágico/petequial","tipo":"objetivo","categoria":"Pediatria"}],"limitacoes":["Os thresholds de sinais vitais (min/max) são de referência ADULTA. As fichas de Emergências Pediátricas foram anotadas usando as mesmas tags qualitativas (taquicardia, taquipneia, hipotensao, febre, etc.) quando a própria ficha descreve o achado em texto, mas as regras numéricas adulto-padrão NÃO devem ser aplicadas automaticamente a uma vítima pediátrica — os valores normais de FC/FR/PAS variam muito por faixa etária (ver ficha 'abordagem_avaliacao_pediatrica' no JSON original, que tem tabela de referência por idade mas foi excluída da anotação por ser puramente uma tabela de referência, não uma patologia). Antes de usar o motor em modo pediátrico, é necessário: (1) adicionar um campo de idade/faixa etária ao formulário, e (2) parametrizar min/max por faixa etária em vez de usar os valores fixos atuais.","Algumas fichas descrevem 'síndromes tóxicas' ou 'subtipos' com apenas 1 critério textual (ex: narcose do azoto, síncope das águas pouco profundas) — não foram anotadas por não serem decomponíveis em achados discretos verificáveis; ver 'excluidos' na ficha correspondente.","Pesos e bandeiras vermelhas foram atribuídos por julgamento clínico direto durante a anotação, seguindo a mesma escala 1-3 validada nas 4 fichas de teste, mas NÃO foram calculados estatisticamente (ex: IDF real de cada tag pelas 68 fichas) — ficam como candidatos a revisão humana antes de uso em produção."]}</script>
+<script type="application/json" id="criterios-source">{"asma":{"nome":"Asma","formato":"por_gravidade","niveis_gravidade":{"crise_ligeira":[{"tag":"dispneia","peso":1,"origem":"Dispneia com a marcha"},{"tag":"pieira","peso":2,"origem":"Possibilidade de pieira discreta na fase expiratória"}],"crise_moderada":[{"tag":"ansiedade","peso":1,"origem":"Ansiedade"},{"tag":"dispneia","peso":1,"origem":"Dispneia em pequenos esforços"},{"tag":"dispneia_impede_falar","peso":2,"origem":"Incapacidade de completar frases curtas"},{"tag":"pieira","peso":2,"origem":"Pieira"},{"tag":"tiragem_musculos_acessorios","peso":2,"origem":"Uso de músculos acessórios e tiragens"},{"tag":"taquipneia","peso":1,"origem":"FR aumentada"},{"tag":"spo2_baixo","peso":2,"origem":"Decréscimo da SpO2"},{"tag":"taquicardia","peso":1,"origem":"FC aumentada"}],"crise_grave":[{"tag":"ansiedade","peso":1,"origem":"Ansiedade ou agitação"},{"tag":"dispneia","peso":2,"origem":"Dispneia em repouso"},{"tag":"pieira","peso":2,"origem":"Pieira"},{"tag":"posicao_tripe","peso":3,"origem":"Posição de tripé","bandeira_vermelha":true},{"tag":"dispneia_impede_falar","peso":2,"origem":"Incapacidade de completar frases curtas"},{"tag":"tiragem_musculos_acessorios","peso":2,"origem":"Uso de músculos acessórios e tiragens"},{"tag":"taquipneia","peso":1,"origem":"FR aumentada"},{"tag":"taquicardia","peso":1,"origem":"FC aumentada"}],"paragem_ventilatoria_iminente":[{"tag":"prostracao","peso":2,"origem":"Prostração ou desorientação"},{"tag":"silencio_ventilatorio","peso":3,"origem":"Sons ventilatórios inaudíveis (silêncio ventilatório)","bandeira_vermelha":true},{"tag":"apneia","peso":3,"origem":"Apneia","bandeira_vermelha":true},{"tag":"bradicardia","peso":2,"origem":"Bradicardia"}]},"excluidos":["FR normal ou ligeiramente elevada (crise_ligeira) — ambíguo demais pra virar critério útil de pontuação","Vítima calma ou ligeiramente ansiosa (crise_ligeira) — não discrimina de outras patologias","Prefere estar sentada (crise_moderada) — sinal fraco isoladamente, redundante com outros já cobertos"],"categoria":"Respiratório"},"dor_toracica_cardiaca":{"nome":"Dor Torácica de Origem Cardíaca","formato":"plano","criterios":[{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"fadiga_inicio_subito","peso":1,"origem":"Cansaço de início súbito"},{"tag":"dor_toracica_opressiva","peso":3,"origem":"Dor/desconforto retroesternal tipo opressão, peso, ardor ou pressão","bandeira_vermelha":true},{"tag":"dor_epigastrica","peso":1,"origem":"Dor epigástrica"},{"tag":"dor_irradiada_msuperior_mandibula","peso":3,"origem":"Irradiação para membros superiores (principalmente esquerdo), pescoço, mandíbula","bandeira_vermelha":true},{"tag":"palpitacoes","peso":1,"origem":"Palpitações"},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"sudorese","peso":1,"origem":"Sudorese"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas e/ou vómitos"},{"tag":"ansiedade","peso":1,"origem":"Ansiedade e agitação"},{"tag":"sincope_lipotimia","peso":2,"origem":"Lipotimia ou síncope"}],"excluidos":["Angústia — redundante com ansiedade/agitação já mapeado, e muito subjetivo pra ser um critério isolado"],"categoria":"Cardiovascular"},"choque_geral":{"nome":"Choque (Hipoperfusão) - Geral","formato":"plano","criterios":[{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência (ansiedade progredindo para agitação, confusão, prostração, sonolência)"},{"tag":"taquipneia","peso":1,"origem":"Taquipneia (sinal clássico de choque)"},{"tag":"taquicardia","peso":1,"origem":"Taquicardia (inicialmente ligeira, evoluindo, pulsos periféricos finos/ausentes)"},{"tag":"pele_fria_palida_sudorese","peso":3,"origem":"Pele pálida, fria, viscosa, cianótica, suada","bandeira_vermelha":true},{"tag":"hipotensao","peso":2,"origem":"Diminuição da pressão arterial (sinal mais tardio)","bandeira_vermelha":true}],"excluidos":[],"nota":"Ficha 'geral' — não diferencia subtipos (hipovolêmico/distributivo/etc). O JSON tem uma tabela comparativa hipovolêmico x neurogênico que fica pra uma segunda iteração, não vale a pena modelar já na amostra de teste.","categoria":"Sistêmico"},"avc":{"nome":"AVC (Acidente Vascular Cerebral)","formato":"plano","criterios":[{"tag":"assimetria_facial","peso":3,"origem":"Alteração da mímica facial / Desvio da comissura labial","bandeira_vermelha":true},{"tag":"hemiparesia_hemiplegia","peso":3,"origem":"Diminuição ou perda de força/sensibilidade nos membros (hemiparesia/hemiplegia)","bandeira_vermelha":true},{"tag":"disartria_afasia","peso":3,"origem":"Alteração da linguagem/fala (disartria/afasia)","bandeira_vermelha":true},{"tag":"alteracao_visual","peso":1,"origem":"Alterações da visão"},{"tag":"desvio_olhar","peso":2,"origem":"Desvio conjugado do olhar"},{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleias intensas"},{"tag":"ataxia","peso":2,"origem":"Ataxia cerebelosa (desequilíbrio da marcha/coordenação)"},{"tag":"vertigem_tonturas","peso":1,"origem":"Vertigem e tonturas"}],"excluidos":["Ausência de reconhecimento do défice (anosognosia) — dificílimo de avaliar em campo, baixo valor prático como critério de pontuação"],"nota":"assimetria_facial, hemiparesia_hemiplegia e disartria_afasia são exatamente os 3 critérios da escala de Cincinnati — os 3 juntos batendo = 85% de probabilidade segundo a própria ficha, então fazem sentido como bandeira_vermelha tripla.","categoria":"Neurológico"},"sepsis":{"nome":"Sépsis","formato":"plano","criterios":[{"tag":"taquipneia","peso":2,"origem":"FR > 22 cpm"},{"tag":"spo2_baixo","peso":2,"origem":"SpO2 < 90%"},{"tag":"tosse","peso":1,"origem":"Tosse"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"taquicardia","peso":1,"origem":"FC > 90 bpm"},{"tag":"hipotensao","peso":2,"origem":"PAS < 90 mmHg","bandeira_vermelha":true},{"tag":"febre","peso":2,"origem":"Temperatura corporal ≥ 38ºC ou < 35ºC"},{"tag":"dor_abdominal","peso":1,"origem":"Dor abdominal e/ou lombar"},{"tag":"distensao_abdominal","peso":1,"origem":"Distensão abdominal"},{"tag":"obstipacao","peso":1,"origem":"Obstipação"},{"tag":"diarreia","peso":1,"origem":"Diarreia"},{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência"},{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleias"},{"tag":"icterícia","peso":1,"origem":"Icterícia (pele e olhos amarelados)"},{"tag":"disuria","peso":1,"origem":"Sintomas de infeção urinária: dor/ardor a urinar, aumento da frequência de micções"}],"excluidos":["Sinais de inflamação cutâneos sugestivos de infeção — pele/local varia muito, difícil de tornar critério genérico sem apontar região"],"categoria":"Sistêmico"},"disseccao_aorta":{"nome":"Disseção da Aorta","formato":"plano","criterios":[{"tag":"cianose","peso":1,"origem":"Cianose periférica"},{"tag":"dor_toracica_opressiva","peso":3,"origem":"Dor torácica ou interescapular de início súbito, muito intensa, sem sinais prévios (a dor mais intensa já sentida)","bandeira_vermelha":true},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"sudorese","peso":1,"origem":"Sudorese"},{"tag":"hipotensao","peso":2,"origem":"Hipotensão"},{"tag":"pulsos_assimetricos","peso":3,"origem":"Assimetria dos pulsos periféricos (possível ausência de um deles)","bandeira_vermelha":true},{"tag":"assimetria_pressao_arterial_membros","peso":3,"origem":"Diferença de pressão arterial entre membros superior a 10mmHg","bandeira_vermelha":true},{"tag":"sincope_lipotimia","peso":2,"origem":"Síncope"}],"excluidos":[],"nota":"Muito parecida clinicamente com dor_toracica_cardiaca; os 3 critérios de bandeira_vermelha (pulsos assimétricos, diferença de PA entre membros, dor dilacerante interescapular) são o que realmente diferencia as duas.","categoria":"Cardiovascular"},"dpoc":{"nome":"DPOC (Doença Pulmonar Obstrutiva Crónica)","formato":"plano","criterios":[{"tag":"expetoracao_purulenta","peso":2,"origem":"Expetoração purulenta"},{"tag":"cianose","peso":2,"origem":"Cianose"},{"tag":"tosse","peso":1,"origem":"Tosse persistente"},{"tag":"dispneia","peso":1,"origem":"Dispneia mais exacerbada que o habitual"},{"tag":"respiracao_ruidosa","peso":1,"origem":"Respiração ruidosa"},{"tag":"ansiedade","peso":1,"origem":"Agitação e ansiedade"},{"tag":"alteracao_consciencia","peso":2,"origem":"Alterações de consciência (casos graves)","bandeira_vermelha":true},{"tag":"febre","peso":1,"origem":"Febre"}],"excluidos":[],"categoria":"Respiratório"},"eap":{"nome":"Edema Agudo do Pulmão (EAP)","formato":"plano","criterios":[{"tag":"secrecoes_rosadas_espumosas","peso":3,"origem":"Secreções aquosas, espumosas, rosadas","bandeira_vermelha":true},{"tag":"cianose","peso":2,"origem":"Cianose"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"ortopneia","peso":2,"origem":"Ortopneia (piora deitado)"},{"tag":"taquipneia","peso":1,"origem":"Aumento da FR"},{"tag":"fervores_pulmonares","peso":3,"origem":"Ruído tipo farfalheira/fervores ('panela de água a ferver')","bandeira_vermelha":true},{"tag":"ansiedade","peso":1,"origem":"Ansiedade e agitação"},{"tag":"taquicardia","peso":1,"origem":"Aumento da FC"},{"tag":"hipertensao","peso":1,"origem":"Aumento da TA (na maioria dos casos)"},{"tag":"palidez","peso":1,"origem":"Palidez e sudorese"},{"tag":"sudorese","peso":1,"origem":"Palidez e sudorese"}],"excluidos":["Sensação de afogamento — muito subjetivo/redundante com dispneia+fervores já cobertos"],"categoria":"Respiratório"},"infecao_respiratoria":{"nome":"Infeção Respiratória","formato":"plano","criterios":[{"tag":"expetoracao_purulenta","peso":1,"origem":"Expetoração purulenta"},{"tag":"tosse","peso":1,"origem":"Tosse"},{"tag":"febre","peso":1,"origem":"Febre"}],"excluidos":["Congestão e corrimento nasal — muito inespecífico (comum em dezenas de quadros virais banais)","Mialgias, Astenia — muito inespecíficos isoladamente"],"categoria":"Respiratório"},"pneumotorax":{"nome":"Pneumotórax","formato":"plano","criterios":[{"tag":"desvio_traqueia","peso":3,"origem":"Desvio da traqueia (tardio)","bandeira_vermelha":true},{"tag":"ingurgitamento_jugular","peso":2,"origem":"Ingurgitamento jugular"},{"tag":"cianose","peso":2,"origem":"Cianose"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"assimetria_toracica","peso":3,"origem":"Assimetria da parede torácica","bandeira_vermelha":true},{"tag":"dor_toracica_opressiva","peso":2,"origem":"Dor intensa tipo pontada/facada no tórax, sem irradiação"},{"tag":"palidez","peso":1,"origem":"Pele pálida"},{"tag":"sudorese","peso":1,"origem":"Sudorese"},{"tag":"hipotensao","peso":1,"origem":"Sinais de choque: hipotensão"},{"tag":"taquicardia","peso":1,"origem":"Sinais de choque: taquicardia"},{"tag":"taquipneia","peso":1,"origem":"Sinais de choque: taquipneia"}],"excluidos":["Enfisema subcutâneo — achado de palpação, não é algo o utilizador tipicamente marca num checklist de sinais/sintomas"],"categoria":"Respiratório"},"sincope":{"nome":"Síncope","formato":"plano","criterios":[{"tag":"alteracao_consciencia","peso":1,"origem":"Alteração do estado de consciência"},{"tag":"sincope_lipotimia","peso":2,"origem":"Lipotimia (sensação de perda dos sentidos)"},{"tag":"vertigem_tonturas","peso":1,"origem":"Tonturas"},{"tag":"alteracao_visual","peso":1,"origem":"Visão turva"},{"tag":"hipotensao","peso":2,"origem":"Hipotensão"},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"sudorese","peso":1,"origem":"Sudorese"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas e vómitos"}],"excluidos":["Astenia — inespecífico demais isolado"],"categoria":"Neurológico"},"convulsao":{"nome":"Convulsão","formato":"plano","criterios":[{"tag":"cianose","peso":1,"origem":"Cianose periférica"},{"tag":"convulsao_presente","peso":3,"origem":"Extensão e rigidez das extremidades (crise tónico-clónica)","bandeira_vermelha":true},{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"alteracao_consciencia","peso":2,"origem":"Período de inconsciência"},{"tag":"glicemia_baixa","peso":2,"origem":"Pode apresentar hipoglicemia"},{"tag":"perda_controlo_esfincteres","peso":1,"origem":"Perda de controlo dos esfíncteres"},{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleias intensas"},{"tag":"letargia","peso":1,"origem":"Fadiga, sonolência, confusão e desorientação"}],"excluidos":["Paralisia da musculatura da face e/ou pescoço, Amnésia retrógrada, Aumento da TA, Afasia, Incapacidade para cumprir ordens, Alterações emocionais — sinais pós-crise reais mas de baixo valor discriminativo isolado / difíceis de reportar objetivamente em campo"],"categoria":"Neurológico"},"hipoglicemia":{"nome":"Hipoglicemia","formato":"plano","criterios":[{"tag":"glicemia_baixa","peso":3,"origem":"Glicemia capilar < 60 mg/dL","bandeira_vermelha":true},{"tag":"alteracao_consciencia","peso":2,"origem":"AEC (agitação, agressividade, irritabilidade, confusão ou prostração)"},{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleias"},{"tag":"vertigem_tonturas","peso":1,"origem":"Tonturas"},{"tag":"fraqueza_muscular","peso":1,"origem":"Fraqueza muscular"},{"tag":"tremores","peso":2,"origem":"Tremores"},{"tag":"alteracao_visual","peso":1,"origem":"Visão turva"},{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"sudorese","peso":2,"origem":"Sudorese"},{"tag":"polifagia","peso":2,"origem":"Polifagia (sensação de fome)"},{"tag":"midriase","peso":1,"origem":"Midríase"},{"tag":"convulsao_presente","peso":2,"origem":"Convulsões"}],"excluidos":["Descoordenação motora, Discurso arrastado — reaproveitei ataxia/disartria_afasia seria possível mas optei por não duplicar com convulsao/tremores já cobertos"],"categoria":"Endócrino"},"hiperglicemia":{"nome":"Hiperglicemia","formato":"plano","criterios":[{"tag":"glicemia_alta","peso":3,"origem":"Glicemia capilar > 200 mg/dL","bandeira_vermelha":true},{"tag":"alteracao_consciencia","peso":1,"origem":"AEC (confusão ou prostração)"},{"tag":"letargia","peso":1,"origem":"Sonolência / Prostração"},{"tag":"taquicardia","peso":1,"origem":"Pulso rápido e cheio"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas e vómitos"},{"tag":"halito_cetonico","peso":3,"origem":"Hálito frutado (cetónico)","bandeira_vermelha":true},{"tag":"pele_seca_ruborizada","peso":2,"origem":"Pele seca e ruborizada"},{"tag":"sinais_desidratacao","peso":1,"origem":"Desidratação"},{"tag":"hipotensao","peso":1,"origem":"Hipotensão"},{"tag":"poliuria_polidipsia","peso":2,"origem":"Poliúria / Polidipsia extrema (sede)"},{"tag":"xerostomia","peso":1,"origem":"Xerostomia (boca seca)"},{"tag":"dor_abdominal","peso":1,"origem":"Dor abdominal"}],"excluidos":[],"categoria":"Endócrino"},"diabetes_mellitus_geral":{"nome":"Diabetes Mellitus (sinais gerais)","formato":"plano","criterios":[{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleias e tonturas"},{"tag":"vertigem_tonturas","peso":1,"origem":"Cefaleias e tonturas"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas e vómitos"},{"tag":"alteracao_consciencia","peso":1,"origem":"Alteração do estado de consciência"},{"tag":"polifagia","peso":1,"origem":"Polifagia"},{"tag":"poliuria_polidipsia","peso":2,"origem":"Polidipsia (sede excessiva) / Poliúria"},{"tag":"perda_peso_inexplicada","peso":2,"origem":"Perda de peso sem explicação"},{"tag":"alteracao_visual","peso":1,"origem":"Visão turva"},{"tag":"xerostomia","peso":1,"origem":"Xerostomia"}],"excluidos":["Astenia, Mialgias, Dificuldade de cicatrização, Prurido, Glicosúria — sinais de instalação crónica, pouco úteis num checklist agudo pré-hospitalar; esta ficha é mais uma referência geral da doença do que um quadro agudo diferenciável de hipo/hiperglicemia"],"nota":"Esta ficha sobrepõe-se muito com hipoglicemia/hiperglicemia (é o pano de fundo comum). Manter as 3 fichas separadas pode gerar 'empates' no motor quando os 3 aparecem juntos no top-3 — aceitável, mas vale revisão humana.","categoria":"Endócrino"},"hemorragia_digestiva":{"nome":"Hemorragia Digestiva","formato":"plano","criterios":[{"tag":"hemorragia_digestiva_visivel","peso":3,"origem":"Vómito ou dejeção com características hemáticas","bandeira_vermelha":true},{"tag":"sudorese","peso":1,"origem":"Sudorese"},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"taquicardia","peso":1,"origem":"Pulso rápido"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas"},{"tag":"hipotensao","peso":2,"origem":"Hipotensão"},{"tag":"vertigem_tonturas","peso":1,"origem":"Tonturas"},{"tag":"sincope_lipotimia","peso":2,"origem":"Síncope"}],"excluidos":[],"categoria":"Gastrointestinal"},"apendicite":{"nome":"Apendicite","formato":"plano","criterios":[{"tag":"dor_fossa_iliaca_direita","peso":3,"origem":"Dor na fossa ilíaca direita, que aumenta com a rápida descompressão","bandeira_vermelha":true},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómitos"},{"tag":"febre","peso":1,"origem":"Febre"}],"excluidos":["Dor pode irradiar para membro inferior, Perda de apetite — baixo valor discriminativo isolado","Se rotura: diminuição da dor localizada, passando a dor difusa — evolução tardia, difícil de usar como critério de entrada inicial"],"categoria":"Gastrointestinal"},"oclusao_intestinal":{"nome":"Oclusão Intestinal","formato":"plano","criterios":[{"tag":"dor_tipo_colica","peso":2,"origem":"Dor abdominal tipo cólica"},{"tag":"distensao_abdominal","peso":3,"origem":"Distensão do abdómen","bandeira_vermelha":true},{"tag":"obstipacao","peso":2,"origem":"Obstipação"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómitos"}],"excluidos":["Vómitos fecaloides em casos graves — achado tardio/raro, baixo peso amostral esperado"],"categoria":"Gastrointestinal"},"colica_renal":{"nome":"Cólica Renal","formato":"plano","criterios":[{"tag":"dor_lombar","peso":2,"origem":"Dor tipo cólica com início lombar e irradiação para bexiga/genitais"},{"tag":"dor_tipo_colica","peso":2,"origem":"Dor tipo cólica (pode ser extremamente violenta)"},{"tag":"ansiedade","peso":1,"origem":"Agitação (procura de posição antálgica)"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómitos"},{"tag":"disuria","peso":2,"origem":"Dor ao urinar (se obstrução nos ureteres)"},{"tag":"hematuria","peso":2,"origem":"Hematúria (sangue na urina) em alguns casos"}],"excluidos":[],"categoria":"Gastrointestinal"},"anafilaxia":{"nome":"Anafilaxia e Reação Alérgica","formato":"por_gravidade","niveis_gravidade":{"reacao_alergica":[{"tag":"edema_mucosas_labios","peso":2,"origem":"Edema das mucosas (olhos, lábios)"},{"tag":"tosse","peso":1,"origem":"Tosse"},{"tag":"dor_abdominal","peso":1,"origem":"Dor abdominal, náuseas, vómitos e diarreia"},{"tag":"nauseas_vomitos","peso":1,"origem":"Dor abdominal, náuseas, vómitos e diarreia"},{"tag":"urticaria_eritema_prurido","peso":2,"origem":"Eritema (rubor) / Prurido (comichão) / Urticária"},{"tag":"alteracao_consciencia","peso":1,"origem":"Alterações do estado de consciência (desorientação, zumbidos, vertigens)"}],"reacao_anafilatica":[{"tag":"urticaria_eritema_prurido","peso":2,"origem":"Alterações da pele e/ou mucosas (urticária, prurido, língua/lábios edemaciados)"},{"tag":"edema_mucosas_labios","peso":3,"origem":"Língua/lábios edemaciados","bandeira_vermelha":true},{"tag":"dispneia","peso":2,"origem":"Compromisso respiratório (dispneia, síbilos, estridor, cianose)"},{"tag":"pieira","peso":2,"origem":"Compromisso respiratório (síbilos)"},{"tag":"estridor","peso":3,"origem":"Compromisso respiratório (estridor)","bandeira_vermelha":true},{"tag":"cianose","peso":2,"origem":"Compromisso respiratório (cianose)"},{"tag":"hipotensao","peso":3,"origem":"Hipotensão ou sintomas associados","bandeira_vermelha":true},{"tag":"sincope_lipotimia","peso":2,"origem":"Sintomas associados (síncope, astenia, descontrolo de esfíncteres)"},{"tag":"nauseas_vomitos","peso":1,"origem":"Sintomas gastrointestinais persistentes (vómitos, dor abdominal, diarreia)"},{"tag":"dor_abdominal","peso":1,"origem":"Sintomas gastrointestinais persistentes"}]},"excluidos":["Aumento das secreções nasais, Olhos vermelhos com ardor e lacrimejo — inespecíficos, sobrepõem-se com quadros alérgicos banais não anafiláticos"],"categoria":"Sistêmico"},"intoxicacao_digestiva":{"nome":"Intoxicação por Via Digestiva","formato":"plano","criterios":[{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"taquicardia","peso":1,"origem":"FC rápida ou lenta"},{"tag":"bradicardia","peso":1,"origem":"FC rápida ou lenta"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómito"},{"tag":"dor_abdominal","peso":1,"origem":"Dor abdominal"},{"tag":"diarreia","peso":1,"origem":"Diarreia"},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência"},{"tag":"convulsao_presente","peso":2,"origem":"Convulsões"}],"excluidos":["Queimaduras químicas ao redor/dentro da boca, Odores anormais do hálito — muito específicos do produto, difíceis de generalizar num checklist"],"categoria":"Intoxicações"},"intoxicacao_inalatoria":{"nome":"Intoxicação por Via Inalatória","formato":"plano","criterios":[{"tag":"estridor","peso":2,"origem":"Estridor"},{"tag":"cianose","peso":2,"origem":"Cianose"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómito"},{"tag":"diarreia","peso":1,"origem":"Diarreia"},{"tag":"sudorese","peso":1,"origem":"Sudorese"},{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleia"},{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência"},{"tag":"vertigem_tonturas","peso":1,"origem":"Tonturas"},{"tag":"convulsao_presente","peso":2,"origem":"Convulsões"},{"tag":"midriase","peso":1,"origem":"Alteração das pupilas (mióticas ou midriáticas)"},{"tag":"miose","peso":1,"origem":"Alteração das pupilas (mióticas ou midriáticas)"}],"excluidos":["Queimaduras no trato respiratório, Expetoração com fuligem — sobrepõe-se com queimadura_via_aerea (fichas de queimaduras), mantidos separados para não duplicar peso"],"categoria":"Intoxicações"},"intoxicacao_monoxido_carbono":{"nome":"Intoxicação por Monóxido de Carbono (CO)","formato":"por_gravidade","niveis_gravidade":{"leves":[{"tag":"cefaleia_intensa","peso":1,"origem":"Dor de cabeça"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas"}],"moderados":[{"tag":"cefaleia_intensa","peso":2,"origem":"Dor de cabeça severa"},{"tag":"nauseas_vomitos","peso":1,"origem":"Vómitos"},{"tag":"alteracao_consciencia","peso":2,"origem":"Confusão"},{"tag":"letargia","peso":2,"origem":"Sonolência"},{"tag":"taquicardia","peso":1,"origem":"Aumento da FC"},{"tag":"taquipneia","peso":1,"origem":"Aumento da FR"}],"severos":[{"tag":"convulsao_presente","peso":3,"origem":"Convulsões","bandeira_vermelha":true},{"tag":"glasgow_baixo","peso":3,"origem":"Coma","bandeira_vermelha":true}]},"excluidos":["Fadiga (leves) — muito inespecífico isolado","PCR (severos) — não é um 'sinal a marcar', é o próprio desfecho"],"categoria":"Intoxicações"},"intoxicacao_cutanea":{"nome":"Intoxicação por Via Cutânea","formato":"plano","criterios":[{"tag":"sialorreia","peso":1,"origem":"Aumento da saliva"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómito"},{"tag":"diarreia","peso":1,"origem":"Diarreia"},{"tag":"sudorese","peso":1,"origem":"Diaforese"},{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência"},{"tag":"urticaria_eritema_prurido","peso":1,"origem":"Alterações da pele (eritema, prurido, lesões cáusticas)"}],"excluidos":["Irritação ocular — muito local/específico, baixo valor sem exame direto"],"categoria":"Intoxicações"},"intoxicacao_parenterica":{"nome":"Intoxicação por Via Parentérica","formato":"plano","criterios":[{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas / Vómito"},{"tag":"dor_abdominal","peso":1,"origem":"Dor abdominal"},{"tag":"diarreia","peso":1,"origem":"Diarreia"},{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência"},{"tag":"letargia","peso":1,"origem":"Sonolência"},{"tag":"convulsao_presente","peso":2,"origem":"Convulsões"},{"tag":"parestesias","peso":1,"origem":"Parestesias"},{"tag":"espasmos_musculares","peso":1,"origem":"Espasmos musculares"},{"tag":"marca_picada_local","peso":2,"origem":"Marca de picada"}],"excluidos":["Sabor metálico ou de borracha, Dor no local, Pele avermelhada, Edema local — muito subjetivos/inespecíficos"],"categoria":"Intoxicações"},"tce":{"nome":"Traumatismo Cranioencefálico (TCE)","formato":"plano","criterios":[{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência (desorientação a inconsciência)"},{"tag":"ataxia","peso":1,"origem":"Perda de coordenação"},{"tag":"vertigem_tonturas","peso":1,"origem":"Tonturas e zumbidos"},{"tag":"disartria_afasia","peso":2,"origem":"Disartria e/ou hemiparesia (pode confundir-se com AVC)"},{"tag":"hemiparesia_hemiplegia","peso":2,"origem":"Disartria e/ou hemiparesia (pode confundir-se com AVC)"},{"tag":"cefaleia_intensa","peso":1,"origem":"Cefaleias, náuseas ou vómitos"},{"tag":"nauseas_vomitos","peso":1,"origem":"Cefaleias, náuseas ou vómitos"},{"tag":"convulsao_presente","peso":2,"origem":"Convulsões"},{"tag":"equimose_periorbital_retroauricular","peso":3,"origem":"Equimose periorbital ('Racoon eyes') / retroauricular ('Sinal de Battle')","bandeira_vermelha":true},{"tag":"perda_liquido_cefalorraquidiano","peso":3,"origem":"Perda de LCR ou sangue pelos orifícios naturais da cabeça","bandeira_vermelha":true},{"tag":"postura_anomala_membros","peso":3,"origem":"Postura de descorticação ou descerebração","bandeira_vermelha":true}],"excluidos":["Confusão/alteração de comportamento, Amnésia anterógrada, Alteração pupilar, Hipertermia — redundantes com alteracao_consciencia já coberto ou de baixo valor isolado"],"categoria":"Trauma"},"tvm":{"nome":"Traumatismo Vertebromedular (TVM)","formato":"plano","criterios":[{"tag":"dor_a_palpacao_local","peso":2,"origem":"Dor ou hipersensibilidade ao movimento/palpação da coluna"},{"tag":"deformidade_membro","peso":1,"origem":"Deformidade anatómica da coluna"},{"tag":"dispneia","peso":2,"origem":"Dificuldade ou paragem ventilatória"},{"tag":"hemiparesia_hemiplegia","peso":2,"origem":"Alterações da resposta motora/sensitiva das extremidades"},{"tag":"parestesias","peso":2,"origem":"Parestesias ou dormência das extremidades"},{"tag":"bradicardia","peso":2,"origem":"Sinais de choque neurogénico (bradicardia)"},{"tag":"hipotensao","peso":2,"origem":"Sinais de choque neurogénico (hipotensão)"}],"excluidos":["Incontinência de esfíncteres, Priapismo — pouco reportáveis/observáveis rotineiramente em campo, e raros"],"categoria":"Trauma"},"trauma_toracico":{"nome":"Traumatismo Torácico","formato":"por_subtipo","subtipos":{"fratura_de_costelas":[{"tag":"dor_a_palpacao_local","peso":2,"origem":"Dor quando ventila, à movimentação e à palpação local"},{"tag":"crepitacao_ossea","peso":2,"origem":"Crepitação óssea"},{"tag":"dispneia","peso":1,"origem":"Ventilação superficial por defesa à dor"}],"retalho_vollet_costal":[{"tag":"dor_a_palpacao_local","peso":2,"origem":"Dor intensa na grelha costal"},{"tag":"taquipneia","peso":2,"origem":"Ventilação rápida e superficial"},{"tag":"crepitacao_ossea","peso":2,"origem":"Crepitação óssea"},{"tag":"equimose_local","peso":1,"origem":"Equimose ou abrasão (se presente)"},{"tag":"ansiedade","peso":1,"origem":"Agitação e ansiedade inicial (hipoxia)"}],"pneumotorax_simples":[{"tag":"taquipneia","peso":1,"origem":"Taquipneia"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"assimetria_toracica","peso":3,"origem":"Expansão assimétrica da parede torácica","bandeira_vermelha":true},{"tag":"spo2_baixo","peso":1,"origem":"Diminuição dos valores de oximetria"},{"tag":"dor_toracica_opressiva","peso":1,"origem":"Dor pleurítica no lado da lesão"}],"pneumotorax_aberto":[{"tag":"ferida_aspirante_torax","peso":3,"origem":"Ferida aspirante do tórax (som aspirante na inspiração ou borbulhar na expiração)","bandeira_vermelha":true},{"tag":"dispneia","peso":1,"origem":"Todos os sinais de pneumotórax"},{"tag":"assimetria_toracica","peso":2,"origem":"Todos os sinais de pneumotórax"}],"pneumotorax_hipertensivo":[{"tag":"ansiedade","peso":1,"origem":"Ansiedade e agitação numa fase inicial"},{"tag":"taquipneia","peso":1,"origem":"Taquipneia superficial"},{"tag":"dispneia","peso":1,"origem":"Dispneia progressiva"},{"tag":"assimetria_toracica","peso":2,"origem":"Expansão assimétrica da parede torácica"},{"tag":"ingurgitamento_jugular","peso":3,"origem":"Ingurgitamento das veias jugulares","bandeira_vermelha":true},{"tag":"desvio_traqueia","peso":3,"origem":"Desvio da traqueia para o lado oposto à lesão (sinal tardio)","bandeira_vermelha":true},{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"hipotensao","peso":2,"origem":"Hipotensão"},{"tag":"cianose","peso":1,"origem":"Cianose"}],"hemotorax":[{"tag":"ansiedade","peso":1,"origem":"Agitação e ansiedade"},{"tag":"taquipneia","peso":1,"origem":"Taquipneia"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"hemoptises","peso":2,"origem":"Hemoptises"},{"tag":"taquicardia","peso":1,"origem":"Sinais de choque hipovolémico (taquicardia)"},{"tag":"hipotensao","peso":2,"origem":"Sinais de choque hipovolémico (hipotensão)"},{"tag":"palidez","peso":1,"origem":"Sinais de choque hipovolémico (pele pálida e fria)"}],"tamponamento_cardiaco":[{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"cianose","peso":1,"origem":"Cianose"},{"tag":"ingurgitamento_jugular","peso":2,"origem":"Tríade de Beck: ingurgitamento das veias jugulares"},{"tag":"hipotensao","peso":2,"origem":"Tríade de Beck: hipotensão"},{"tag":"hipofonese_sons_cardiacos","peso":3,"origem":"Tríade de Beck: hipofonese dos sons cardíacos","bandeira_vermelha":true}]},"excluidos":["lesao_grandes_vasos — só 2 sinais muito inespecíficos (diferença de pulsos/PA), já cobertos com mais peso em disseccao_aorta"],"categoria":"Trauma"},"trauma_abdominal":{"nome":"Traumatismo Abdominal","formato":"plano","criterios":[{"tag":"hemorragia_externa_visivel","peso":1,"origem":"Hemorragia"},{"tag":"equimose_local","peso":1,"origem":"Abrasões / Equimoses"},{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"hipotensao","peso":2,"origem":"Hipotensão"},{"tag":"dor_abdominal","peso":2,"origem":"Dor abdominal"},{"tag":"dor_a_palpacao_local","peso":1,"origem":"Sensibilidade (dor à palpação)"}],"excluidos":[],"categoria":"Trauma"},"trauma_tecidos_moles":{"nome":"Traumatismo de Tecidos Moles","formato":"por_subtipo","subtipos":{"sindrome_compartimental":[{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor local"},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"parestesias","peso":2,"origem":"Parestesia"},{"tag":"impotencia_funcional","peso":1,"origem":"Paresia"},{"tag":"ausencia_pulso_distal","peso":3,"origem":"Ausência de pulso distal","bandeira_vermelha":true}],"lesao_ouvidos":[{"tag":"equimose_local","peso":1,"origem":"Equimoses no pavilhão auricular"},{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor"},{"tag":"otorragia","peso":2,"origem":"Hemorragias"},{"tag":"vertigem_tonturas","peso":1,"origem":"Vertigens"}]},"excluidos":["A taxonomia de tipos de ferida (edema, equimose, hematoma, abrasão, laceração, incisão, avulsão, amputação, feridas perfurantes, objetos empalados) é classificação por INSPEÇÃO VISUAL direta da lesão, não um padrão de sinais/sintomas a comparar contra outras patologias — não faz sentido pontuar isso no motor de diferencial diagnóstico. A lesão dos olhos também foi excluída pelo mesmo motivo."],"categoria":"Trauma"},"trauma_musculoesqueletico":{"nome":"Traumatismo Musculoesquelético","formato":"por_subtipo","subtipos":{"fratura":[{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor (diminui com tração e imobilização)"},{"tag":"impotencia_funcional","peso":2,"origem":"Impotência funcional (mobilização dolorosa e limitada)"},{"tag":"deformidade_membro","peso":3,"origem":"Deformidade (angulação dos topos ósseos ou encurtamento do membro)","bandeira_vermelha":true},{"tag":"crepitacao_ossea","peso":2,"origem":"Crepitação"},{"tag":"edema_local","peso":1,"origem":"Edema"},{"tag":"equimose_local","peso":1,"origem":"Equimoses ou hematomas"}],"luxacao":[{"tag":"dor_a_palpacao_local","peso":2,"origem":"Dor ou pressão (geralmente intensa)"},{"tag":"deformidade_membro","peso":3,"origem":"Deformidade evidente","bandeira_vermelha":true},{"tag":"impotencia_funcional","peso":2,"origem":"Impotência funcional"}],"entorse":[{"tag":"edema_local","peso":2,"origem":"Edema"},{"tag":"equimose_local","peso":1,"origem":"Equimose"},{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor que aumenta ao mobilizar"}]},"excluidos":[],"categoria":"Trauma"},"trauma_termico":{"nome":"Trauma Térmico (Calor e Frio)","formato":"por_subtipo","subtipos":{"golpe_de_calor":[{"tag":"alteracao_consciencia","peso":2,"origem":"Alteração do estado de consciência"},{"tag":"tremores","peso":1,"origem":"Tremores e convulsões (iniciais ou tardios)"},{"tag":"convulsao_presente","peso":2,"origem":"Tremores e convulsões (iniciais ou tardios)"},{"tag":"miose","peso":1,"origem":"Pupilas mióticas"},{"tag":"taquicardia","peso":1,"origem":"Taquicardia inicial seguida de bradicardia"},{"tag":"hipotensao","peso":1,"origem":"Perfil hipotensivo (conforme grau de desidratação)"},{"tag":"sudorese","peso":1,"origem":"Sudorese (se em esforço)"},{"tag":"febre","peso":3,"origem":"Temperatura ≥41ºC com disfunção do SNC","bandeira_vermelha":true}],"hipotermia_leve":[{"tag":"tremores","peso":2,"origem":"Tremores exacerbados"},{"tag":"ataxia","peso":1,"origem":"Diminuição da coordenação/raciocínio"},{"tag":"disartria_afasia","peso":1,"origem":"Fala arrastada"}],"hipotermia_moderada":[{"tag":"bradicardia","peso":2,"origem":"Bradicardia"},{"tag":"dispneia","peso":1,"origem":"Depressão respiratória"}],"hipotermia_severa":[{"tag":"midriase","peso":2,"origem":"Pupilas dilatadas e arreativas"},{"tag":"hipotermia_vital","peso":3,"origem":"Fibrilhação ventricular / temperatura <28ºC","bandeira_vermelha":true}],"congelamento_superficial":[{"tag":"parestesias","peso":2,"origem":"Parestesias, dormência"},{"tag":"edema_local","peso":1,"origem":"Edema após 3 horas"},{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor latejante"}],"congelamento_profundo":[{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor local durante descongelamento"},{"tag":"equimose_local","peso":1,"origem":"Pele cianosada/escura"}]},"excluidos":["Sinais muito raros ou não checáveis em campo (ex: flictenas com sangue, linhas de demarcação em dias/semanas) foram deixados de fora por não serem úteis no momento da triagem inicial"],"categoria":"Trauma"},"afogamento_barotrauma":{"nome":"Afogamento e Barotrauma","formato":"por_subtipo","subtipos":{"barotrauma_ouvido_seios":[{"tag":"dor_a_palpacao_local","peso":2,"origem":"Dor intensa no ouvido/seios perinasais"},{"tag":"otorragia","peso":2,"origem":"Hemorragia do globo ocular / Hemorragia"}],"hiperpressurizacao_pulmonar":[{"tag":"assimetria_toracica","peso":2,"origem":"Enfisema subcutâneo"},{"tag":"dispneia","peso":2,"origem":"Pneumotórax"}],"doenca_descompressao":[{"tag":"urticaria_eritema_prurido","peso":1,"origem":"Rash cutâneo generalizado"},{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"dor_toracica_opressiva","peso":2,"origem":"Dor torácica"},{"tag":"alteracao_visual","peso":1,"origem":"Perturbações da visão"},{"tag":"ataxia","peso":2,"origem":"Ataxia"},{"tag":"parestesias","peso":1,"origem":"Parestesias"}]},"excluidos":["Narcose do azoto ('semelhante à intoxicação alcoólica') e síncope das águas pouco profundas (1 sinal só: perda de consciência) — não decomponíveis em critérios discretos suficientes","Progressão geral do afogamento (apneia -> laringospasmo -> hipóxia -> PCR) — é uma sequência fisiológica, não uma lista de sinais/sintomas a marcar"],"categoria":"Trauma"},"queimaduras":{"nome":"Queimaduras","formato":"por_subtipo","subtipos":{"queimadura_via_aerea":[{"tag":"fuligem_mucosas","peso":3,"origem":"Fuligem na mucosa da boca/nariz","bandeira_vermelha":true},{"tag":"rouquidao","peso":2,"origem":"Rouquidão"},{"tag":"tosse","peso":1,"origem":"Tosse persistente"},{"tag":"estridor","peso":2,"origem":"Estridor"},{"tag":"dispneia","peso":1,"origem":"Dificuldade ventilatória"}]},"excluidos":["Classificação por grau (1º-4º) e cálculo de SCQ — são avaliações visuais/de medição diretas da queimadura, não sinais/sintomas a comparar com outras patologias no motor de diferencial"],"categoria":"Trauma"},"trabalho_de_parto":{"nome":"Trabalho de Parto (3 Estádios)","formato":"plano","criterios":[{"tag":"contracoes_uterinas_frequentes","peso":3,"origem":"Contrações dolorosas e frequentes (a cada 5 min)","bandeira_vermelha":true},{"tag":"rotura_membranas","peso":3,"origem":"Rotura de membranas amnióticas associada a contrações","bandeira_vermelha":true},{"tag":"dor_tipo_colica","peso":1,"origem":"Vontade incontrolável de 'puxar'/'fazer força' ou de evacuar"}],"excluidos":["Sensação de pressão na vagina e/ou ânus — só faz sentido já em contexto obstétrico, redundante com os 2 critérios de bandeira já fortes"],"categoria":"Obstetrícia"},"hipertensao_gravidez":{"nome":"Hipertensão na Gravidez","formato":"plano","criterios":[{"tag":"hipertensao","peso":3,"origem":"TA ≥ 140/90 mmHg após as 20 semanas","bandeira_vermelha":true},{"tag":"cefaleia_intensa","peso":2,"origem":"Cefaleias intensas"},{"tag":"alteracao_visual","peso":2,"origem":"Perturbações visuais ('moscas volantes' ou visão turva)"},{"tag":"dor_abdominal","peso":2,"origem":"Dores abdominais severas"},{"tag":"convulsao_presente","peso":3,"origem":"Convulsões (eclâmpsia)","bandeira_vermelha":true}],"excluidos":[],"categoria":"Obstetrícia"},"aborto_abortamento":{"nome":"Aborto ou Abortamento","formato":"plano","criterios":[{"tag":"dor_abdominal","peso":2,"origem":"Dor abdominal severa"},{"tag":"hemorragia_vaginal","peso":3,"origem":"Hemorragia vaginal significativa","bandeira_vermelha":true}],"excluidos":[],"nota":"Ficha com apenas 2 critérios — no motor, precisa de ambos baterem para atingir o mínimo de 2 critérios exigido por rankear(); revisão humana recomendada para considerar adicionar mais achados (ex: sincope_lipotimia, palidez) se a ficha original permitir inferir isso com segurança clínica.","categoria":"Obstetrícia"},"alergia_pediatria":{"nome":"Alergia e Anafilaxia (Pediatria)","formato":"por_gravidade","niveis_gravidade":{"alergia":[{"tag":"urticaria_eritema_prurido","peso":2,"origem":"Exantema urticariforme / Prurido"},{"tag":"nauseas_vomitos","peso":1,"origem":"Vómitos e diarreia"},{"tag":"diarreia","peso":1,"origem":"Vómitos e diarreia"},{"tag":"edema_mucosas_labios","peso":2,"origem":"Edema das estruturas da VA, lábios e rosto"},{"tag":"tosse","peso":1,"origem":"Tosse e pieira"},{"tag":"pieira","peso":1,"origem":"Tosse e pieira"},{"tag":"dispneia","peso":1,"origem":"Dispneia"}],"anafilaxia_potencialmente_fatal":[{"tag":"edema_mucosas_labios","peso":2,"origem":"Via aérea: Edema, rouquidão"},{"tag":"rouquidao","peso":2,"origem":"Via aérea: rouquidão"},{"tag":"estridor","peso":3,"origem":"Via aérea: estridor","bandeira_vermelha":true},{"tag":"taquipneia","peso":1,"origem":"Ventilação: Taquipneia"},{"tag":"pieira","peso":1,"origem":"Ventilação: pieira"},{"tag":"cianose","peso":2,"origem":"Ventilação: cianose"},{"tag":"spo2_baixo","peso":2,"origem":"Ventilação: SpO2 <92%"},{"tag":"alteracao_consciencia","peso":1,"origem":"Ventilação: confusão"},{"tag":"palidez","peso":1,"origem":"Circulação: Palidez"},{"tag":"hipotensao","peso":3,"origem":"Circulação: hipotensão","bandeira_vermelha":true},{"tag":"sudorese","peso":1,"origem":"Circulação: sudorese"},{"tag":"sincope_lipotimia","peso":2,"origem":"Circulação: desmaio"},{"tag":"letargia","peso":1,"origem":"Circulação: sonolência/coma"}]},"excluidos":[],"categoria":"Pediatria"},"asma_pediatria":{"nome":"Asma (Pediatria)","formato":"por_gravidade","niveis_gravidade":{"moderada":[{"tag":"dispneia","peso":1,"origem":"Dispneia"},{"tag":"tiragem_musculos_acessorios","peso":1,"origem":"Sinais de esforço ventilatório"},{"tag":"dispneia_impede_falar","peso":2,"origem":"Dificuldade em completar frases"},{"tag":"taquipneia","peso":1,"origem":"Taquipneia e taquicardia"},{"tag":"taquicardia","peso":1,"origem":"Taquipneia e taquicardia"},{"tag":"pieira","peso":2,"origem":"Pieira ('chiar de chaleira')"},{"tag":"cianose","peso":2,"origem":"Cianose ou pele marmoreada"},{"tag":"pele_marmoreada","peso":2,"origem":"Cianose ou pele marmoreada"},{"tag":"spo2_baixo","peso":1,"origem":"Saturação normal ou baixa"},{"tag":"posicao_tripe","peso":2,"origem":"Posição de tripé"}],"grave":[{"tag":"alteracao_consciencia","peso":3,"origem":"Alteração do estado de consciência","bandeira_vermelha":true},{"tag":"tiragem_musculos_acessorios","peso":2,"origem":"Tiragem e uso de musculatura acessória"},{"tag":"silencio_ventilatorio","peso":3,"origem":"Diminuição ou ausência de sons ventilatórios","bandeira_vermelha":true},{"tag":"bradicardia","peso":2,"origem":"Bradipneia e/ou alteração do padrão ventilatório"}]},"excluidos":["Uso excessivo de músculos abdominais — redundante com tiragem_musculos_acessorios já coberto"],"categoria":"Pediatria"},"bronquiolite":{"nome":"Bronquiolite","formato":"plano","criterios":[{"tag":"tosse","peso":1,"origem":"Evolução para tosse persistente"},{"tag":"febre","peso":1,"origem":"Febre geralmente <39°C"},{"tag":"apneia_periodos","peso":3,"origem":"Períodos de apneia (<2 meses de idade)","bandeira_vermelha":true},{"tag":"taquipneia","peso":1,"origem":"Taquipneia"},{"tag":"tiragem_musculos_acessorios","peso":2,"origem":"Tiragem"},{"tag":"adejo_nasal","peso":1,"origem":"Adejo nasal"},{"tag":"spo2_baixo","peso":2,"origem":"Hipoxemia"},{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"sinais_desidratacao","peso":1,"origem":"Sinais de desidratação (mucosas secas, fontanela deprimida)"},{"tag":"fontanela_deprimida","peso":1,"origem":"Sinais de desidratação (fontanela deprimida)"}],"excluidos":["Quadro de constipação inicial, Diminuição do apetite — muito inespecíficos"],"categoria":"Pediatria"},"laringite":{"nome":"Laringite Aguda","formato":"plano","criterios":[{"tag":"tosse","peso":2,"origem":"Tosse laríngea ('tosse de cão')"},{"tag":"rouquidao","peso":2,"origem":"Rouquidão ou mudanças na voz"},{"tag":"estridor","peso":3,"origem":"Estridor (mais comum na inspiração)","bandeira_vermelha":true},{"tag":"dispneia","peso":1,"origem":"Dificuldade respiratória principalmente durante episódios de tosse"}],"excluidos":[],"categoria":"Pediatria"},"desidratacao_pediatrica":{"nome":"Desidratação (Pediatria)","formato":"plano","criterios":[{"tag":"sinais_desidratacao","peso":2,"origem":"Mucosas secas, saliva espessa e branca / Pele seca, olhos sem brilho, prega cutânea"},{"tag":"letargia","peso":2,"origem":"Apatia"},{"tag":"fontanela_deprimida","peso":2,"origem":"Fontanela anterior deprimida (até aos 18 meses)"}],"excluidos":["Sede, Diminuição do débito urinário — difíceis de aferir objetivamente em campo no momento da avaliação"],"categoria":"Pediatria"},"febre_pediatrica":{"nome":"Febre (Pediatria)","formato":"plano","criterios":[{"tag":"febre","peso":1,"origem":"Febre"},{"tag":"pieira","peso":2,"origem":"Presença de pieira, convulsões, dificuldade respiratória, vómitos incoercíveis ou desidratação"},{"tag":"convulsao_presente","peso":3,"origem":"Presença de ... convulsões ...","bandeira_vermelha":true},{"tag":"dispneia","peso":2,"origem":"Presença de ... dificuldade respiratória ..."},{"tag":"nauseas_vomitos","peso":1,"origem":"Vómitos incoercíveis"},{"tag":"sinais_desidratacao","peso":1,"origem":"Desidratação"},{"tag":"letargia","peso":2,"origem":"Prostração/sonolência"},{"tag":"rash_petequial","peso":3,"origem":"Presença de manchas ou pintas no corpo","bandeira_vermelha":true}],"excluidos":["Febre em lactente <3 meses, febre >3-4 dias, temp >40ºC, doença crónica — são critérios de CONTEXTO/RISCO do doente, não sinais/sintomas observáveis no momento; ficam melhor como perguntas de triagem separadas, não como criterios de match"],"categoria":"Pediatria"},"convulsao_pediatrica":{"nome":"Convulsão (Pediatria)","formato":"plano","criterios":[{"tag":"convulsao_presente","peso":3,"origem":"Convulsão focal ou generalizada, espasmos involuntários ou aumento do tónus (rigidez)","bandeira_vermelha":true},{"tag":"alteracao_consciencia","peso":1,"origem":"Confusão ou parestesias"},{"tag":"parestesias","peso":1,"origem":"Confusão ou parestesias"}],"excluidos":["Sinais específicos de RN (apertar lábios, mastigar involuntariamente, olhos em direções diferentes) — muito específicos da faixa neonatal, baixa amostra esperada de uso"],"categoria":"Pediatria"},"sepsis_meningococica":{"nome":"Sépsis / Doença Meningocócica","formato":"por_gravidade","niveis_gravidade":{"sinais_precoces":[{"tag":"febre","peso":1,"origem":"Febre"},{"tag":"dor_a_palpacao_local","peso":1,"origem":"Dor nas pernas"},{"tag":"dispneia","peso":1,"origem":"Dificuldade respiratória"},{"tag":"palidez","peso":1,"origem":"Coloração da pele alterada / Mãos e pés frios"}],"sinais_classicos":[{"tag":"rash_hemorragico","peso":3,"origem":"Rash hemorrágico","bandeira_vermelha":true},{"tag":"rash_petequial","peso":3,"origem":"Rash petequial (criança já gravemente doente)","bandeira_vermelha":true},{"tag":"rigidez_nuca","peso":3,"origem":"Rigidez da nuca","bandeira_vermelha":true},{"tag":"fotofobia","peso":2,"origem":"Fotofobia"},{"tag":"fontanela_hipertensa","peso":2,"origem":"Fontanela hipertensa (lactentes)"}],"sinais_tardios":[{"tag":"alteracao_consciencia","peso":2,"origem":"Confusão ou delírio / AEC"},{"tag":"convulsao_presente","peso":2,"origem":"Convulsões"}]},"excluidos":["Sede — muito inespecífico"],"categoria":"Pediatria"},"hipoglicemia_pediatrica":{"nome":"Hipoglicemia (Pediatria)","formato":"por_gravidade","niveis_gravidade":{"precoces":[{"tag":"glicemia_baixa","peso":3,"origem":"Glicemia capilar < 60 mg/dl (< 40 mg/dl em RN)","bandeira_vermelha":true},{"tag":"palidez","peso":1,"origem":"Palidez"},{"tag":"nauseas_vomitos","peso":1,"origem":"Náuseas/Vómitos"},{"tag":"ansiedade","peso":1,"origem":"Ansiedade"},{"tag":"polifagia","peso":1,"origem":"Fome"},{"tag":"palpitacoes","peso":1,"origem":"Palpitações"},{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"taquipneia","peso":1,"origem":"Taquipneia"},{"tag":"tremores","peso":1,"origem":"Tremores"},{"tag":"sudorese","peso":1,"origem":"Suores frios"}],"tardios":[{"tag":"irritabilidade","peso":1,"origem":"Irritabilidade"},{"tag":"letargia","peso":2,"origem":"Letargia/sonolência"},{"tag":"alteracao_visual","peso":1,"origem":"Diminuição da acuidade visual"},{"tag":"disartria_afasia","peso":1,"origem":"Dificuldade em falar"},{"tag":"alteracao_consciencia","peso":2,"origem":"Confusão"},{"tag":"ataxia","peso":1,"origem":"Falta de coordenação dos movimentos musculares"},{"tag":"convulsao_presente","peso":3,"origem":"Convulsão","bandeira_vermelha":true},{"tag":"glasgow_baixo","peso":3,"origem":"Coma","bandeira_vermelha":true}]},"excluidos":["Astenia, Fadiga — redundante com letargia já coberto"],"categoria":"Pediatria"},"intoxicacao_pediatrica":{"nome":"Intoxicação (Pediatria)","formato":"por_subtipo","subtipos":{"anticolinergicos":[{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"hipertensao","peso":1,"origem":"Híper/hipotensão"},{"tag":"midriase","peso":2,"origem":"Midríase"},{"tag":"febre","peso":1,"origem":"Hipertermia"},{"tag":"pele_seca_ruborizada","peso":2,"origem":"Pele vermelha e seca, mucosas secas"},{"tag":"ansiedade","peso":1,"origem":"Agitação/delírio"}],"colinergicos":[{"tag":"bradicardia","peso":1,"origem":"Taqui/bradicardia"},{"tag":"miose","peso":2,"origem":"Miose"},{"tag":"sialorreia","peso":2,"origem":"Hipersecreção de glândulas exócrinas"},{"tag":"diarreia","peso":1,"origem":"Diarreia"},{"tag":"letargia","peso":1,"origem":"Depressão do SNC"}],"hipermetabolicos":[{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"taquipneia","peso":1,"origem":"Polipneia"},{"tag":"febre","peso":1,"origem":"Febre"},{"tag":"ansiedade","peso":1,"origem":"Agitação"}],"narcoticos":[{"tag":"bradicardia","peso":2,"origem":"Bradicardia"},{"tag":"miose","peso":2,"origem":"Miose"},{"tag":"hipotensao","peso":2,"origem":"Hipotensão"},{"tag":"dispneia","peso":2,"origem":"Depressão respiratória e do SNC"}],"simpaticomimeticos":[{"tag":"taquicardia","peso":1,"origem":"Taquicardia"},{"tag":"hipertensao","peso":1,"origem":"HTA"},{"tag":"midriase","peso":2,"origem":"Midríase"},{"tag":"nauseas_vomitos","peso":1,"origem":"Vómitos"},{"tag":"dor_abdominal","peso":1,"origem":"Dor abdominal"},{"tag":"sudorese","peso":1,"origem":"Sudorese"}],"sedativos_hipnoticos":[{"tag":"bradicardia","peso":1,"origem":"Bradicardia"},{"tag":"hipotensao","peso":1,"origem":"Hipotensão"},{"tag":"dispneia","peso":2,"origem":"Depressão respiratória e do SNC"},{"tag":"hipotermia_vital","peso":1,"origem":"Hipotermia"}]},"excluidos":["Torcicolo, crises oculogíricas, disfonia (extrapiramidal) — síndrome com apenas achados muito específicos/raros, baixo valor esperado de uso","Alterações sugestivas de intoxicação (queimadura lábios/língua, hálito característico) — muito específicas do produto, mantidas fora do checklist genérico"],"categoria":"Pediatria"}}</script>
+<script type="application/json" id="atuacoes-source">{"asma":[{"texto":"Remover fator desencadeante ou retirar a vítima do local","grupo":null},{"texto":"Posicionar para facilitar a respiração (elevação do tronco)","grupo":null},{"texto":"Iniciar oxigenoterapia de acordo com a gravidade apresentada","grupo":null},{"texto":"Recolher informação: tempo de início, história de episódios anteriores, fatores desencadeantes, história de patologias respiratórias, hábitos farmacológicos (ex: broncodilatadores)","grupo":null},{"texto":"Reduzir ao mínimo o esforço físico da vítima","grupo":null},{"texto":"Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação","grupo":null},{"texto":"Transportar em posição de Fowler (elevação da cabeceira a 45º)","grupo":null}],"dor_toracica_cardiaca":[{"texto":"Evitar que a vítima faça esforços","grupo":null},{"texto":"Posicionar em posição de conforto","grupo":null},{"texto":"Fornecer oxigénio suplementar conforme a situação clínica","grupo":null},{"texto":"Caracterizar a dor torácica","grupo":null},{"texto":"Recolher informação: tempo de início, episódios anteriores, antecedentes cardíacos, hábitos farmacológicos (nitratos), trauma torácico","grupo":null},{"texto":"Perante deterioração do quadro, identificar como vítima crítica e contactar o centro de orientação para apoio","grupo":null},{"texto":"Transportar em Fowler (45º)","grupo":null}],"choque_geral":[{"texto":"Identificar sintomatologia compatível com o tipo de choque","grupo":null},{"texto":"Atuar sobre a causa do choque","grupo":null},{"texto":"Garantir manutenção da temperatura corporal","grupo":null},{"texto":"Fornecer oxigénio suplementar conforme a situação clínica","grupo":null},{"texto":"Se PAS < 90mmHg, elevar os membros inferiores","grupo":null},{"texto":"Recolher informação: etiologia do choque, progressão da sintomatologia, hábitos farmacológicos","grupo":null},{"texto":"Transporte mantendo via aérea permeável","grupo":null}],"avc":[{"texto":"Identificar sintomatologia compatível com AVC","grupo":null},{"texto":"Identificar critérios para inclusão em Via Verde AVC (início <24h e idade ≥18 anos)","grupo":null},{"texto":"Administrar oxigénio suplementar conforme necessário","grupo":null},{"texto":"Contactar precocemente o CODU para validação de inclusão em Via Verde AVC","grupo":null},{"texto":"Avaliar escalas de Cincinnati e RACE","grupo":null},{"texto":"Avaliar glicemia capilar","grupo":null},{"texto":"Posicionar com elevação do tronco a 30º","grupo":null},{"texto":"Recolher informação: hora de início dos sintomas (ou última vez visto bem), circunstâncias, dependência nas AVDs, episódios anteriores, anticoagulantes orais (Varfine®, Sintrom®, Xarelto®, Heparina)","grupo":null},{"texto":"Perante sinais de gravidade, solicitar apoio diferenciado ao CODU","grupo":null},{"texto":"Transporte mantendo permeabilidade da via aérea, devido à AEC","grupo":null}],"sepsis":[{"texto":"Identificar sinais compatíveis com sépsis","grupo":null},{"texto":"Iniciar oxigenoterapia de acordo com a gravidade apresentada","grupo":null},{"texto":"Recolher informação: progressão da sintomatologia, história de infeção, hábitos farmacológicos","grupo":null},{"texto":"Perante sinais de gravidade ou caso suspeito/provável Via Verde Sépsis, contactar CODU","grupo":null},{"texto":"Realizar pelo menos 2 avaliações completas de sinais vitais (antes e depois das medidas implementadas)","grupo":null},{"texto":"Durante o transporte, garantir permeabilidade contínua da via aérea","grupo":null}],"disseccao_aorta":[{"texto":"Atuação similar à avaliação e atuação da dor torácica de origem cardíaca","grupo":null}],"dpoc":[{"texto":"Posicionar para facilitar a respiração (elevação do tronco)","grupo":null},{"texto":"Perante secreções que a vítima não consegue expelir, aspirar","grupo":null},{"texto":"Fornecer oxigénio suplementar conforme a situação clínica","grupo":null},{"texto":"Recolher informação: tempo de início, história de agudizações anteriores, comorbilidades, hábitos farmacológicos, oxigenoterapia no domicílio","grupo":null},{"texto":"Evitar que a vítima faça esforço desnecessário","grupo":null},{"texto":"Reconhecendo sinais de gravidade, sinalizar a vítima como crítica e acionar apoio diferenciado","grupo":null},{"texto":"Transportar em posição de Fowler (45º)","grupo":null}],"eap":[{"texto":"Posicionar para facilitar a respiração (sentada/Fowler) com pernas pendentes","grupo":null},{"texto":"Administrar oxigénio suplementar conforme necessário","grupo":null},{"texto":"Recolher informação: tempo de início, episódios anteriores, antecedentes cardíacos, hábitos farmacológicos","grupo":null},{"texto":"Reduzir ao mínimo o esforço físico da vítima","grupo":null},{"texto":"Perante deterioração do quadro, identificar como vítima crítica e contactar o centro de orientação para apoio","grupo":null},{"texto":"Transportar em Fowler com pernas pendentes","grupo":null}],"infecao_respiratoria":[{"texto":"Posicionar para facilitar a respiração (sentada/Fowler)","grupo":null},{"texto":"Administrar oxigénio conforme indicado para o quadro","grupo":null},{"texto":"Recolher informação: tempo de início, episódios anteriores, contacto com infetados, hábitos farmacológicos","grupo":null},{"texto":"Evitar que a vítima faça esforço desnecessário","grupo":null},{"texto":"Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação","grupo":null},{"texto":"Transportar em Fowler (45º)","grupo":null}],"pneumotorax":[{"texto":"Posicionar para facilitar a respiração (sentada/Fowler)","grupo":null},{"texto":"Iniciar oxigenoterapia de acordo com a gravidade apresentada","grupo":null},{"texto":"Recolher informação: tempo de início, episódios anteriores, alteração recente de pressão atmosférica (voo/mergulho), hábitos tabágicos, trauma torácico","grupo":null},{"texto":"Reduzir ao mínimo o esforço físico da vítima","grupo":null},{"texto":"Reconhecendo sinais de gravidade, sinalizar a vítima como crítica e acionar apoio diferenciado","grupo":null},{"texto":"Transportar em Fowler (45º)","grupo":null}],"sincope":[{"texto":"Se pré-síncope detetada, promover manobras de contrapressão física até deitar a vítima","grupo":null},{"texto":"Se desidratação, promover ingestão de pequenas quantidades de água","grupo":null},{"texto":"Avaliar glicemia capilar para despiste da causa","grupo":null},{"texto":"Iniciar oxigenoterapia de acordo com a gravidade apresentada","grupo":null},{"texto":"Recolher informação: história relatada por testemunhas, episódios anteriores, causa provável, doenças cardiovasculares, hábitos farmacológicos","grupo":null},{"texto":"Perante deterioração do quadro, identificar como vítima crítica e contactar o centro de orientação para apoio","grupo":null},{"texto":"Transporte mantendo permeabilidade da via aérea, devido à AEC","grupo":null}],"convulsao":[{"texto":"Afastar objetos que possam causar traumatismos e proteger a cabeça","grupo":"Durante crise tonico clonica"},{"texto":"Permeabilizar a via aérea com adjuvantes básicos, se possível (sem forçar)","grupo":"Durante crise tonico clonica"},{"texto":"Administrar O2","grupo":"Durante crise tonico clonica"},{"texto":"Não restringir movimentos","grupo":"Durante crise tonico clonica"},{"texto":"Registar duração, zonas do corpo envolvidas e intervalos","grupo":"Durante crise tonico clonica"},{"texto":"Colocar em PLS (posição lateral de segurança)","grupo":"Pos crise"},{"texto":"Avaliar temperatura corporal; se hipertermia, promover arrefecimento (retirar roupas, compressas de água tépida)","grupo":"Pos crise"},{"texto":"Avaliar glicemia capilar; se hipoglicemia, administrar glicose (ver capítulo Diabetes)","grupo":"Pos crise"},{"texto":"Se sinais de AVC, verificar critérios para Via Verde AVC","grupo":"Pos crise"},{"texto":"Reduzir estimulação sensorial","grupo":"Pos crise"},{"texto":"Fornecer oxigénio suplementar conforme a situação clínica","grupo":"Pos crise"},{"texto":"Recolher informação: caracterizar a convulsão (duração, partes envolvidas, intervalos), despistar causa provável, episódios anteriores, hábitos farmacológicos (anticonvulsivantes)","grupo":"Pos crise"},{"texto":"Perante sinais de gravidade ou convulsão tónico-clónica presenciada, identificar criticidade e solicitar apoio diferenciado ao CODU","grupo":"Pos crise"},{"texto":"Transporte mantendo permeabilidade da via aérea, devido à AEC","grupo":"Pos crise"}],"hipoglicemia":[{"texto":"Avaliar a glicemia capilar","grupo":"Geral"},{"texto":"Administrar oxigénio conforme indicado para o quadro","grupo":"Geral"},{"texto":"Verificar existência de bomba infusora de insulina; se hipoglicemia, parar/desligar","grupo":"Geral"},{"texto":"Procurar causa da hipoglicemia","grupo":"Geral"},{"texto":"Administrar via oral 25g de glicose (gel ou ampolas hipertónicas)","grupo":"Glicemia menor 60 vitima consciente a"},{"texto":"Promover ingestão de alimentos ricos em hidratos de carbono e açúcares (pão, bolachas)","grupo":"Glicemia menor 60 vitima consciente a"},{"texto":"Repetir administração de glicose se sintomas se mantiverem","grupo":"Glicemia menor 60 vitima consciente a"},{"texto":"Administrar papa espessa de açúcar na mucosa oral (gengivas, sob a língua), lateralizando a vítima para permeabilidade da via aérea","grupo":"Glicemia menor 60 vitima v d ou s escala avds"},{"texto":"Se não houver recuperação, repetir administração e promover transporte precoce em articulação com o CODU","grupo":"Glicemia menor 60 vitima v d ou s escala avds"},{"texto":"Promover ingestão de alimentos ricos em hidratos de carbono e açúcares","grupo":"Glicemia entre 60 e 80"},{"texto":"Recolher informação: tempo de início, episódios anteriores, antecedentes de Diabetes, última refeição, hábitos farmacológicos","grupo":"Comum"},{"texto":"Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação","grupo":"Comum"},{"texto":"Transporte mantendo permeabilidade da via aérea","grupo":"Comum"}],"hiperglicemia":[],"diabetes_mellitus_geral":[],"hemorragia_digestiva":[{"texto":"Caracterizar o vómito/dejeção quanto a quantidade e aspeto","grupo":null},{"texto":"Perante AEC ou incapacidade de expelir vómito, permeabilizar a via aérea","grupo":null},{"texto":"Administrar oxigénio suplementar conforme necessário","grupo":null},{"texto":"Posicionar em posição de conforto mantendo via aérea permeável","grupo":null},{"texto":"Recolher informação: tempo de início, episódios anteriores, antecedentes digestivos, hábitos farmacológicos","grupo":null},{"texto":"Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação","grupo":null},{"texto":"Transporte mantendo permeabilidade da via aérea","grupo":null}],"apendicite":[{"texto":"Ver Dor abdominal: Atuação (comum às 3 causas deste capítulo)","grupo":null}],"oclusao_intestinal":[{"texto":"Ver Dor abdominal: Atuação (comum às 3 causas deste capítulo)","grupo":null}],"colica_renal":[{"texto":"Ver Dor abdominal: Atuação (comum às 3 causas deste capítulo)","grupo":null}],"anafilaxia":[{"texto":"Afastar o fator desencadeante ou retirar a vítima do local o mais precocemente possível","grupo":null},{"texto":"Administrar oxigénio conforme indicado para o quadro","grupo":null},{"texto":"Recolher informação: substância/alergénio causador, história de episódios anteriores, progressão da sintomatologia, antecedentes de alergias, hábitos farmacológicos","grupo":null},{"texto":"Perante sinais de gravidade (reação anafilática), identificar vítima crítica e solicitar apoio diferenciado ao CODU","grupo":null},{"texto":"Transportar assegurando que a via aérea se mantém desobstruída","grupo":null}],"intoxicacao_digestiva":[],"intoxicacao_inalatoria":[],"intoxicacao_monoxido_carbono":[{"texto":"Administrar O2 a 15L/min, independentemente dos valores de SpO2.","grupo":"Especifica"}],"intoxicacao_cutanea":[],"intoxicacao_parenterica":[],"tce":[{"texto":"Elevar a cabeceira da maca a 30º se PAS ≥ 110 mmHg (proclive em bloco se imobilizada; elevar cabeceira se não imobilizada)","grupo":null},{"texto":"Se TAS < 110 mmHg, manter a vítima em posição neutra","grupo":null},{"texto":"Não aplicar pensos compressivos em TCE","grupo":null},{"texto":"Aspiração de vómito/secreções de forma não agressiva, minimizando o reflexo de vómito (aumenta PIC); transporte em maca de vácuo lateralizada até 45º","grupo":null},{"texto":"Contraindicada a introdução de dispositivos nasais até exclusão de fraturas da base do crânio","grupo":null},{"texto":"Administrar oxigénio de acordo com algoritmo","grupo":null},{"texto":"Transporte sem colar cervical se: alteração de 2 pontos na GCS ou 1 letra na AVDS; alterações pupilares de novo; hemiparesia; tríade de Cushing","grupo":null},{"texto":"Transmitir dados ao CODU considerando apoio diferenciado se: sinais para remoção do colar; compromisso da via aérea; crise convulsiva; perda súbita de consciência","grupo":null}],"tvm":[{"texto":"Restrição de movimentos de coluna perante sinais de TVM: dor à palpação da coluna, défice sensitivo-motor ou incapacidade de se mobilizar sem ajuda","grupo":null},{"texto":"Administrar oxigénio de acordo com algoritmo","grupo":null},{"texto":"Transmitir dados ao CODU considerando apoio diferenciado se: compromisso da via aérea; dificuldade respiratória ou PCR; perda súbita de consciência; alteração de 2 pontos na GCS ou 1 letra na AVDS; alteração da resposta motora nos membros ou tronco; sinais de choque neurogénico","grupo":null},{"texto":"Na vítima pediátrica considerar elevação do tronco para posição neutra da cabeça; na vítima geriátrica com cifose, preencher o espaço entre cabeça e dispositivo de imobilização","grupo":null}],"trauma_toracico":{"fratura_de_costelas":[],"retalho_vollet_costal":[{"texto":"Encorajar a vítima a ventilar profundamente","grupo":null},{"texto":"Não aplicar ligaduras a envolver o tórax","grupo":null},{"texto":"Nota: a imobilização com 'almofada' de compressas já não está indicada, dificulta a função pulmonar e aumenta o risco de atelectasia","grupo":null}],"pneumotorax_simples":[],"pneumotorax_aberto":[],"pneumotorax_hipertensivo":[{"texto":"Identificar e solicitar de imediato apoio diferenciado para descompressão do pneumotórax","grupo":null},{"texto":"Administrar oxigénio conforme a orientação técnica em vigor","grupo":null}],"hemotorax":[{"texto":"Identificar e solicitar de imediato apoio diferenciado para drenar o hemotórax","grupo":null},{"texto":"Iniciar oxigenoterapia segundo o procedimento aplicável","grupo":null}],"tamponamento_cardiaco":[]},"trauma_abdominal":[{"texto":"Não reintroduzir as vísceras","grupo":"Evisceracao"},{"texto":"Colocar compressas humedecidas em soro fisiológico","grupo":"Evisceracao"},{"texto":"Tapar as compressas com película não porosa (p.ex. embalagem das compressas esterilizadas) para evitar secagem e hipotermia","grupo":"Evisceracao"},{"texto":"Posicionar a vítima com joelhos fletidos, em caso de traumatismo isolado","grupo":"Evisceracao"}],"trauma_tecidos_moles":{"sindrome_compartimental":[{"texto":"Aplicação de frio na área lesada 15-20 min, com intervalos da mesma duração","grupo":"Lesao fechada"},{"texto":"Compressão do local da lesão","grupo":"Lesao fechada"},{"texto":"Elevação da área lesionada acima do nível do coração","grupo":"Lesao fechada"},{"texto":"Manter o membro lesionado imóvel","grupo":"Lesao fechada"},{"texto":"1. Assegurar hemóstase: pressão direta, considerar torniquete se hemorragia incontrolável","grupo":"Lesao aberta"},{"texto":"2. Preparação da ferida: antecipar necessidade de analgesia com apoio diferenciado, limpeza com compressas esterilizadas e agente de limpeza, tricotomia se necessário, irrigação com soro fisiológico (passo mais importante para reduzir contaminação), ligaduras sem apertar demasiado (avaliar estado neurovascular antes e depois)","grupo":"Lesao aberta"},{"texto":"Lavar cuidadosa e abundantemente a parte amputada com SF","grupo":"Amputacao"},{"texto":"Envolver em compressas humedecidas em soro fisiológico","grupo":"Amputacao"},{"texto":"Colocar num saco plástico, dentro de outro saco/recipiente com frio","grupo":"Amputacao"},{"texto":"Nunca manter quente, nunca colocar em água, nunca em contacto direto com frio, nunca usar frio seco","grupo":"Amputacao"},{"texto":"Transportar a parte amputada afastada da vítima; não atrasar o transporte da vítima crítica por não encontrar a parte amputada","grupo":"Amputacao"},{"texto":"Não remover o objeto (risco de hemorragia interna e lesão de estruturas adjacentes)","grupo":"Objetos empalados"},{"texto":"Estabilizar o objeto com compressas sobrepostas, ligaduras ou panos","grupo":"Objetos empalados"},{"texto":"Controlar hemorragia sem comprimir o objeto","grupo":"Objetos empalados"},{"texto":"Não cortar/remover a parte exterior, exceto se demasiado grande/pesado ou impedir o transporte","grupo":"Objetos empalados"},{"texto":"Nos olhos: usar copo de plástico sem tocar no objeto, tapar os dois olhos para prevenir movimento ocular","grupo":"Objetos empalados"},{"texto":"Objetos inamovíveis (poste, pilar): retirar a vítima do objeto, articular com CODU para recursos (apoio médico, bombeiros)","grupo":"Objetos empalados"},{"texto":"Remover apenas se afetar diretamente a via aérea ou interferir com compressões torácicas em RCP","grupo":"Objetos empalados"},{"texto":"Tranquilizar a vítima; zona muito irrigada (risco de hemorragia abundante)","grupo":"Face e pescoco"},{"texto":"Preparar para aspirar ou reposicionar por obstrução da VA por sangue","grupo":"Face e pescoco"},{"texto":"Aplicar compressas/ligaduras com cuidado para não interferir com fluxo sanguíneo ou passagem de ar (penso oclusivo se necessário)","grupo":"Face e pescoco"},{"texto":"Transportar sentada se não houver indicação para restringir movimentos da coluna","grupo":"Face e pescoco"},{"texto":"Sentar a vítima em posição que não induza ingestão do sangue","grupo":"Epistaxis"},{"texto":"Compressão direta nas asas nasais com 2 dedos durante 10 min + frio no mesmo período","grupo":"Epistaxis"},{"texto":"Se não parar, tamponamento com esponja hemostática + frio por períodos de 10 min","grupo":"Epistaxis"},{"texto":"Se por trauma/queda, verificar perda de LCR - se existir, suspeitar de lesão cerebral e abordar como TCE","grupo":"Epistaxis"},{"texto":"Colocar compressa ao longo do ouvido externo, nunca dentro do canal auditivo","grupo":"Ouvido"},{"texto":"Não tentar controlar diretamente sangue do canal auditivo (risco de aumentar PIC se houver perda de LCR)","grupo":"Ouvido"},{"texto":"Penso no ouvido externo e transporte rápido","grupo":"Ouvido"},{"texto":"Pressão direta para hemorragia externa","grupo":"Cintura escapular"},{"texto":"Imobilizar se indicado, para prevenir movimento","grupo":"Cintura escapular"},{"texto":"Ligadura sobre toda a área; manter posição anatómica ou ligadura enrolada na mão para a vítima segurar","grupo":"Mao punho dedos"},{"texto":"Imobilizar a zona para impedir movimento (materiais podem deslocar-se)","grupo":"Joelho cotovelo"},{"texto":"Controlo de hemorragia se indicado; ligadura sem apertar demasiado; avaliar função neurovascular antes e após","grupo":"Pe tornozelo"}],"lesao_ouvidos":[{"texto":"Aplicação de frio na área lesada 15-20 min, com intervalos da mesma duração","grupo":"Lesao fechada"},{"texto":"Compressão do local da lesão","grupo":"Lesao fechada"},{"texto":"Elevação da área lesionada acima do nível do coração","grupo":"Lesao fechada"},{"texto":"Manter o membro lesionado imóvel","grupo":"Lesao fechada"},{"texto":"1. Assegurar hemóstase: pressão direta, considerar torniquete se hemorragia incontrolável","grupo":"Lesao aberta"},{"texto":"2. Preparação da ferida: antecipar necessidade de analgesia com apoio diferenciado, limpeza com compressas esterilizadas e agente de limpeza, tricotomia se necessário, irrigação com soro fisiológico (passo mais importante para reduzir contaminação), ligaduras sem apertar demasiado (avaliar estado neurovascular antes e depois)","grupo":"Lesao aberta"},{"texto":"Lavar cuidadosa e abundantemente a parte amputada com SF","grupo":"Amputacao"},{"texto":"Envolver em compressas humedecidas em soro fisiológico","grupo":"Amputacao"},{"texto":"Colocar num saco plástico, dentro de outro saco/recipiente com frio","grupo":"Amputacao"},{"texto":"Nunca manter quente, nunca colocar em água, nunca em contacto direto com frio, nunca usar frio seco","grupo":"Amputacao"},{"texto":"Transportar a parte amputada afastada da vítima; não atrasar o transporte da vítima crítica por não encontrar a parte amputada","grupo":"Amputacao"},{"texto":"Não remover o objeto (risco de hemorragia interna e lesão de estruturas adjacentes)","grupo":"Objetos empalados"},{"texto":"Estabilizar o objeto com compressas sobrepostas, ligaduras ou panos","grupo":"Objetos empalados"},{"texto":"Controlar hemorragia sem comprimir o objeto","grupo":"Objetos empalados"},{"texto":"Não cortar/remover a parte exterior, exceto se demasiado grande/pesado ou impedir o transporte","grupo":"Objetos empalados"},{"texto":"Nos olhos: usar copo de plástico sem tocar no objeto, tapar os dois olhos para prevenir movimento ocular","grupo":"Objetos empalados"},{"texto":"Objetos inamovíveis (poste, pilar): retirar a vítima do objeto, articular com CODU para recursos (apoio médico, bombeiros)","grupo":"Objetos empalados"},{"texto":"Remover apenas se afetar diretamente a via aérea ou interferir com compressões torácicas em RCP","grupo":"Objetos empalados"},{"texto":"Tranquilizar a vítima; zona muito irrigada (risco de hemorragia abundante)","grupo":"Face e pescoco"},{"texto":"Preparar para aspirar ou reposicionar por obstrução da VA por sangue","grupo":"Face e pescoco"},{"texto":"Aplicar compressas/ligaduras com cuidado para não interferir com fluxo sanguíneo ou passagem de ar (penso oclusivo se necessário)","grupo":"Face e pescoco"},{"texto":"Transportar sentada se não houver indicação para restringir movimentos da coluna","grupo":"Face e pescoco"},{"texto":"Sentar a vítima em posição que não induza ingestão do sangue","grupo":"Epistaxis"},{"texto":"Compressão direta nas asas nasais com 2 dedos durante 10 min + frio no mesmo período","grupo":"Epistaxis"},{"texto":"Se não parar, tamponamento com esponja hemostática + frio por períodos de 10 min","grupo":"Epistaxis"},{"texto":"Se por trauma/queda, verificar perda de LCR - se existir, suspeitar de lesão cerebral e abordar como TCE","grupo":"Epistaxis"},{"texto":"Colocar compressa ao longo do ouvido externo, nunca dentro do canal auditivo","grupo":"Ouvido"},{"texto":"Não tentar controlar diretamente sangue do canal auditivo (risco de aumentar PIC se houver perda de LCR)","grupo":"Ouvido"},{"texto":"Penso no ouvido externo e transporte rápido","grupo":"Ouvido"},{"texto":"Pressão direta para hemorragia externa","grupo":"Cintura escapular"},{"texto":"Imobilizar se indicado, para prevenir movimento","grupo":"Cintura escapular"},{"texto":"Ligadura sobre toda a área; manter posição anatómica ou ligadura enrolada na mão para a vítima segurar","grupo":"Mao punho dedos"},{"texto":"Imobilizar a zona para impedir movimento (materiais podem deslocar-se)","grupo":"Joelho cotovelo"},{"texto":"Controlo de hemorragia se indicado; ligadura sem apertar demasiado; avaliar função neurovascular antes e após","grupo":"Pe tornozelo"}]},"trauma_musculoesqueletico":{"fratura":[],"luxacao":[],"entorse":[]},"trauma_termico":{"golpe_de_calor":[],"hipotermia_leve":[],"hipotermia_moderada":[],"hipotermia_severa":[],"congelamento_superficial":[],"congelamento_profundo":[]},"afogamento_barotrauma":{"barotrauma_ouvido_seios":[{"texto":"Considerar imobilização vertebromedular","grupo":"Afogamento"},{"texto":"Prevenir hipotermia: remover roupas molhadas, secar e envolver em cobertores/manta térmica, considerar aquecimento da célula sanitária","grupo":"Afogamento"},{"texto":"Administrar oxigénio conforme a orientação técnica em vigor","grupo":"Afogamento"},{"texto":"Estar atento à possibilidade de vómito","grupo":"Afogamento"}],"hiperpressurizacao_pulmonar":[{"texto":"Considerar imobilização vertebromedular","grupo":"Afogamento"},{"texto":"Prevenir hipotermia: remover roupas molhadas, secar e envolver em cobertores/manta térmica, considerar aquecimento da célula sanitária","grupo":"Afogamento"},{"texto":"Administrar oxigénio conforme a orientação técnica em vigor","grupo":"Afogamento"},{"texto":"Estar atento à possibilidade de vómito","grupo":"Afogamento"}],"doenca_descompressao":[{"texto":"Considerar imobilização vertebromedular","grupo":"Afogamento"},{"texto":"Prevenir hipotermia: remover roupas molhadas, secar e envolver em cobertores/manta térmica, considerar aquecimento da célula sanitária","grupo":"Afogamento"},{"texto":"Administrar oxigénio conforme a orientação técnica em vigor","grupo":"Afogamento"},{"texto":"Estar atento à possibilidade de vómito","grupo":"Afogamento"}]},"queimaduras":{"queimadura_via_aerea":[{"texto":"Dividir tarefas: um elemento avalia a vítima (sinais de gravidade como queimadura de VA, choque hipovolémico), outro inicia o tratamento da queimadura","grupo":"Geral"},{"texto":"Se em espaço fechado, avaliar provável queimadura da via aérea","grupo":"Geral"},{"texto":"Caracterizar a queimadura quanto a causa, extensão e profundidade","grupo":"Geral"},{"texto":"Arrefecer irrigando com água tépida ou soro fisiológico durante 5-10 minutos (evitar hipotermia)","grupo":"Termicas"},{"texto":"Remover roupas e adornos não aderidos; cortar ao redor da roupa aderente, não arrancar","grupo":"Termicas"},{"texto":"Após arrefecer, tapar com compressas secas ou lençol de queimados (ou hidrogel se disponível); manter a vítima e a célula da ambulância aquecidas","grupo":"Termicas"},{"texto":"Não transportar sobre lençóis/roupas molhadas (hipotermia)","grupo":"Termicas"},{"texto":"Transportar para unidade com unidade de queimados, se indicado pelo CODU","grupo":"Termicas"},{"texto":"Não tocar na vítima nem em nada em contacto com ela sem garantir que a corrente foi desligada","grupo":"Eletricas"},{"texto":"Em média/alta tensão, considerar cinemática de trauma associada (restrição de movimentos da coluna)","grupo":"Eletricas"},{"texto":"Avaliar tipo/quantidade de corrente, trajeto e duração do contacto; solicitar apoio diferenciado","grupo":"Eletricas"},{"texto":"Monitorização do ritmo cardíaco pelas equipas diferenciadas","grupo":"Eletricas"},{"texto":"Consultar ficha de dados de segurança e contactar o CIAV","grupo":"Quimicas"},{"texto":"EPI adequado ao produto químico","grupo":"Quimicas"},{"texto":"Abordar com o 'vento pelas costas' se pó","grupo":"Quimicas"},{"texto":"Evitar contaminação da ambulância e equipamentos","grupo":"Quimicas"},{"texto":"Remover vestuário e fechar em saco","grupo":"Quimicas"},{"texto":"Remover a maior quantidade possível de substância com compressas secas (exceto olhos)","grupo":"Quimicas"},{"texto":"Se indicado pelo CIAV, lavar abundantemente com água tépida corrente (pequenas áreas com SF)","grupo":"Quimicas"},{"texto":"Lavar com água ou SF no local e durante o transporte","grupo":"Olhos"},{"texto":"Remover lentes de contacto se existirem","grupo":"Olhos"},{"texto":"Lavar do canto interno para o externo","grupo":"Olhos"}]},"trabalho_de_parto":[],"hipertensao_gravidez":[{"texto":"Contactar imediatamente o CODU","grupo":"Grávida em convulsao"},{"texto":"Proteger a cabeça da grávida","grupo":"Grávida em convulsao"},{"texto":"Afastar objetos potencialmente lesantes","grupo":"Grávida em convulsao"},{"texto":"Administrar oxigénio a 15 L/min por máscara de alto débito","grupo":"Grávida em convulsao"},{"texto":"Esperar que a convulsão cesse","grupo":"Grávida em convulsao"},{"texto":"Avaliar a grávida, elevando a anca da direita para a esquerda","grupo":"Grávida em convulsao"},{"texto":"Estar preparado para recorrência da convulsão","grupo":"Grávida em convulsao"},{"texto":"Transportar idealmente para hospital com obstetrícia, neonatologia e cuidados intensivos, designado pelo CODU","grupo":"Grávida em convulsao"}],"aborto_abortamento":[{"texto":"Posicionar a grávida em Trendelenburg","grupo":null},{"texto":"Administrar e gerir oxigenoterapia visando SpO2 92-96%","grupo":null},{"texto":"Colocar pensos higiénicos e vigiar perdas hemáticas","grupo":null},{"texto":"Vigiar sinais de choque hipovolémico","grupo":null},{"texto":"Em caso de dor severa e sinais de choque, pedir apoio diferenciado","grupo":null},{"texto":"Manter a grávida aquecida","grupo":null},{"texto":"Transportar para hospital com bloco de partos, designado pelo CODU","grupo":null},{"texto":"Se o produto da conceção for expulso, recolher, acondicionar em saco e transportar junto da mulher, mas fora do seu alcance visual","grupo":null}],"alergia_pediatria":[{"texto":"Afastar o fator desencadeante ou retirar a vítima do local o mais precocemente possível","grupo":null},{"texto":"Administrar oxigénio suplementar conforme necessário","grupo":null},{"texto":"Recolher informação sobre o eventual alergénio","grupo":null},{"texto":"Perante sinais de gravidade, nomeadamente reação anafilática, identificar vítima crítica e solicitar apoio diferenciado ao CODU","grupo":null},{"texto":"Transportar assegurando que a via aérea se mantém desobstruída","grupo":null}],"asma_pediatria":[{"texto":"Recolher informação sobre esquema de tratamento habitual, doses e medicação/câmara expansora que a criança já tenha consigo","grupo":null},{"texto":"Atuação compatível com a do adulto, diferindo na administração de O2","grupo":null},{"texto":"Administrar oxigénio suplementar de acordo com orientação técnica","grupo":null},{"texto":"Sem oximetria disponível, administrar O2 a 15L/min nas crises moderadas ou graves","grupo":null}],"bronquiolite":[{"texto":"Elevação da cabeceira da cama, maca ou berço a 30º","grupo":null},{"texto":"Desobstrução nasal com limpeza suave das secreções","grupo":null},{"texto":"Aspiração suave das secreções nasais, evitando aspiração nasofaríngea (risco de trauma e agravamento do edema)","grupo":null},{"texto":"Perante bradipneia ou exaustão respiratória, iniciar suporte ventilatório com máscara e insuflador com O2 alto débito","grupo":null},{"texto":"Administrar oxigénio de acordo com orientação técnica; sem oximetria disponível, administrar O2 a 15L/min nas dispneias moderadas ou graves","grupo":null},{"texto":"Transporte com elevação da cabeceira, posição sentada ou Fowler","grupo":null}],"laringite":[{"texto":"Elevação da cabeceira da cama, maca ou berço a 30º","grupo":null},{"texto":"Administrar oxigénio suplementar de acordo com orientação técnica","grupo":null},{"texto":"Minimizar stress que provoque choro na criança","grupo":null},{"texto":"Não aquecer demasiado o ambiente em volta da criança","grupo":null},{"texto":"Considerar colocar a criança junto à janela para respirar ar frio se estridor em repouso","grupo":null},{"texto":"Transporte com elevação da cabeceira, posição sentada ou Fowler","grupo":null}],"desidratacao_pediatrica":[{"texto":"Identificar sinais de desidratação: quantificar episódios de vómitos/diarreia, número de fraldas e intervalo de tempo","grupo":null},{"texto":"Se vómitos: pausa alimentar de pelo menos 30 minutos; dar líquidos em pequena quantidade de cada vez (não encher o estômago)","grupo":null},{"texto":"Hidratar com colher de sopa de 5 em 5 minutos, avaliando tolerância","grupo":null},{"texto":"Vigiar a quantidade de urina produzida (aumento do volume indica hidratação eficaz)","grupo":null},{"texto":"Transporte seguro","grupo":null}],"febre_pediatrica":[{"texto":"Medidas de arrefecimento apenas se a vítima não tiver tremores: retirar roupa excessiva, manter protegida do ambiente frio","grupo":null},{"texto":"Perante via aérea permeável, oferecer líquidos de acordo com a preferência (água, chás, sumos)","grupo":null},{"texto":"Recolher informação: tempo de início, sinais de infeção, episódio convulsivo, sintomas associados, patologia prévia, hábitos farmacológicos","grupo":null},{"texto":"Durante o transporte, garantir permeabilidade contínua da via aérea","grupo":null}],"convulsao_pediatrica":[{"texto":"Por impossibilidade de avaliar ABC adequadamente, administrar O2 alto débito a 15L/min","grupo":"Durante a convulsao"},{"texto":"Solicitar apoio diferenciado de imediato","grupo":"Durante a convulsao"},{"texto":"Se os pais tiverem medicação SOS anticonvulsivante, auxiliar no posicionamento da criança","grupo":"Durante a convulsao"},{"texto":"Avaliar e corrigir ABCDE","grupo":"Pos crise convulsiva"},{"texto":"Posição de recuperação quando indicado, mantendo permeabilidade da VA","grupo":"Pos crise convulsiva"},{"texto":"Suspender ou limitar o fator desencadeante","grupo":"Pos crise convulsiva"},{"texto":"Administrar O2 suplementar se SpO2 <92%, mantendo até recuperação completa da consciência","grupo":"Pos crise convulsiva"},{"texto":"Sem oximetria e com alterações significativas em A, B, C, administrar O2 a 15L/min","grupo":"Pos crise convulsiva"},{"texto":"Recolher informação: tempo de início, duração, tipo (focal/generalizada), sintomas associados, patologia prévia, hábitos farmacológicos, causas","grupo":"Pos crise convulsiva"},{"texto":"Transportar assegurando que a via aérea se mantém desobstruída","grupo":"Pos crise convulsiva"}],"sepsis_meningococica":[{"texto":"Na suspeita de meningococemia, abordar com EPI adequado (transmissão por gotículas)","grupo":null},{"texto":"Questionar sobre alterações cutâneas, dificuldade respiratória, alterações neurológicas, débito urinário e confirmar vacinação","grupo":null},{"texto":"Se confirmada a suspeita, contactar CODU para agilizar com o delegado de saúde pública eventual profilaxia antibiótica aos contactos","grupo":null},{"texto":"Administrar oxigénio suplementar segundo orientação técnica; sem oximetria e com alterações em A, B e C, administrar O2 a 15L/min","grupo":null},{"texto":"Prevenir a hipertermia","grupo":null},{"texto":"Recolher informação: tempo de início, evolução, sintomas associados, hábitos farmacológicos e história prévia","grupo":null},{"texto":"Transporte seguro","grupo":null}],"hipoglicemia_pediatrica":[{"texto":"Avaliar glicemia na criança com alteração da 'Aparência' no TAP, história compatível de diabetes/hipoglicémia, ou AEC","grupo":null},{"texto":"Administrar oxigénio suplementar segundo orientação técnica","grupo":null},{"texto":"Se sem vómito e com reflexos de sucção/deglutição mantidos: colocar ao peito ou dar biberão","grupo":null},{"texto":"Se capaz de se alimentar sem risco de engasgamento/aspiração e sem vómitos: fornecer refeição (açúcar, fruta, pão com doce ou compotas)","grupo":null},{"texto":"Sem reflexos de deglutição mantidos (risco de aspiração): preparar papa de açúcar e espalhar pequena quantidade sob a língua e bochechas, com atenção à quantidade (risco de obstrução da VA)","grupo":null},{"texto":"Recolher informação: tempo de início, evolução, sintomas associados, hábitos farmacológicos e história prévia","grupo":null},{"texto":"Transporte seguro mantendo VA permeável","grupo":null}],"intoxicacao_pediatrica":{"anticolinergicos":[{"texto":"Informar CODU com possível colaboração do CIAV","grupo":null},{"texto":"Em função do tipo de tóxico, abordar o cenário com o EPI recomendado","grupo":null},{"texto":"Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo","grupo":null},{"texto":"Administrar oxigénio suplementar segundo procedimento em vigor","grupo":null},{"texto":"Na intoxicação por monóxido de carbono, administrar O2 a 15L/min","grupo":null},{"texto":"Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%","grupo":null},{"texto":"Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível","grupo":null},{"texto":"Seguir recomendações do CIAV/CODU","grupo":null},{"texto":"Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência","grupo":null}],"colinergicos":[{"texto":"Informar CODU com possível colaboração do CIAV","grupo":null},{"texto":"Em função do tipo de tóxico, abordar o cenário com o EPI recomendado","grupo":null},{"texto":"Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo","grupo":null},{"texto":"Administrar oxigénio suplementar segundo procedimento em vigor","grupo":null},{"texto":"Na intoxicação por monóxido de carbono, administrar O2 a 15L/min","grupo":null},{"texto":"Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%","grupo":null},{"texto":"Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível","grupo":null},{"texto":"Seguir recomendações do CIAV/CODU","grupo":null},{"texto":"Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência","grupo":null}],"hipermetabolicos":[{"texto":"Informar CODU com possível colaboração do CIAV","grupo":null},{"texto":"Em função do tipo de tóxico, abordar o cenário com o EPI recomendado","grupo":null},{"texto":"Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo","grupo":null},{"texto":"Administrar oxigénio suplementar segundo procedimento em vigor","grupo":null},{"texto":"Na intoxicação por monóxido de carbono, administrar O2 a 15L/min","grupo":null},{"texto":"Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%","grupo":null},{"texto":"Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível","grupo":null},{"texto":"Seguir recomendações do CIAV/CODU","grupo":null},{"texto":"Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência","grupo":null}],"narcoticos":[{"texto":"Informar CODU com possível colaboração do CIAV","grupo":null},{"texto":"Em função do tipo de tóxico, abordar o cenário com o EPI recomendado","grupo":null},{"texto":"Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo","grupo":null},{"texto":"Administrar oxigénio suplementar segundo procedimento em vigor","grupo":null},{"texto":"Na intoxicação por monóxido de carbono, administrar O2 a 15L/min","grupo":null},{"texto":"Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%","grupo":null},{"texto":"Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível","grupo":null},{"texto":"Seguir recomendações do CIAV/CODU","grupo":null},{"texto":"Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência","grupo":null}],"simpaticomimeticos":[{"texto":"Informar CODU com possível colaboração do CIAV","grupo":null},{"texto":"Em função do tipo de tóxico, abordar o cenário com o EPI recomendado","grupo":null},{"texto":"Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo","grupo":null},{"texto":"Administrar oxigénio suplementar segundo procedimento em vigor","grupo":null},{"texto":"Na intoxicação por monóxido de carbono, administrar O2 a 15L/min","grupo":null},{"texto":"Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%","grupo":null},{"texto":"Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível","grupo":null},{"texto":"Seguir recomendações do CIAV/CODU","grupo":null},{"texto":"Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência","grupo":null}],"sedativos_hipnoticos":[{"texto":"Informar CODU com possível colaboração do CIAV","grupo":null},{"texto":"Em função do tipo de tóxico, abordar o cenário com o EPI recomendado","grupo":null},{"texto":"Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo","grupo":null},{"texto":"Administrar oxigénio suplementar segundo procedimento em vigor","grupo":null},{"texto":"Na intoxicação por monóxido de carbono, administrar O2 a 15L/min","grupo":null},{"texto":"Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%","grupo":null},{"texto":"Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível","grupo":null},{"texto":"Seguir recomendações do CIAV/CODU","grupo":null},{"texto":"Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência","grupo":null}]}}</script>
+<script type="application/json" id="casos-source">[{"id":"caso_asma_moderada","titulo":"Dispneia súbita com sibilos","categoria_alvo":"Respiratório","nivel_dificuldade":"iniciante","vinheta":"Você é chamado(a) para uma vítima de 34 anos, consciente e orientada, sentada, que refere \"falta de ar\" de início súbito há cerca de 20 minutos. À observação: fala em frases curtas, usa musculatura acessória para respirar, ausculta-se sibilância na fase expiratória. A vítima está ansiosa. Nega dor torácica.","gabarito":{"tipo":"definido","ficha_id":"asma","variante":"crise_moderada","vitais_esperados":{"FC":118,"FR":26,"SpO2":90},"tags_esperadas":["dispneia","pieira","tiragem_musculos_acessorios","ansiedade"],"nota_instrutor":"Foco: reconhecer a tríade dispneia + sibilância + tiragem. SpO2 90% reforça gravidade moderada — não é \"grave\" porque não há posição de tripé nem incapacidade total de falar. Sem trauma: o toggle de contexto deve ficar em \"Sem trauma\"."}},{"id":"caso_avc_classico","titulo":"Alteração súbita da fala e força","categoria_alvo":"Neurológico","nivel_dificuldade":"iniciante","vinheta":"Vítima de 71 anos, encontrada pela família com queixa de \"boca torta\" e dificuldade em falar, iniciada há cerca de 40 minutos. À observação: assimetria facial com desvio da comissura labial, fala arrastada, dificuldade em elevar o braço direito. Refere também cefaleia intensa.","gabarito":{"tipo":"definido","ficha_id":"avc","variante":null,"tags_esperadas":["assimetria_facial","disartria_afasia","hemiparesia_hemiplegia","cefaleia_intensa"],"nota_instrutor":"Os 3 primeiros achados marcados são exatamente os critérios da escala de Cincinnati. Ponto de discussão: perguntar à turma qual seria a hora de início a registar (última vez visto bem) e os critérios da Via Verde AVC."}},{"id":"caso_dor_toracica_cardiaca","titulo":"Dor torácica com irradiação","categoria_alvo":"Cardiovascular","nivel_dificuldade":"intermediario","vinheta":"Vítima de 58 anos refere dor \"em aperto\" no peito, com irradiação para o braço esquerdo, iniciada há 30 minutos em repouso. Está pálida, sudoreica, ansiosa. Nega esforço físico prévio. TA aferida: 82/58 mmHg. FC 112.","gabarito":{"tipo":"definido","ficha_id":"dor_toracica_cardiaca","variante":null,"vitais_esperados":{"PAS":82,"FC":112},"tags_esperadas":["dor_toracica_opressiva","dor_irradiada_msuperior_mandibula","sudorese","palidez"],"nota_instrutor":"A PAS baixa (82) é um ponto de discussão importante: sinaliza possível choque cardiogénico associado, não uma patologia separada — bom momento para falar sobre vítima crítica e pedido de apoio diferenciado precoce."}},{"id":"caso_ambiguo_dispneia","titulo":"Mal-estar geral, sem sinais específicos","categoria_alvo":"Respiratório","nivel_dificuldade":"avancado","vinheta":"Vítima de 46 anos refere sensação súbita de falta de ar e cansaço, com ansiedade marcada. Está taquicárdica, taquipneica, pálida e sudoreica. Não há queixa de dor torácica nem sibilância à auscultação. Nenhum antecedente relevante conhecido no momento.","gabarito":{"tipo":"ambiguo","candidatos_validos":[{"ficha_id":"asma","variante":"crise_moderada"},{"ficha_id":"asma","variante":"crise_grave"},{"ficha_id":"eap","variante":null},{"ficha_id":"dor_toracica_cardiaca","variante":null}],"tags_esperadas":["dispneia","ansiedade","sudorese","palidez","fadiga_inicio_subito"],"vitais_esperados":{"FC":118,"FR":24},"nota_instrutor":"Este caso é DELIBERADAMENTE ambíguo — o objetivo pedagógico não é acertar uma única patologia, e sim reconhecer que os achados apresentados não permitem diferenciar com segurança entre um quadro respiratório e um cardíaco. Com estes achados, a app deve mostrar um aviso de \"achados insuficientes para diferenciar\" entre Asma, Edema Agudo do Pulmão (EAP) e Dor Torácica Cardíaca — todos cursam com dispneia + sinais autonómicos inespecíficos. Discuta com a turma que outros achados (dor torácica presente/ausente, sibilância presente/ausente, ortopneia/fervores na auscultação) resolveriam a ambiguidade."}},{"id":"caso_trauma_pneumotorax","titulo":"Vítima de acidente com dificuldade respiratória","categoria_alvo":"Trauma","nivel_dificuldade":"avancado","vinheta":"Vítima envolvida em acidente de viação (colisão frontal, sem cinto de segurança), consciente mas com dificuldade respiratória marcada. À observação: taquipneia, assimetria na expansão torácica, turgência jugular, desvio da traqueia, cianose labial. TA 78/50, FC 128.","gabarito":{"tipo":"definido","ficha_id":"trauma_toracico","variante":"pneumotorax_hipertensivo","vitais_esperados":{"FC":128,"PAS":78},"tags_esperadas":["dispneia","taquipneia","assimetria_toracica","ingurgitamento_jugular","desvio_traqueia","cianose"],"nota_instrutor":"Ponto-chave deste caso: o aluno precisa de ativar o toggle \"Houve trauma\" antes de analisar — sem isso, a ficha de Traumatismo Torácico nem entra no ranking, mesmo com todos os achados corretos marcados. É intencional: reforça a importância do contexto mecanismo de lesão."}}]</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var taxonomia = JSON.parse(document.getElementById("taxonomia-source").textContent);
+  var fichas = JSON.parse(document.getElementById("criterios-source").textContent);
+  var atuacoes = JSON.parse(document.getElementById("atuacoes-source").textContent);
+  var CASOS_EMBUTIDOS = JSON.parse(document.getElementById("casos-source").textContent);
+
+  var BONUS_BANDEIRA = 2;
+  var LIMIAR_DIFERENCIACAO_PONTOS = 12;
+  var GRUPOS_ORDEM = ["Geral","Respiratório","Cardiovascular","Neurológico","Endócrino",
+    "Gastrointestinal","Sistêmico","Intoxicações","Trauma","Obstetrícia","Pediatria"];
+
+  var ICON_FLAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 21V4a1 1 0 011-1h13.5a.5.5 0 01.4.8L15 9l3.9 5.2a.5.5 0 01-.4.8H5v6"/></svg>';
+  var ICON_CHECK = '<svg class="chk" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+  var ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="#FFB703" stroke-width="2.2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>';
+  var ICON_STEP = '<svg viewBox="0 0 24 24" fill="none" stroke="#5FD1C0" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>';
+  var ICON_EMPTY = '<svg viewBox="0 0 24 24" fill="none" stroke="#B4A493" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+  function normalizar(s){
+    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  function formatarVariante(v){
+    if (!v) return "";
+    return v.split("_").map(function(w){ return w.charAt(0).toUpperCase() + w.slice(1); }).join(" ");
+  }
+
+  // ------------------------------------------------------------------
+  // Motor de pontuação — porte direto de motor_pontuacao.py
+  // ------------------------------------------------------------------
+  function tagsDosVitais(vitais){
+    var ativas = new Set();
+    taxonomia.sinais_vitais.forEach(function(regra){
+      var v = vitais[regra.parametro];
+      if (v === undefined || v === null || isNaN(v)) return;
+      if (regra.min !== null && v < regra.min) return;
+      if (regra.max !== null && v > regra.max) return;
+      ativas.add(regra.tag);
+    });
+    return ativas;
+  }
+
+  function pontuarLista(criterios, tagsPresentes){
+    var totalPeso = 0, obtidoPeso = 0, bateram = [];
+    criterios.forEach(function(c){
+      var pesoEfetivo = c.peso * (c.bandeira_vermelha ? BONUS_BANDEIRA : 1);
+      totalPeso += pesoEfetivo;
+      if (tagsPresentes.has(c.tag)){
+        obtidoPeso += pesoEfetivo;
+        bateram.push(c);
+      }
+    });
+    var precisao = totalPeso ? obtidoPeso / totalPeso : 0;
+    var cobertura = tagsPresentes.size ? bateram.length / tagsPresentes.size : 0;
+    var f1 = (precisao + cobertura) ? (2 * precisao * cobertura) / (precisao + cobertura) : 0;
+    return { precisao: precisao, cobertura: cobertura, f1: f1, bateram: bateram };
+  }
+
+  function variantesDaFicha(ficha){
+    if (ficha.formato === "plano") return [[null, ficha.criterios]];
+    if (ficha.formato === "por_gravidade") return Object.keys(ficha.niveis_gravidade).map(function(k){ return [k, ficha.niveis_gravidade[k]]; });
+    if (ficha.formato === "por_subtipo") return Object.keys(ficha.subtipos).map(function(k){ return [k, ficha.subtipos[k]]; });
+    return [];
+  }
+
+  // Portões de contexto clínico:
+  // - Trauma: fichas de Trauma só competem se houver mecanismo confirmado.
+  // - Pediátrico: fichas de Pediatria só competem se a vítima for pediátrica
+  //   (sem isso, sinais autonómicos genéricos — taquicardia, palidez, sudorese —
+  //   fazem fichas pediátricas pequenas "roubarem" o ranking de vítimas adultas,
+  //   já que o motor não tem noção de idade por si só).
+  var contextoTrauma = false;
+  var contextoPediatrico = false;
+
+  function rankear(tagsPresentes, opts){
+    opts = opts || {};
+    // topN=4, não 3: se um candidato genuinamente empatado com o líder (dentro
+    // de LIMIAR_DIFERENCIACAO_PONTOS) ficasse na 4ª posição, um corte em 3
+    // o excluiria da avaliação de empate silenciosamente.
+    var topN = opts.topN || 4, limiar = opts.limiar != null ? opts.limiar : 0.25, minimoCriterios = opts.minimoCriterios || 2;
+    var candidatos = [];
+    Object.keys(fichas).forEach(function(fid){
+      var ficha = fichas[fid];
+      if (ficha.categoria === "Trauma" && !contextoTrauma) return;
+      if (ficha.categoria === "Pediatria" && !contextoPediatrico) return;
+      variantesDaFicha(ficha).forEach(function(par){
+        var variante = par[0], criterios = par[1];
+        var r = pontuarLista(criterios, tagsPresentes);
+        if (r.bateram.length < minimoCriterios) return;
+        candidatos.push({ fid: fid, nome: ficha.nome, variante: variante, precisao: r.precisao, cobertura: r.cobertura, f1: r.f1, bateram: r.bateram });
+      });
+    });
+    candidatos.sort(function(a,b){ return b.f1 - a.f1; });
+    return candidatos.filter(function(c){ return c.f1 >= limiar; }).slice(0, topN);
+  }
+
+  function avaliarDiferenciacao(candidatos){
+    if (!candidatos.length) return { empatados: [], liderF1: 0 };
+    var liderF1 = candidatos[0].f1;
+    var empatados = candidatos.filter(function(c){ return (liderF1 - c.f1) * 100 < LIMIAR_DIFERENCIACAO_PONTOS; });
+    return { empatados: empatados, liderF1: liderF1 };
+  }
+
+  var TAGS_BANDEIRA = new Set();
+  Object.keys(fichas).forEach(function(fid){
+    variantesDaFicha(fichas[fid]).forEach(function(par){
+      par[1].forEach(function(c){ if (c.bandeira_vermelha) TAGS_BANDEIRA.add(c.tag); });
+    });
+  });
+
+  // ------------------------------------------------------------------
+  // Componentes reutilizáveis: grelha de vitais e seletor de tags
+  // (usados tanto no formulário principal como no editor de casos)
+  // ------------------------------------------------------------------
+  var PARAM_ORDEM = ["FC","FR","PAS","PAD","SpO2","Temp","Glicemia","Glasgow"];
+  var regrasPorParametro = {};
+  taxonomia.sinais_vitais.forEach(function(r){
+    (regrasPorParametro[r.parametro] = regrasPorParametro[r.parametro] || []).push(r);
+  });
+
+  function criarVitalsGrid(container, comHints){
+    var inputs = {};
+    var hints = {};
+    PARAM_ORDEM.forEach(function(param){
+      var regras = regrasPorParametro[param];
+      if (!regras) return;
+      var unidade = regras[0].unidade;
+      var card = document.createElement("div");
+      card.className = "vital-card";
+      card.innerHTML =
+        '<div class="vital-label">' + param + '</div>' +
+        '<div class="vital-input-row"><input type="number" inputmode="decimal" step="any"><span class="vital-unit">' + unidade + '</span></div>' +
+        (comHints ? '<div class="vital-hint"></div>' : '');
+      container.appendChild(card);
+      inputs[param] = card.querySelector("input");
+      if (comHints) hints[param] = card.querySelector(".vital-hint");
+    });
+    return {
+      valores: function(){
+        var v = {};
+        Object.keys(inputs).forEach(function(p){ var raw = inputs[p].value; if (raw !== "") v[p] = parseFloat(raw); });
+        return v;
+      },
+      setValores: function(v){
+        v = v || {};
+        Object.keys(inputs).forEach(function(p){ inputs[p].value = (v[p] !== undefined) ? v[p] : ""; });
+      },
+      limpar: function(){ Object.keys(inputs).forEach(function(p){ inputs[p].value = ""; }); },
+      atualizarHints: function(){
+        if (!comHints) return;
+        var ativas = tagsDosVitais(this.valores());
+        PARAM_ORDEM.forEach(function(param){
+          var regras = regrasPorParametro[param];
+          if (!regras || !hints[param]) return;
+          var achado = regras.find(function(r){ return ativas.has(r.tag); });
+          hints[param].textContent = achado ? achado.label.replace(/\s*\(.*\)$/, "") : "";
+        });
+      },
+      onChange: function(fn){ Object.keys(inputs).forEach(function(p){ inputs[p].addEventListener("input", fn); }); }
+    };
+  }
+
+  function criarPickerTags(container, searchInput){
+    var gruposMap = {};
+    taxonomia.sinais_sintomas.forEach(function(t){ (gruposMap[t.categoria] = gruposMap[t.categoria] || []).push(t); });
+
+    GRUPOS_ORDEM.forEach(function(grupo){
+      var tags = gruposMap[grupo];
+      if (!tags || !tags.length) return;
+      var card = document.createElement("div");
+      card.className = "sym-card" + (grupo === "Geral" ? " open" : "");
+      card.dataset.grupo = grupo;
+      var chipsHtml = tags.map(function(t){
+        var flagged = TAGS_BANDEIRA.has(t.tag);
+        return '<div class="sym-chip" data-tag="' + t.tag + '" data-label="' + normalizar(t.label) + '">' +
+          (flagged ? '<span class="flagdot"></span>' : '') + ICON_CHECK + '<span>' + t.label + '</span></div>';
+      }).join("");
+      card.innerHTML =
+        '<div class="sym-card-head"><h3>' + grupo + '</h3><span class="sym-count-pill" data-count="' + grupo + '"></span><div class="chevron"></div></div>' +
+        '<div class="sym-card-body"><div class="chips-wrap">' + chipsHtml + '</div></div>';
+      container.appendChild(card);
+      card.querySelector(".sym-card-head").addEventListener("click", function(){ card.classList.toggle("open"); });
+    });
+
+    container.addEventListener("click", function(e){
+      var chip = e.target.closest(".sym-chip");
+      if (!chip) return;
+      chip.classList.toggle("selected");
+      var isFlagged = !!chip.querySelector(".flagdot");
+      chip.classList.toggle("flagged", isFlagged && chip.classList.contains("selected"));
+      atualizarContagens();
+    });
+
+    function atualizarContagens(){
+      GRUPOS_ORDEM.forEach(function(grupo){
+        var card = container.querySelector('.sym-card[data-grupo="' + grupo + '"]');
+        if (!card) return;
+        var n = card.querySelectorAll(".sym-chip.selected").length;
+        var pill = card.querySelector('[data-count="' + grupo + '"]');
+        pill.textContent = n > 0 ? n + " selec." : "";
+      });
+    }
+
+    if (searchInput){
+      searchInput.addEventListener("input", function(){
+        var termo = normalizar(searchInput.value.trim());
+        var buscando = termo.length > 0;
+        container.querySelectorAll(".sym-card").forEach(function(card){
+          var algumVisivel = false;
+          card.querySelectorAll(".sym-chip").forEach(function(chip){
+            var visivel = !buscando || chip.dataset.label.indexOf(termo) !== -1;
+            chip.style.display = visivel ? "" : "none";
+            if (visivel) algumVisivel = true;
+          });
+          card.style.display = (buscando && !algumVisivel) ? "none" : "";
+          if (buscando && algumVisivel) card.classList.add("open");
+          else if (!buscando) card.classList.toggle("open", card.dataset.grupo === "Geral");
+        });
+      });
+    }
+
+    return {
+      getSelected: function(){
+        var tags = new Set();
+        container.querySelectorAll(".sym-chip.selected").forEach(function(chip){ tags.add(chip.dataset.tag); });
+        return tags;
+      },
+      setSelected: function(tagsArray){
+        var set = new Set(tagsArray || []);
+        container.querySelectorAll(".sym-chip").forEach(function(chip){
+          var sel = set.has(chip.dataset.tag);
+          chip.classList.toggle("selected", sel);
+          var isFlagged = !!chip.querySelector(".flagdot");
+          chip.classList.toggle("flagged", isFlagged && sel);
+        });
+        atualizarContagens();
+      },
+      limpar: function(){ this.setSelected([]); }
+    };
+  }
+
+  // ------------------------------------------------------------------
+  // Navegação entre views
+  // ------------------------------------------------------------------
+  var TODAS_VIEWS = ["view-gate","view-mode","view-casos","view-editor","view-form","view-result"];
+  function mostrarView(id){
+    TODAS_VIEWS.forEach(function(v){ document.getElementById(v).hidden = (v !== id); });
+    window.scrollTo(0,0);
+  }
+
+  // ------------------------------------------------------------------
+  // Estado: modo instrutor/aluno + casos personalizados (localStorage)
+  // ------------------------------------------------------------------
+  var LS_MODO = "bombeiros_modo_instrutor";
+  var LS_CASOS = "bombeiros_casos_custom";
+  var modoInstrutor = false;
+  var casoAtivo = null;
+
+  function aplicarModoUI(){
+    document.body.classList.toggle("is-instrutor", modoInstrutor);
+    document.querySelectorAll("#modoLabel").forEach(function(el){ el.textContent = modoInstrutor ? "Instrutor" : "Aluno"; });
+  }
+
+  function carregarCasosCustom(){
+    try { return JSON.parse(localStorage.getItem(LS_CASOS) || "[]"); } catch(e){ return []; }
+  }
+  function salvarCasosCustom(lista){
+    localStorage.setItem(LS_CASOS, JSON.stringify(lista));
+  }
+  function todosCasos(){
+    return CASOS_EMBUTIDOS.concat(carregarCasosCustom());
+  }
+
+  function codigoDoDia(){
+    var d = new Date();
+    return String(d.getDate()).padStart(2,"0") + String(d.getMonth()+1).padStart(2,"0");
+  }
+
+  // ---- gate de treino ----
+  document.getElementById("btnAckTreino").addEventListener("click", function(){
+    var salvo = localStorage.getItem(LS_MODO);
+    if (salvo === null){
+      mostrarView("view-mode");
+    } else {
+      modoInstrutor = salvo === "1";
+      aplicarModoUI();
+      renderCasosList();
+      mostrarView("view-casos");
+    }
+  });
+
+  // ---- seleção de modo ----
+  function escolherModo(instrutor){
+    modoInstrutor = instrutor;
+    localStorage.setItem(LS_MODO, instrutor ? "1" : "0");
+    aplicarModoUI();
+    renderCasosList();
+    mostrarView("view-casos");
+    document.getElementById("pinBox").hidden = true;
+    document.getElementById("pinInput").value = "";
+    document.getElementById("pinError").hidden = true;
+  }
+  document.getElementById("btnSouAluno").addEventListener("click", function(){ escolherModo(false); });
+  document.getElementById("btnSouInstrutor").addEventListener("click", function(){
+    document.getElementById("pinBox").hidden = false;
+    document.getElementById("pinInput").focus();
+  });
+  document.getElementById("btnConfirmarPin").addEventListener("click", function(){
+    if (document.getElementById("pinInput").value === codigoDoDia()){
+      escolherModo(true);
+    } else {
+      document.getElementById("pinError").hidden = false;
+    }
+  });
+  document.getElementById("linkTrocarModo").addEventListener("click", function(){ mostrarView("view-mode"); });
+
+  // ---- lista de casos ----
+  function renderCasosList(){
+    var el = document.getElementById("casosList");
+    var embutidosN = CASOS_EMBUTIDOS.length;
+    var casos = todosCasos();
+    el.innerHTML = casos.map(function(c, i){
+      var custom = i >= embutidosN;
+      return '<div class="caso-card" data-idx="' + i + '">' +
+        '<div class="caso-card-top"><div class="caso-titulo">' + c.titulo + '</div>' +
+        (c.nivel_dificuldade ? '<span class="caso-badge">' + c.nivel_dificuldade + '</span>' : '') + '</div>' +
+        (c.categoria_alvo ? '<div class="caso-cat">' + c.categoria_alvo + '</div>' : '') +
+        (custom ? '<div class="caso-del" data-del="' + i + '" data-instrutor-only style="display:' + (modoInstrutor ? 'inline-block':'none') + '">Eliminar caso</div>' : '') +
+        '</div>';
+    }).join("");
+  }
+  document.getElementById("casoLivre").addEventListener("click", function(){
+    casoAtivo = null;
+    prepararFormularioParaCaso();
+    mostrarView("view-form");
+  });
+  document.getElementById("casosList").addEventListener("click", function(e){
+    var delBtn = e.target.closest("[data-del]");
+    if (delBtn){
+      e.stopPropagation();
+      if (!modoInstrutor) return;
+      var idx = parseInt(delBtn.dataset.del, 10);
+      var custom = carregarCasosCustom();
+      var customIdx = idx - CASOS_EMBUTIDOS.length;
+      if (customIdx >= 0){
+        custom.splice(customIdx, 1);
+        salvarCasosCustom(custom);
+        renderCasosList();
+      }
+      return;
+    }
+    var card = e.target.closest(".caso-card");
+    if (!card) return;
+    var idx = parseInt(card.dataset.idx, 10);
+    casoAtivo = todosCasos()[idx];
+    prepararFormularioParaCaso();
+    mostrarView("view-form");
+  });
+
+  // ---- exportar / importar casos personalizados ----
+  document.getElementById("btnExportarCasos").addEventListener("click", function(){
+    var dados = JSON.stringify(carregarCasosCustom(), null, 2);
+    var a = document.createElement("a");
+    a.href = "data:application/json;charset=utf-8," + encodeURIComponent(dados);
+    a.download = "casos_ficticios_custom.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+  document.getElementById("btnImportarCasos").addEventListener("click", function(){
+    document.getElementById("inputImportar").click();
+  });
+  document.getElementById("inputImportar").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var novos = JSON.parse(reader.result);
+        if (!Array.isArray(novos)) throw new Error("formato inválido");
+        var atuais = carregarCasosCustom();
+        var idsExistentes = new Set(atuais.map(function(c){ return c.id; }));
+        novos.forEach(function(c){ if (!idsExistentes.has(c.id)) atuais.push(c); });
+        salvarCasosCustom(atuais);
+        renderCasosList();
+      } catch(err){
+        alert("Não foi possível importar este arquivo: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  });
+
+  // ------------------------------------------------------------------
+  // Formulário principal
+  // ------------------------------------------------------------------
+  var vitals = criarVitalsGrid(document.getElementById("vitalsGrid"), true);
+  vitals.onChange(atualizarTudo);
+
+  var symPicker = criarPickerTags(document.getElementById("symGroups"), document.getElementById("symSearch"));
+  document.getElementById("symGroups").addEventListener("click", atualizarTudo);
+
+  function atualizarTudo(){
+    vitals.atualizarHints();
+    var total = tagsDosVitais(vitals.valores()).size + symPicker.getSelected().size;
+    document.getElementById("selCount").textContent = total + " selec.";
+    document.getElementById("ctaCount").innerHTML = "<b>" + total + "</b> achado" + (total === 1 ? "" : "s") + " selecionado" + (total === 1 ? "" : "s");
+    document.getElementById("btnAnalisar").disabled = total === 0;
+  }
+  atualizarTudo();
+
+  document.getElementById("contextToggle").addEventListener("click", function(e){
+    var btn = e.target.closest(".context-btn");
+    if (!btn) return;
+    document.querySelectorAll("#contextToggle .context-btn").forEach(function(b){ b.classList.remove("active","trauma-on"); });
+    btn.classList.add("active");
+    contextoTrauma = btn.dataset.trauma === "sim";
+    if (contextoTrauma) btn.classList.add("trauma-on");
+    document.getElementById("contextNote").textContent = contextoTrauma
+      ? "Fichas de trauma incluídas na análise."
+      : "Fichas de trauma (torácico, TCE, queimaduras, etc.) só entram na análise com mecanismo confirmado.";
+  });
+
+  document.getElementById("idadeToggle").addEventListener("click", function(e){
+    var btn = e.target.closest(".context-btn");
+    if (!btn) return;
+    document.querySelectorAll("#idadeToggle .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    contextoPediatrico = btn.dataset.idade === "pediatrico";
+    document.getElementById("idadeNote").textContent = contextoPediatrico
+      ? "Fichas de Pediatria incluídas na análise. Os valores de referência dos sinais vitais continuam calibrados para adultos."
+      : "Fichas de Pediatria só entram na análise quando a vítima é pediátrica. Os valores de referência dos sinais vitais continuam calibrados para adultos em ambos os modos.";
+  });
+
+  function resetFormulario(){
+    vitals.limpar();
+    symPicker.limpar();
+    document.querySelectorAll("#contextToggle .context-btn").forEach(function(b){ b.classList.remove("active","trauma-on"); });
+    document.querySelector('#contextToggle [data-trauma="nao"]').classList.add("active");
+    contextoTrauma = false;
+    document.getElementById("contextNote").textContent = "Fichas de trauma (torácico, TCE, queimaduras, etc.) só entram na análise com mecanismo confirmado.";
+
+    document.querySelectorAll("#idadeToggle .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    document.querySelector('#idadeToggle [data-idade="adulto"]').classList.add("active");
+    contextoPediatrico = false;
+    document.getElementById("idadeNote").textContent = "Fichas de Pediatria só entram na análise quando a vítima é pediátrica. Os valores de referência dos sinais vitais continuam calibrados para adultos em ambos os modos.";
+
+    atualizarTudo();
+  }
+
+  function prepararFormularioParaCaso(){
+    resetFormulario();
+    var box = document.getElementById("vinhetaBox");
+    if (casoAtivo){
+      document.getElementById("vinhetaTitulo").textContent = casoAtivo.titulo;
+      document.getElementById("vinhetaTexto").textContent = casoAtivo.vinheta;
+      document.getElementById("gabaritoInline").hidden = true;
+      box.hidden = false;
+    } else {
+      box.hidden = true;
+    }
+  }
+
+  document.getElementById("btnVerGabarito").addEventListener("click", function(){
+    var el = document.getElementById("gabaritoInline");
+    if (!casoAtivo) return;
+    if (el.hidden){
+      el.innerHTML = renderGabaritoConteudo(casoAtivo.gabarito);
+      el.hidden = false;
+    } else {
+      el.hidden = true;
+    }
+  });
+  document.getElementById("btnPreencherDemo").addEventListener("click", function(){
+    if (!casoAtivo || !casoAtivo.gabarito) return;
+    vitals.setValores(casoAtivo.gabarito.vitais_esperados);
+    symPicker.setSelected(casoAtivo.gabarito.tags_esperadas);
+    atualizarTudo();
+  });
+
+  document.getElementById("btnVoltarCasos").addEventListener("click", function(){
+    renderCasosList();
+    mostrarView("view-casos");
+  });
+
+  // ------------------------------------------------------------------
+  // Resultado
+  // ------------------------------------------------------------------
+  var viewForm = document.getElementById("view-form");
+  var viewResult = document.getElementById("view-result");
+  var resultMain = document.getElementById("resultMain");
+  var resultTag = document.getElementById("resultTag");
+
+  function tagInfo(tag){
+    return taxonomia.sinais_sintomas.concat(taxonomia.sinais_vitais).find(function(x){ return x.tag === tag; });
+  }
+
+  function renderCriteriaChips(bateram){
+    return bateram.map(function(c){
+      var t = tagInfo(c.tag);
+      var label = t ? (t.label || "").replace(/\s*\(.*\)$/, "") : c.tag;
+      if (c.bandeira_vermelha) return '<div class="crit-chip flag">' + ICON_FLAG + '<span>' + label + '</span></div>';
+      return '<div class="crit-chip">' + label + '</div>';
+    }).join("");
+  }
+  function renderCriteriaChipsSm(bateram){
+    return bateram.map(function(c){
+      var t = tagInfo(c.tag);
+      var label = t ? (t.label || "").replace(/\s*\(.*\)$/, "") : c.tag;
+      return '<div class="crit-chip-sm' + (c.bandeira_vermelha ? " flag" : "") + '">' + label + '</div>';
+    }).join("");
+  }
+
+  function atuacaoDe(candidato){
+    var entry = atuacoes[candidato.fid];
+    if (!entry) return null;
+    var lista = Array.isArray(entry) ? entry : (candidato.variante ? entry[candidato.variante] : null);
+    return (lista && lista.length) ? lista : null;
+  }
+  function renderAtuacao(lista){
+    var ultimoGrupo = null, html = "";
+    lista.forEach(function(item){
+      if (item.grupo && item.grupo !== ultimoGrupo){
+        html += '<div class="at-group-label">' + item.grupo + '</div>';
+        ultimoGrupo = item.grupo;
+      }
+      html += '<li>' + item.texto + '</li>';
+    });
+    return '<ul class="at-list">' + html + '</ul>';
+  }
+  function nomeCompleto(c){
+    return c.nome + (c.variante ? ' <span class="sub">(' + formatarVariante(c.variante) + ')</span>' : "");
+  }
+  function nomeDoAlvo(alvo){
+    var f = fichas[alvo.ficha_id];
+    var nome = f ? f.nome : alvo.ficha_id;
+    return nome + (alvo.variante ? " (" + formatarVariante(alvo.variante) + ")" : "");
+  }
+
+  function renderGabaritoConteudo(gabarito){
+    var html = '<div class="gabarito-label">Gabarito (só instrutor)</div>';
+    if (gabarito.tipo === "ambiguo"){
+      html += '<div class="gabarito-resposta">Caso ambíguo — válidos: ' +
+        gabarito.candidatos_validos.map(nomeDoAlvo).join(" · ") + '</div>';
+    } else {
+      html += '<div class="gabarito-resposta">' + nomeDoAlvo({ficha_id: gabarito.ficha_id, variante: gabarito.variante}) + '</div>';
+    }
+    if (gabarito.nota_instrutor) html += '<div class="gabarito-nota">' + gabarito.nota_instrutor + '</div>';
+    return html;
+  }
+
+  function candidatoCorresponde(c, alvo){
+    return c.fid === alvo.ficha_id && (alvo.variante ? c.variante === alvo.variante : true);
+  }
+
+  function renderGabaritoResultado(gabarito, candidatos){
+    var alvos = gabarito.tipo === "ambiguo" ? gabarito.candidatos_validos : [{ficha_id: gabarito.ficha_id, variante: gabarito.variante}];
+    var achadoIdx = -1;
+    for (var i = 0; i < candidatos.length; i++){
+      if (alvos.some(function(a){ return candidatoCorresponde(candidatos[i], a); })){ achadoIdx = i; break; }
+    }
+    var status, statusClass, statusIcon;
+    if (achadoIdx === 0){ status = "O motor identificou corretamente como principal"; statusClass = "ok"; statusIcon = ICON_OK; }
+    else if (achadoIdx > 0){ status = "Apareceu no ranking, mas não como principal"; statusClass = "parcial"; statusIcon = ICON_WARN; }
+    else { status = "O motor não encontrou a ficha esperada entre os candidatos mostrados"; statusClass = "falhou"; statusIcon = ICON_X; }
+
+    var html = '<div class="gabarito-box">' + renderGabaritoConteudo(gabarito) +
+      '<div class="gabarito-check ' + statusClass + '">' + statusIcon + '<span>' + status + '</span></div></div>';
+    return html;
+  }
+
+  function renderResultado(totalAchados){
+    var tagsPresentes = new Set();
+    tagsDosVitais(vitals.valores()).forEach(function(t){ tagsPresentes.add(t); });
+    symPicker.getSelected().forEach(function(t){ tagsPresentes.add(t); });
+
+    resultTag.textContent = "Baseado em " + totalAchados + " achado" + (totalAchados === 1 ? "" : "s") + " informado" + (totalAchados === 1 ? "" : "s") +
+      (contextoTrauma ? " · trauma" : " · sem trauma") + (contextoPediatrico ? " · pediátrico" : " · adulto");
+
+    var candidatos = rankear(tagsPresentes);
+    var html = "";
+
+    if (!candidatos.length){
+      html = '<div class="empty-state">' + ICON_EMPTY +
+        '<div><b>Nenhuma correspondência com confiança suficiente.</b><br>Volte e selecione mais achados (sinais vitais e/ou sintomas) para a análise.</div></div>';
+    } else {
+      var diff = avaliarDiferenciacao(candidatos);
+
+      if (diff.empatados.length > 1){
+        var margem = Math.round((diff.liderF1 - diff.empatados[diff.empatados.length-1].f1) * 100);
+        var nomesEmp = diff.empatados.map(function(c){ return c.nome + (c.variante ? " (" + formatarVariante(c.variante) + ")" : ""); }).join(", ");
+        html += '<div class="warn-box"><div class="warn-top">' + ICON_WARN +
+          '<div><div class="warn-title">Achados insuficientes para diferenciar</div>' +
+          '<div class="warn-body">' + diff.empatados.length + ' hipóteses ficaram próximas entre si (diferença ≤ ' + margem + ' pontos). ' +
+          '<b>Candidatos:</b> ' + nomesEmp + '. Considere avaliar achados adicionais antes de decidir conduta.</div></div></div>';
+
+        html += '<div class="tied-label">' + diff.empatados.length + ' hipóteses empatadas — nenhuma destacada</div>';
+        diff.empatados.forEach(function(c){
+          html += '<div class="tied-card"><div class="tied-top"><div class="tied-name">' + nomeCompleto(c) + '</div>' +
+            '<div class="tied-pct">' + Math.round(c.f1*100) + '%</div></div>' +
+            '<div class="tied-criteria">' + renderCriteriaChipsSm(c.bateram) + '</div></div>';
+        });
+
+        var resto = candidatos.filter(function(c){ return diff.empatados.indexOf(c) === -1; });
+        if (resto.length){
+          html += '<div class="outras-label">Outras hipóteses consideradas</div>';
+          resto.forEach(function(c){
+            html += '<div class="tied-card"><div class="tied-top"><div class="tied-name">' + nomeCompleto(c) + '</div>' +
+              '<div class="tied-pct">' + Math.round(c.f1*100) + '%</div></div>' +
+              '<div class="tied-criteria">' + renderCriteriaChipsSm(c.bateram) + '</div></div>';
+          });
+        }
+      } else {
+        var vencedor = candidatos[0];
+        var temBandeira = vencedor.bateram.some(function(c){ return c.bandeira_vermelha; });
+        var nBandeiras = vencedor.bateram.filter(function(c){ return c.bandeira_vermelha; }).length;
+
+        html += '<div class="hero ' + (temBandeira ? "sev-red" : "sev-teal") + '">';
+        html += '<div class="hero-flag">' + (temBandeira ? ICON_FLAG : ICON_STEP) +
+          '<span>' + (temBandeira ? (nBandeiras + " bandeira" + (nBandeiras===1?"":"s") + " vermelha" + (nBandeiras===1?"":"s")) : "Sem bandeiras vermelhas") + '</span></div>';
+        html += '<h2 class="display">' + nomeCompleto(vencedor) + '</h2>';
+        html += '<div class="hero-meta"><span class="conf-badge">' + Math.round(vencedor.f1*100) + '% compatibilidade</span>' +
+          '<span class="conf-label">' + (vencedor.f1 >= 0.6 ? "alta confiança" : "confiança moderada") + '</span></div>';
+        html += '<div class="criteria-title">Achados que bateram</div>';
+        html += '<div class="criteria-wrap">' + renderCriteriaChips(vencedor.bateram) + '</div>';
+        html += '</div>';
+
+        var lista = atuacaoDe(vencedor);
+        if (lista){
+          html += '<div class="section-box"><div class="section-box-title">' + ICON_STEP + '<span>Atuação recomendada</span></div>' + renderAtuacao(lista) + '</div>';
+        }
+
+        var outros = candidatos.slice(1);
+        if (outros.length){
+          html += '<div class="outras-label">Outras hipóteses consideradas (menor compatibilidade)</div>';
+          outros.forEach(function(c){
+            html += '<div class="tied-card"><div class="tied-top"><div class="tied-name">' + nomeCompleto(c) + '</div>' +
+              '<div class="tied-pct">' + Math.round(c.f1*100) + '%</div></div>' +
+              '<div class="tied-criteria">' + renderCriteriaChipsSm(c.bateram) + '</div></div>';
+          });
+        }
+      }
+    }
+
+    if (casoAtivo && modoInstrutor && casoAtivo.gabarito){
+      html += renderGabaritoResultado(casoAtivo.gabarito, candidatos);
+    }
+
+    html += '<div class="footer-note"><b>Simulador de treino</b> — não substitui protocolos oficiais nem avaliação clínica real. Não usar para apoio a decisão em ocorrência. Regras de sinais vitais calibradas para adultos.</div>';
+    resultMain.innerHTML = html;
+  }
+
+  document.getElementById("btnAnalisar").addEventListener("click", function(){
+    var total = tagsDosVitais(vitals.valores()).size + symPicker.getSelected().size;
+    if (total === 0) return;
+    renderResultado(total);
+    mostrarView("view-result");
+  });
+  document.getElementById("btnVoltar").addEventListener("click", function(){ mostrarView("view-form"); });
+
+  // ------------------------------------------------------------------
+  // Editor de casos fictícios (só instrutor)
+  // ------------------------------------------------------------------
+  var edVitals = criarVitalsGrid(document.getElementById("edVitalsGrid"), false);
+  var edSymPicker = criarPickerTags(document.getElementById("edSymGroups"), document.getElementById("edSymSearch"));
+
+  // categoria alvo
+  var edCategoria = document.getElementById("edCategoria");
+  GRUPOS_ORDEM.forEach(function(g){
+    var o = document.createElement("option"); o.value = g; o.textContent = g; edCategoria.appendChild(o);
+  });
+
+  // ficha correta (ordenado por nome)
+  var fichaIdsOrdenados = Object.keys(fichas).sort(function(a,b){ return fichas[a].nome.localeCompare(fichas[b].nome); });
+  var edFichaId = document.getElementById("edFichaId");
+  fichaIdsOrdenados.forEach(function(fid){
+    var o = document.createElement("option"); o.value = fid; o.textContent = fichas[fid].nome; edFichaId.appendChild(o);
+  });
+  function atualizarVariantesEditor(){
+    var edVariante = document.getElementById("edVariante");
+    edVariante.innerHTML = '<option value="">—</option>';
+    var ficha = fichas[edFichaId.value];
+    if (!ficha) return;
+    variantesDaFicha(ficha).forEach(function(par){
+      if (!par[0]) return;
+      var o = document.createElement("option"); o.value = par[0]; o.textContent = formatarVariante(par[0]);
+      edVariante.appendChild(o);
+    });
+  }
+  edFichaId.addEventListener("change", atualizarVariantesEditor);
+  atualizarVariantesEditor();
+
+  // candidatos válidos (caso ambíguo) — todas as variantes de todas as fichas
+  var edCandidatosList = document.getElementById("edCandidatosList");
+  fichaIdsOrdenados.forEach(function(fid){
+    variantesDaFicha(fichas[fid]).forEach(function(par){
+      var label = fichas[fid].nome + (par[0] ? " (" + formatarVariante(par[0]) + ")" : "");
+      var row = document.createElement("label");
+      row.style.cssText = "display:flex; align-items:center; gap:8px; padding:6px 4px; font-size:13px;";
+      row.innerHTML = '<input type="checkbox" data-fid="' + fid + '" data-variante="' + (par[0]||"") + '"> ' + label;
+      edCandidatosList.appendChild(row);
+    });
+  });
+
+  document.getElementById("edTipoGabarito").addEventListener("click", function(e){
+    var btn = e.target.closest(".context-btn");
+    if (!btn) return;
+    document.querySelectorAll("#edTipoGabarito .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    var ambiguo = btn.dataset.tipo === "ambiguo";
+    document.getElementById("edGabaritoDefinido").hidden = ambiguo;
+    document.getElementById("edGabaritoAmbiguo").hidden = !ambiguo;
+  });
+
+  document.getElementById("btnNovoCaso").addEventListener("click", function(){
+    document.getElementById("edTitulo").value = "";
+    document.getElementById("edCategoria").value = "";
+    document.getElementById("edNivel").value = "iniciante";
+    document.getElementById("edVinheta").value = "";
+    document.getElementById("edNota").value = "";
+    document.querySelectorAll("#edTipoGabarito .context-btn").forEach(function(b){ b.classList.remove("active"); });
+    document.querySelector('#edTipoGabarito [data-tipo="definido"]').classList.add("active");
+    document.getElementById("edGabaritoDefinido").hidden = false;
+    document.getElementById("edGabaritoAmbiguo").hidden = true;
+    edCandidatosList.querySelectorAll("input").forEach(function(cb){ cb.checked = false; });
+    edVitals.limpar();
+    edSymPicker.limpar();
+    mostrarView("view-editor");
+  });
+  document.getElementById("btnCancelarEditor").addEventListener("click", function(){ mostrarView("view-casos"); });
+
+  document.getElementById("btnSalvarCaso").addEventListener("click", function(){
+    var titulo = document.getElementById("edTitulo").value.trim();
+    var vinheta = document.getElementById("edVinheta").value.trim();
+    if (!titulo || !vinheta){ alert("Preencha pelo menos o título e a vinheta."); return; }
+
+    var tipoAmbiguo = document.querySelector('#edTipoGabarito [data-tipo="ambiguo"]').classList.contains("active");
+    var gabarito;
+    if (tipoAmbiguo){
+      var candidatosValidos = [];
+      edCandidatosList.querySelectorAll("input:checked").forEach(function(cb){
+        candidatosValidos.push({ ficha_id: cb.dataset.fid, variante: cb.dataset.variante || null });
+      });
+      if (candidatosValidos.length < 2){ alert("Marque pelo menos 2 candidatos válidos para um caso ambíguo."); return; }
+      gabarito = { tipo: "ambiguo", candidatos_validos: candidatosValidos };
+    } else {
+      var fid = document.getElementById("edFichaId").value;
+      var variante = document.getElementById("edVariante").value || null;
+      gabarito = { tipo: "definido", ficha_id: fid, variante: variante };
+    }
+    gabarito.vitais_esperados = edVitals.valores();
+    gabarito.tags_esperadas = Array.from(edSymPicker.getSelected());
+    var nota = document.getElementById("edNota").value.trim();
+    if (nota) gabarito.nota_instrutor = nota;
+
+    var novoCaso = {
+      id: "custom_" + Date.now(),
+      titulo: titulo,
+      categoria_alvo: document.getElementById("edCategoria").value || null,
+      nivel_dificuldade: document.getElementById("edNivel").value,
+      vinheta: vinheta,
+      gabarito: gabarito
+    };
+
+    var custom = carregarCasosCustom();
+    custom.push(novoCaso);
+    salvarCasosCustom(custom);
+    renderCasosList();
+    mostrarView("view-casos");
+  });
+
+  // ------------------------------------------------------------------
+  // Arranque
+  // ------------------------------------------------------------------
+  mostrarView("view-gate");
+})();
+</script>
+</body>
+</html>

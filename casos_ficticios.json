@@ -1,0 +1,80 @@
+[
+  {
+    "id": "caso_asma_moderada",
+    "titulo": "Dispneia súbita com sibilos",
+    "categoria_alvo": "Respiratório",
+    "nivel_dificuldade": "iniciante",
+    "vinheta": "Você é chamado(a) para uma vítima de 34 anos, consciente e orientada, sentada, que refere \"falta de ar\" de início súbito há cerca de 20 minutos. À observação: fala em frases curtas, usa musculatura acessória para respirar, ausculta-se sibilância na fase expiratória. A vítima está ansiosa. Nega dor torácica.",
+    "gabarito": {
+      "tipo": "definido",
+      "ficha_id": "asma",
+      "variante": "crise_moderada",
+      "vitais_esperados": { "FC": 118, "FR": 26, "SpO2": 90 },
+      "tags_esperadas": ["dispneia", "pieira", "tiragem_musculos_acessorios", "ansiedade"],
+      "nota_instrutor": "Foco: reconhecer a tríade dispneia + sibilância + tiragem. SpO2 90% reforça gravidade moderada — não é \"grave\" porque não há posição de tripé nem incapacidade total de falar. Sem trauma: o toggle de contexto deve ficar em \"Sem trauma\"."
+    }
+  },
+  {
+    "id": "caso_avc_classico",
+    "titulo": "Alteração súbita da fala e força",
+    "categoria_alvo": "Neurológico",
+    "nivel_dificuldade": "iniciante",
+    "vinheta": "Vítima de 71 anos, encontrada pela família com queixa de \"boca torta\" e dificuldade em falar, iniciada há cerca de 40 minutos. À observação: assimetria facial com desvio da comissura labial, fala arrastada, dificuldade em elevar o braço direito. Refere também cefaleia intensa.",
+    "gabarito": {
+      "tipo": "definido",
+      "ficha_id": "avc",
+      "variante": null,
+      "tags_esperadas": ["assimetria_facial", "disartria_afasia", "hemiparesia_hemiplegia", "cefaleia_intensa"],
+      "nota_instrutor": "Os 3 primeiros achados marcados são exatamente os critérios da escala de Cincinnati. Ponto de discussão: perguntar à turma qual seria a hora de início a registar (última vez visto bem) e os critérios da Via Verde AVC."
+    }
+  },
+  {
+    "id": "caso_dor_toracica_cardiaca",
+    "titulo": "Dor torácica com irradiação",
+    "categoria_alvo": "Cardiovascular",
+    "nivel_dificuldade": "intermediario",
+    "vinheta": "Vítima de 58 anos refere dor \"em aperto\" no peito, com irradiação para o braço esquerdo, iniciada há 30 minutos em repouso. Está pálida, sudoreica, ansiosa. Nega esforço físico prévio. TA aferida: 82/58 mmHg. FC 112.",
+    "gabarito": {
+      "tipo": "definido",
+      "ficha_id": "dor_toracica_cardiaca",
+      "variante": null,
+      "vitais_esperados": { "PAS": 82, "FC": 112 },
+      "tags_esperadas": ["dor_toracica_opressiva", "dor_irradiada_msuperior_mandibula", "sudorese", "palidez"],
+      "nota_instrutor": "A PAS baixa (82) é um ponto de discussão importante: sinaliza possível choque cardiogénico associado, não uma patologia separada — bom momento para falar sobre vítima crítica e pedido de apoio diferenciado precoce."
+    }
+  },
+  {
+    "id": "caso_ambiguo_dispneia",
+    "titulo": "Mal-estar geral, sem sinais específicos",
+    "categoria_alvo": "Respiratório",
+    "nivel_dificuldade": "avancado",
+    "vinheta": "Vítima de 46 anos refere sensação súbita de falta de ar e cansaço, com ansiedade marcada. Está taquicárdica, taquipneica, pálida e sudoreica. Não há queixa de dor torácica nem sibilância à auscultação. Nenhum antecedente relevante conhecido no momento.",
+    "gabarito": {
+      "tipo": "ambiguo",
+      "candidatos_validos": [
+        { "ficha_id": "asma", "variante": "crise_moderada" },
+        { "ficha_id": "asma", "variante": "crise_grave" },
+        { "ficha_id": "eap", "variante": null },
+        { "ficha_id": "dor_toracica_cardiaca", "variante": null }
+      ],
+      "tags_esperadas": ["dispneia", "ansiedade", "sudorese", "palidez", "fadiga_inicio_subito"],
+      "vitais_esperados": { "FC": 118, "FR": 24 },
+      "nota_instrutor": "Este caso é DELIBERADAMENTE ambíguo — o objetivo pedagógico não é acertar uma única patologia, e sim reconhecer que os achados apresentados não permitem diferenciar com segurança entre um quadro respiratório e um cardíaco. Com estes achados, a app deve mostrar um aviso de \"achados insuficientes para diferenciar\" entre Asma, Edema Agudo do Pulmão (EAP) e Dor Torácica Cardíaca — todos cursam com dispneia + sinais autonómicos inespecíficos. Discuta com a turma que outros achados (dor torácica presente/ausente, sibilância presente/ausente, ortopneia/fervores na auscultação) resolveriam a ambiguidade."
+    }
+  },
+  {
+    "id": "caso_trauma_pneumotorax",
+    "titulo": "Vítima de acidente com dificuldade respiratória",
+    "categoria_alvo": "Trauma",
+    "nivel_dificuldade": "avancado",
+    "vinheta": "Vítima envolvida em acidente de viação (colisão frontal, sem cinto de segurança), consciente mas com dificuldade respiratória marcada. À observação: taquipneia, assimetria na expansão torácica, turgência jugular, desvio da traqueia, cianose labial. TA 78/50, FC 128.",
+    "gabarito": {
+      "tipo": "definido",
+      "ficha_id": "trauma_toracico",
+      "variante": "pneumotorax_hipertensivo",
+      "vitais_esperados": { "FC": 128, "PAS": 78 },
+      "tags_esperadas": ["dispneia", "taquipneia", "assimetria_toracica", "ingurgitamento_jugular", "desvio_traqueia", "cianose"],
+      "nota_instrutor": "Ponto-chave deste caso: o aluno precisa de ativar o toggle \"Houve trauma\" antes de analisar — sem isso, a ficha de Traumatismo Torácico nem entra no ranking, mesmo com todos os achados corretos marcados. É intencional: reforça a importância do contexto mecanismo de lesão."
+    }
+  }
+]
