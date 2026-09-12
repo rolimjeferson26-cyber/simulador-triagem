@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 844 },
+    { "file": "Resultado.dc.html", "x": 470, "y": 0, "w": 390, "h": 844 },
+    { "file": "ResultadoAmbiguo.dc.html", "x": 940, "y": 0, "w": 390, "h": 844 }
+  ],
+  "annotations": [
+    { "id": "note-form", "x": 0, "y": -110, "w": 300, "text": "1. Formulário — vitais + sinais/sintomas\nToques grandes, correção em tempo real (amber), CTA fixo no rodapé" },
+    { "id": "note-resultado", "x": 470, "y": -110, "w": 300, "text": "2. Resultado — vencedor claro\nCor = significado clínico: vermelho só p/ bandeiras de urgência" },
+    { "id": "note-ambiguo", "x": 940, "y": -110, "w": 300, "text": "3. Resultado — empate/ambiguidade\nNenhum destaque; aviso âmbar explica por quê" }
+  ],
+  "launch": { "view": "canvas" }
+}

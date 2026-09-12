@@ -1,0 +1,191 @@
+{
+  "versao": "0.1-teste",
+  "nota": "Vocabulário de teste construído a partir de 4 fichas (asma, dor_toracica_cardiaca, choque_geral, avc). Ainda não cobre o restante do JSON.",
+  "sinais_vitais": [
+    {
+      "tag": "taquicardia",
+      "label": "Taquicardia (FC elevada)",
+      "parametro": "FC",
+      "unidade": "bpm",
+      "min": 101,
+      "max": null
+    },
+    {
+      "tag": "bradicardia",
+      "label": "Bradicardia (FC baixa)",
+      "parametro": "FC",
+      "unidade": "bpm",
+      "min": null,
+      "max": 59
+    },
+    {
+      "tag": "taquipneia",
+      "label": "Taquipneia (FR elevada)",
+      "parametro": "FR",
+      "unidade": "cpm",
+      "min": 21,
+      "max": null
+    },
+    {
+      "tag": "hipotensao",
+      "label": "Hipotensão (PAS baixa)",
+      "parametro": "PAS",
+      "unidade": "mmHg",
+      "min": null,
+      "max": 89
+    },
+    {
+      "tag": "spo2_baixo",
+      "label": "SpO2 diminuída",
+      "parametro": "SpO2",
+      "unidade": "%",
+      "min": null,
+      "max": 93
+    },
+    {
+      "tag": "apneia",
+      "label": "Apneia (ausência de respiração)",
+      "parametro": "FR",
+      "unidade": "cpm",
+      "min": 0,
+      "max": 0
+    }
+  ],
+  "sinais_sintomas": [
+    {
+      "tag": "dispneia",
+      "label": "Dispneia / falta de ar",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "dispneia_impede_falar",
+      "label": "Dispneia que impede completar frases",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "pieira",
+      "label": "Pieira (sibilos expiratórios)",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "tiragem_musculos_acessorios",
+      "label": "Uso de músculos acessórios / tiragem",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "posicao_tripe",
+      "label": "Posição de tripé",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "prostracao",
+      "label": "Prostração / desorientação",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "silencio_ventilatorio",
+      "label": "Silêncio ventilatório (sons inaudíveis)",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "dor_toracica_opressiva",
+      "label": "Dor/desconforto retroesternal em aperto ou peso",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "dor_irradiada_msuperior_mandibula",
+      "label": "Dor irradiada para MS esquerdo, pescoço ou mandíbula",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "dor_epigastrica",
+      "label": "Dor epigástrica",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "palpitacoes",
+      "label": "Palpitações",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "sincope_lipotimia",
+      "label": "Síncope ou lipotimia",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "fadiga_inicio_subito",
+      "label": "Cansaço de início súbito",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "alteracao_consciencia",
+      "label": "Alteração do estado de consciência",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "pele_fria_palida_sudorese",
+      "label": "Pele pálida, fria e sudoreica",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "assimetria_facial",
+      "label": "Assimetria facial / desvio da comissura labial",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "hemiparesia_hemiplegia",
+      "label": "Perda de força/sensibilidade num lado do corpo",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "disartria_afasia",
+      "label": "Alteração da fala (disartria/afasia)",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "alteracao_visual",
+      "label": "Alterações da visão",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "desvio_olhar",
+      "label": "Desvio conjugado do olhar",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "cefaleia_intensa",
+      "label": "Cefaleia intensa",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "ataxia",
+      "label": "Ataxia (desequilíbrio da marcha/coordenação)",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "vertigem_tonturas",
+      "label": "Vertigem / tonturas",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "palidez",
+      "label": "Palidez",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "sudorese",
+      "label": "Sudorese",
+      "tipo": "objetivo"
+    },
+    {
+      "tag": "nauseas_vomitos",
+      "label": "Náuseas e/ou vómitos",
+      "tipo": "subjetivo"
+    },
+    {
+      "tag": "ansiedade",
+      "label": "Ansiedade / agitação",
+      "tipo": "objetivo"
+    }
+  ]
+}

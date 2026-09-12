@@ -1,0 +1,3022 @@
+{
+  "asma": {
+    "nome": "Asma",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "crise_ligeira": [
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia com a marcha"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Possibilidade de pieira discreta na fase expiratória"
+        }
+      ],
+      "crise_moderada": [
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Ansiedade"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia em pequenos esforços"
+        },
+        {
+          "tag": "dispneia_impede_falar",
+          "peso": 2,
+          "origem": "Incapacidade de completar frases curtas"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Pieira"
+        },
+        {
+          "tag": "tiragem_musculos_acessorios",
+          "peso": 2,
+          "origem": "Uso de músculos acessórios e tiragens"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "FR aumentada"
+        },
+        {
+          "tag": "spo2_baixo",
+          "peso": 2,
+          "origem": "Decréscimo da SpO2"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "FC aumentada"
+        }
+      ],
+      "crise_grave": [
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Ansiedade ou agitação"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 2,
+          "origem": "Dispneia em repouso"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Pieira"
+        },
+        {
+          "tag": "posicao_tripe",
+          "peso": 3,
+          "origem": "Posição de tripé",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "dispneia_impede_falar",
+          "peso": 2,
+          "origem": "Incapacidade de completar frases curtas"
+        },
+        {
+          "tag": "tiragem_musculos_acessorios",
+          "peso": 2,
+          "origem": "Uso de músculos acessórios e tiragens"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "FR aumentada"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "FC aumentada"
+        }
+      ],
+      "paragem_ventilatoria_iminente": [
+        {
+          "tag": "prostracao",
+          "peso": 2,
+          "origem": "Prostração ou desorientação"
+        },
+        {
+          "tag": "silencio_ventilatorio",
+          "peso": 3,
+          "origem": "Sons ventilatórios inaudíveis (silêncio ventilatório)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "apneia",
+          "peso": 3,
+          "origem": "Apneia",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "bradicardia",
+          "peso": 2,
+          "origem": "Bradicardia"
+        }
+      ]
+    },
+    "excluidos": [
+      "FR normal ou ligeiramente elevada (crise_ligeira) — ambíguo demais pra virar critério útil de pontuação",
+      "Vítima calma ou ligeiramente ansiosa (crise_ligeira) — não discrimina de outras patologias",
+      "Prefere estar sentada (crise_moderada) — sinal fraco isoladamente, redundante com outros já cobertos"
+    ],
+    "categoria": "Respiratório"
+  },
+  "dor_toracica_cardiaca": {
+    "nome": "Dor Torácica de Origem Cardíaca",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "fadiga_inicio_subito",
+        "peso": 1,
+        "origem": "Cansaço de início súbito"
+      },
+      {
+        "tag": "dor_toracica_opressiva",
+        "peso": 3,
+        "origem": "Dor/desconforto retroesternal tipo opressão, peso, ardor ou pressão",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "dor_epigastrica",
+        "peso": 1,
+        "origem": "Dor epigástrica"
+      },
+      {
+        "tag": "dor_irradiada_msuperior_mandibula",
+        "peso": 3,
+        "origem": "Irradiação para membros superiores (principalmente esquerdo), pescoço, mandíbula",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "palpitacoes",
+        "peso": 1,
+        "origem": "Palpitações"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas e/ou vómitos"
+      },
+      {
+        "tag": "ansiedade",
+        "peso": 1,
+        "origem": "Ansiedade e agitação"
+      },
+      {
+        "tag": "sincope_lipotimia",
+        "peso": 2,
+        "origem": "Lipotimia ou síncope"
+      }
+    ],
+    "excluidos": [
+      "Angústia — redundante com ansiedade/agitação já mapeado, e muito subjetivo pra ser um critério isolado"
+    ],
+    "categoria": "Cardiovascular"
+  },
+  "choque_geral": {
+    "nome": "Choque (Hipoperfusão) - Geral",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência (ansiedade progredindo para agitação, confusão, prostração, sonolência)"
+      },
+      {
+        "tag": "taquipneia",
+        "peso": 1,
+        "origem": "Taquipneia (sinal clássico de choque)"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Taquicardia (inicialmente ligeira, evoluindo, pulsos periféricos finos/ausentes)"
+      },
+      {
+        "tag": "pele_fria_palida_sudorese",
+        "peso": 3,
+        "origem": "Pele pálida, fria, viscosa, cianótica, suada",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Diminuição da pressão arterial (sinal mais tardio)",
+        "bandeira_vermelha": true
+      }
+    ],
+    "excluidos": [],
+    "nota": "Ficha 'geral' — não diferencia subtipos (hipovolêmico/distributivo/etc). O JSON tem uma tabela comparativa hipovolêmico x neurogênico que fica pra uma segunda iteração, não vale a pena modelar já na amostra de teste.",
+    "categoria": "Sistêmico"
+  },
+  "avc": {
+    "nome": "AVC (Acidente Vascular Cerebral)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "assimetria_facial",
+        "peso": 3,
+        "origem": "Alteração da mímica facial / Desvio da comissura labial",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "hemiparesia_hemiplegia",
+        "peso": 3,
+        "origem": "Diminuição ou perda de força/sensibilidade nos membros (hemiparesia/hemiplegia)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "disartria_afasia",
+        "peso": 3,
+        "origem": "Alteração da linguagem/fala (disartria/afasia)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "alteracao_visual",
+        "peso": 1,
+        "origem": "Alterações da visão"
+      },
+      {
+        "tag": "desvio_olhar",
+        "peso": 2,
+        "origem": "Desvio conjugado do olhar"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias intensas"
+      },
+      {
+        "tag": "ataxia",
+        "peso": 2,
+        "origem": "Ataxia cerebelosa (desequilíbrio da marcha/coordenação)"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Vertigem e tonturas"
+      }
+    ],
+    "excluidos": [
+      "Ausência de reconhecimento do défice (anosognosia) — dificílimo de avaliar em campo, baixo valor prático como critério de pontuação"
+    ],
+    "nota": "assimetria_facial, hemiparesia_hemiplegia e disartria_afasia são exatamente os 3 critérios da escala de Cincinnati — os 3 juntos batendo = 85% de probabilidade segundo a própria ficha, então fazem sentido como bandeira_vermelha tripla.",
+    "categoria": "Neurológico"
+  },
+  "sepsis": {
+    "nome": "Sépsis",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "taquipneia",
+        "peso": 2,
+        "origem": "FR > 22 cpm"
+      },
+      {
+        "tag": "spo2_baixo",
+        "peso": 2,
+        "origem": "SpO2 < 90%"
+      },
+      {
+        "tag": "tosse",
+        "peso": 1,
+        "origem": "Tosse"
+      },
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "FC > 90 bpm"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "PAS < 90 mmHg",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "febre",
+        "peso": 2,
+        "origem": "Temperatura corporal ≥ 38ºC ou < 35ºC"
+      },
+      {
+        "tag": "dor_abdominal",
+        "peso": 1,
+        "origem": "Dor abdominal e/ou lombar"
+      },
+      {
+        "tag": "distensao_abdominal",
+        "peso": 1,
+        "origem": "Distensão abdominal"
+      },
+      {
+        "tag": "obstipacao",
+        "peso": 1,
+        "origem": "Obstipação"
+      },
+      {
+        "tag": "diarreia",
+        "peso": 1,
+        "origem": "Diarreia"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias"
+      },
+      {
+        "tag": "icterícia",
+        "peso": 1,
+        "origem": "Icterícia (pele e olhos amarelados)"
+      },
+      {
+        "tag": "disuria",
+        "peso": 1,
+        "origem": "Sintomas de infeção urinária: dor/ardor a urinar, aumento da frequência de micções"
+      }
+    ],
+    "excluidos": [
+      "Sinais de inflamação cutâneos sugestivos de infeção — pele/local varia muito, difícil de tornar critério genérico sem apontar região"
+    ],
+    "categoria": "Sistêmico"
+  },
+  "disseccao_aorta": {
+    "nome": "Disseção da Aorta",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "cianose",
+        "peso": 1,
+        "origem": "Cianose periférica"
+      },
+      {
+        "tag": "dor_toracica_opressiva",
+        "peso": 3,
+        "origem": "Dor torácica ou interescapular de início súbito, muito intensa, sem sinais prévios (a dor mais intensa já sentida)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Hipotensão"
+      },
+      {
+        "tag": "pulsos_assimetricos",
+        "peso": 3,
+        "origem": "Assimetria dos pulsos periféricos (possível ausência de um deles)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "assimetria_pressao_arterial_membros",
+        "peso": 3,
+        "origem": "Diferença de pressão arterial entre membros superior a 10mmHg",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "sincope_lipotimia",
+        "peso": 2,
+        "origem": "Síncope"
+      }
+    ],
+    "excluidos": [],
+    "nota": "Muito parecida clinicamente com dor_toracica_cardiaca; os 3 critérios de bandeira_vermelha (pulsos assimétricos, diferença de PA entre membros, dor dilacerante interescapular) são o que realmente diferencia as duas.",
+    "categoria": "Cardiovascular"
+  },
+  "dpoc": {
+    "nome": "DPOC (Doença Pulmonar Obstrutiva Crónica)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "expetoracao_purulenta",
+        "peso": 2,
+        "origem": "Expetoração purulenta"
+      },
+      {
+        "tag": "cianose",
+        "peso": 2,
+        "origem": "Cianose"
+      },
+      {
+        "tag": "tosse",
+        "peso": 1,
+        "origem": "Tosse persistente"
+      },
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia mais exacerbada que o habitual"
+      },
+      {
+        "tag": "respiracao_ruidosa",
+        "peso": 1,
+        "origem": "Respiração ruidosa"
+      },
+      {
+        "tag": "ansiedade",
+        "peso": 1,
+        "origem": "Agitação e ansiedade"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alterações de consciência (casos graves)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "febre",
+        "peso": 1,
+        "origem": "Febre"
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Respiratório"
+  },
+  "eap": {
+    "nome": "Edema Agudo do Pulmão (EAP)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "secrecoes_rosadas_espumosas",
+        "peso": 3,
+        "origem": "Secreções aquosas, espumosas, rosadas",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "cianose",
+        "peso": 2,
+        "origem": "Cianose"
+      },
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "ortopneia",
+        "peso": 2,
+        "origem": "Ortopneia (piora deitado)"
+      },
+      {
+        "tag": "taquipneia",
+        "peso": 1,
+        "origem": "Aumento da FR"
+      },
+      {
+        "tag": "fervores_pulmonares",
+        "peso": 3,
+        "origem": "Ruído tipo farfalheira/fervores ('panela de água a ferver')",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "ansiedade",
+        "peso": 1,
+        "origem": "Ansiedade e agitação"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Aumento da FC"
+      },
+      {
+        "tag": "hipertensao",
+        "peso": 1,
+        "origem": "Aumento da TA (na maioria dos casos)"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez e sudorese"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Palidez e sudorese"
+      }
+    ],
+    "excluidos": [
+      "Sensação de afogamento — muito subjetivo/redundante com dispneia+fervores já cobertos"
+    ],
+    "categoria": "Respiratório"
+  },
+  "infecao_respiratoria": {
+    "nome": "Infeção Respiratória",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "expetoracao_purulenta",
+        "peso": 1,
+        "origem": "Expetoração purulenta"
+      },
+      {
+        "tag": "tosse",
+        "peso": 1,
+        "origem": "Tosse"
+      },
+      {
+        "tag": "febre",
+        "peso": 1,
+        "origem": "Febre"
+      }
+    ],
+    "excluidos": [
+      "Congestão e corrimento nasal — muito inespecífico (comum em dezenas de quadros virais banais)",
+      "Mialgias, Astenia — muito inespecíficos isoladamente"
+    ],
+    "categoria": "Respiratório"
+  },
+  "pneumotorax": {
+    "nome": "Pneumotórax",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "desvio_traqueia",
+        "peso": 3,
+        "origem": "Desvio da traqueia (tardio)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "ingurgitamento_jugular",
+        "peso": 2,
+        "origem": "Ingurgitamento jugular"
+      },
+      {
+        "tag": "cianose",
+        "peso": 2,
+        "origem": "Cianose"
+      },
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "assimetria_toracica",
+        "peso": 3,
+        "origem": "Assimetria da parede torácica",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "dor_toracica_opressiva",
+        "peso": 2,
+        "origem": "Dor intensa tipo pontada/facada no tórax, sem irradiação"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Pele pálida"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 1,
+        "origem": "Sinais de choque: hipotensão"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Sinais de choque: taquicardia"
+      },
+      {
+        "tag": "taquipneia",
+        "peso": 1,
+        "origem": "Sinais de choque: taquipneia"
+      }
+    ],
+    "excluidos": [
+      "Enfisema subcutâneo — achado de palpação, não é algo o utilizador tipicamente marca num checklist de sinais/sintomas"
+    ],
+    "categoria": "Respiratório"
+  },
+  "sincope": {
+    "nome": "Síncope",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 1,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "sincope_lipotimia",
+        "peso": 2,
+        "origem": "Lipotimia (sensação de perda dos sentidos)"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Tonturas"
+      },
+      {
+        "tag": "alteracao_visual",
+        "peso": 1,
+        "origem": "Visão turva"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Hipotensão"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas e vómitos"
+      }
+    ],
+    "excluidos": [
+      "Astenia — inespecífico demais isolado"
+    ],
+    "categoria": "Neurológico"
+  },
+  "convulsao": {
+    "nome": "Convulsão",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "cianose",
+        "peso": 1,
+        "origem": "Cianose periférica"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 3,
+        "origem": "Extensão e rigidez das extremidades (crise tónico-clónica)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Taquicardia"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Período de inconsciência"
+      },
+      {
+        "tag": "glicemia_baixa",
+        "peso": 2,
+        "origem": "Pode apresentar hipoglicemia"
+      },
+      {
+        "tag": "perda_controlo_esfincteres",
+        "peso": 1,
+        "origem": "Perda de controlo dos esfíncteres"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias intensas"
+      },
+      {
+        "tag": "letargia",
+        "peso": 1,
+        "origem": "Fadiga, sonolência, confusão e desorientação"
+      }
+    ],
+    "excluidos": [
+      "Paralisia da musculatura da face e/ou pescoço, Amnésia retrógrada, Aumento da TA, Afasia, Incapacidade para cumprir ordens, Alterações emocionais — sinais pós-crise reais mas de baixo valor discriminativo isolado / difíceis de reportar objetivamente em campo"
+    ],
+    "categoria": "Neurológico"
+  },
+  "hipoglicemia": {
+    "nome": "Hipoglicemia",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "glicemia_baixa",
+        "peso": 3,
+        "origem": "Glicemia capilar < 60 mg/dL",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "AEC (agitação, agressividade, irritabilidade, confusão ou prostração)"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Tonturas"
+      },
+      {
+        "tag": "fraqueza_muscular",
+        "peso": 1,
+        "origem": "Fraqueza muscular"
+      },
+      {
+        "tag": "tremores",
+        "peso": 2,
+        "origem": "Tremores"
+      },
+      {
+        "tag": "alteracao_visual",
+        "peso": 1,
+        "origem": "Visão turva"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Taquicardia"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 2,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "polifagia",
+        "peso": 2,
+        "origem": "Polifagia (sensação de fome)"
+      },
+      {
+        "tag": "midriase",
+        "peso": 1,
+        "origem": "Midríase"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 2,
+        "origem": "Convulsões"
+      }
+    ],
+    "excluidos": [
+      "Descoordenação motora, Discurso arrastado — reaproveitei ataxia/disartria_afasia seria possível mas optei por não duplicar com convulsao/tremores já cobertos"
+    ],
+    "categoria": "Endócrino"
+  },
+  "hiperglicemia": {
+    "nome": "Hiperglicemia",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "glicemia_alta",
+        "peso": 3,
+        "origem": "Glicemia capilar > 200 mg/dL",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 1,
+        "origem": "AEC (confusão ou prostração)"
+      },
+      {
+        "tag": "letargia",
+        "peso": 1,
+        "origem": "Sonolência / Prostração"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Pulso rápido e cheio"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas e vómitos"
+      },
+      {
+        "tag": "halito_cetonico",
+        "peso": 3,
+        "origem": "Hálito frutado (cetónico)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "pele_seca_ruborizada",
+        "peso": 2,
+        "origem": "Pele seca e ruborizada"
+      },
+      {
+        "tag": "sinais_desidratacao",
+        "peso": 1,
+        "origem": "Desidratação"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 1,
+        "origem": "Hipotensão"
+      },
+      {
+        "tag": "poliuria_polidipsia",
+        "peso": 2,
+        "origem": "Poliúria / Polidipsia extrema (sede)"
+      },
+      {
+        "tag": "xerostomia",
+        "peso": 1,
+        "origem": "Xerostomia (boca seca)"
+      },
+      {
+        "tag": "dor_abdominal",
+        "peso": 1,
+        "origem": "Dor abdominal"
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Endócrino"
+  },
+  "diabetes_mellitus_geral": {
+    "nome": "Diabetes Mellitus (sinais gerais)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias e tonturas"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Cefaleias e tonturas"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas e vómitos"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 1,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "polifagia",
+        "peso": 1,
+        "origem": "Polifagia"
+      },
+      {
+        "tag": "poliuria_polidipsia",
+        "peso": 2,
+        "origem": "Polidipsia (sede excessiva) / Poliúria"
+      },
+      {
+        "tag": "perda_peso_inexplicada",
+        "peso": 2,
+        "origem": "Perda de peso sem explicação"
+      },
+      {
+        "tag": "alteracao_visual",
+        "peso": 1,
+        "origem": "Visão turva"
+      },
+      {
+        "tag": "xerostomia",
+        "peso": 1,
+        "origem": "Xerostomia"
+      }
+    ],
+    "excluidos": [
+      "Astenia, Mialgias, Dificuldade de cicatrização, Prurido, Glicosúria — sinais de instalação crónica, pouco úteis num checklist agudo pré-hospitalar; esta ficha é mais uma referência geral da doença do que um quadro agudo diferenciável de hipo/hiperglicemia"
+    ],
+    "nota": "Esta ficha sobrepõe-se muito com hipoglicemia/hiperglicemia (é o pano de fundo comum). Manter as 3 fichas separadas pode gerar 'empates' no motor quando os 3 aparecem juntos no top-3 — aceitável, mas vale revisão humana.",
+    "categoria": "Endócrino"
+  },
+  "hemorragia_digestiva": {
+    "nome": "Hemorragia Digestiva",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "hemorragia_digestiva_visivel",
+        "peso": 3,
+        "origem": "Vómito ou dejeção com características hemáticas",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Pulso rápido"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Hipotensão"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Tonturas"
+      },
+      {
+        "tag": "sincope_lipotimia",
+        "peso": 2,
+        "origem": "Síncope"
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Gastrointestinal"
+  },
+  "apendicite": {
+    "nome": "Apendicite",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dor_fossa_iliaca_direita",
+        "peso": 3,
+        "origem": "Dor na fossa ilíaca direita, que aumenta com a rápida descompressão",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómitos"
+      },
+      {
+        "tag": "febre",
+        "peso": 1,
+        "origem": "Febre"
+      }
+    ],
+    "excluidos": [
+      "Dor pode irradiar para membro inferior, Perda de apetite — baixo valor discriminativo isolado",
+      "Se rotura: diminuição da dor localizada, passando a dor difusa — evolução tardia, difícil de usar como critério de entrada inicial"
+    ],
+    "categoria": "Gastrointestinal"
+  },
+  "oclusao_intestinal": {
+    "nome": "Oclusão Intestinal",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dor_tipo_colica",
+        "peso": 2,
+        "origem": "Dor abdominal tipo cólica"
+      },
+      {
+        "tag": "distensao_abdominal",
+        "peso": 3,
+        "origem": "Distensão do abdómen",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "obstipacao",
+        "peso": 2,
+        "origem": "Obstipação"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómitos"
+      }
+    ],
+    "excluidos": [
+      "Vómitos fecaloides em casos graves — achado tardio/raro, baixo peso amostral esperado"
+    ],
+    "categoria": "Gastrointestinal"
+  },
+  "colica_renal": {
+    "nome": "Cólica Renal",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dor_lombar",
+        "peso": 2,
+        "origem": "Dor tipo cólica com início lombar e irradiação para bexiga/genitais"
+      },
+      {
+        "tag": "dor_tipo_colica",
+        "peso": 2,
+        "origem": "Dor tipo cólica (pode ser extremamente violenta)"
+      },
+      {
+        "tag": "ansiedade",
+        "peso": 1,
+        "origem": "Agitação (procura de posição antálgica)"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómitos"
+      },
+      {
+        "tag": "disuria",
+        "peso": 2,
+        "origem": "Dor ao urinar (se obstrução nos ureteres)"
+      },
+      {
+        "tag": "hematuria",
+        "peso": 2,
+        "origem": "Hematúria (sangue na urina) em alguns casos"
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Gastrointestinal"
+  },
+  "anafilaxia": {
+    "nome": "Anafilaxia e Reação Alérgica",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "reacao_alergica": [
+        {
+          "tag": "edema_mucosas_labios",
+          "peso": 2,
+          "origem": "Edema das mucosas (olhos, lábios)"
+        },
+        {
+          "tag": "tosse",
+          "peso": 1,
+          "origem": "Tosse"
+        },
+        {
+          "tag": "dor_abdominal",
+          "peso": 1,
+          "origem": "Dor abdominal, náuseas, vómitos e diarreia"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Dor abdominal, náuseas, vómitos e diarreia"
+        },
+        {
+          "tag": "urticaria_eritema_prurido",
+          "peso": 2,
+          "origem": "Eritema (rubor) / Prurido (comichão) / Urticária"
+        },
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 1,
+          "origem": "Alterações do estado de consciência (desorientação, zumbidos, vertigens)"
+        }
+      ],
+      "reacao_anafilatica": [
+        {
+          "tag": "urticaria_eritema_prurido",
+          "peso": 2,
+          "origem": "Alterações da pele e/ou mucosas (urticária, prurido, língua/lábios edemaciados)"
+        },
+        {
+          "tag": "edema_mucosas_labios",
+          "peso": 3,
+          "origem": "Língua/lábios edemaciados",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "dispneia",
+          "peso": 2,
+          "origem": "Compromisso respiratório (dispneia, síbilos, estridor, cianose)"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Compromisso respiratório (síbilos)"
+        },
+        {
+          "tag": "estridor",
+          "peso": 3,
+          "origem": "Compromisso respiratório (estridor)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "cianose",
+          "peso": 2,
+          "origem": "Compromisso respiratório (cianose)"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 3,
+          "origem": "Hipotensão ou sintomas associados",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "sincope_lipotimia",
+          "peso": 2,
+          "origem": "Sintomas associados (síncope, astenia, descontrolo de esfíncteres)"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Sintomas gastrointestinais persistentes (vómitos, dor abdominal, diarreia)"
+        },
+        {
+          "tag": "dor_abdominal",
+          "peso": 1,
+          "origem": "Sintomas gastrointestinais persistentes"
+        }
+      ]
+    },
+    "excluidos": [
+      "Aumento das secreções nasais, Olhos vermelhos com ardor e lacrimejo — inespecíficos, sobrepõem-se com quadros alérgicos banais não anafiláticos"
+    ],
+    "categoria": "Sistêmico"
+  },
+  "intoxicacao_digestiva": {
+    "nome": "Intoxicação por Via Digestiva",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "FC rápida ou lenta"
+      },
+      {
+        "tag": "bradicardia",
+        "peso": 1,
+        "origem": "FC rápida ou lenta"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómito"
+      },
+      {
+        "tag": "dor_abdominal",
+        "peso": 1,
+        "origem": "Dor abdominal"
+      },
+      {
+        "tag": "diarreia",
+        "peso": 1,
+        "origem": "Diarreia"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 2,
+        "origem": "Convulsões"
+      }
+    ],
+    "excluidos": [
+      "Queimaduras químicas ao redor/dentro da boca, Odores anormais do hálito — muito específicos do produto, difíceis de generalizar num checklist"
+    ],
+    "categoria": "Intoxicações"
+  },
+  "intoxicacao_inalatoria": {
+    "nome": "Intoxicação por Via Inalatória",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "estridor",
+        "peso": 2,
+        "origem": "Estridor"
+      },
+      {
+        "tag": "cianose",
+        "peso": 2,
+        "origem": "Cianose"
+      },
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómito"
+      },
+      {
+        "tag": "diarreia",
+        "peso": 1,
+        "origem": "Diarreia"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleia"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Tonturas"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 2,
+        "origem": "Convulsões"
+      },
+      {
+        "tag": "midriase",
+        "peso": 1,
+        "origem": "Alteração das pupilas (mióticas ou midriáticas)"
+      },
+      {
+        "tag": "miose",
+        "peso": 1,
+        "origem": "Alteração das pupilas (mióticas ou midriáticas)"
+      }
+    ],
+    "excluidos": [
+      "Queimaduras no trato respiratório, Expetoração com fuligem — sobrepõe-se com queimadura_via_aerea (fichas de queimaduras), mantidos separados para não duplicar peso"
+    ],
+    "categoria": "Intoxicações"
+  },
+  "intoxicacao_monoxido_carbono": {
+    "nome": "Intoxicação por Monóxido de Carbono (CO)",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "leves": [
+        {
+          "tag": "cefaleia_intensa",
+          "peso": 1,
+          "origem": "Dor de cabeça"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Náuseas"
+        }
+      ],
+      "moderados": [
+        {
+          "tag": "cefaleia_intensa",
+          "peso": 2,
+          "origem": "Dor de cabeça severa"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Vómitos"
+        },
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 2,
+          "origem": "Confusão"
+        },
+        {
+          "tag": "letargia",
+          "peso": 2,
+          "origem": "Sonolência"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Aumento da FC"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Aumento da FR"
+        }
+      ],
+      "severos": [
+        {
+          "tag": "convulsao_presente",
+          "peso": 3,
+          "origem": "Convulsões",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "glasgow_baixo",
+          "peso": 3,
+          "origem": "Coma",
+          "bandeira_vermelha": true
+        }
+      ]
+    },
+    "excluidos": [
+      "Fadiga (leves) — muito inespecífico isolado",
+      "PCR (severos) — não é um 'sinal a marcar', é o próprio desfecho"
+    ],
+    "categoria": "Intoxicações"
+  },
+  "intoxicacao_cutanea": {
+    "nome": "Intoxicação por Via Cutânea",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "sialorreia",
+        "peso": 1,
+        "origem": "Aumento da saliva"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómito"
+      },
+      {
+        "tag": "diarreia",
+        "peso": 1,
+        "origem": "Diarreia"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Diaforese"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "urticaria_eritema_prurido",
+        "peso": 1,
+        "origem": "Alterações da pele (eritema, prurido, lesões cáusticas)"
+      }
+    ],
+    "excluidos": [
+      "Irritação ocular — muito local/específico, baixo valor sem exame direto"
+    ],
+    "categoria": "Intoxicações"
+  },
+  "intoxicacao_parenterica": {
+    "nome": "Intoxicação por Via Parentérica",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas / Vómito"
+      },
+      {
+        "tag": "dor_abdominal",
+        "peso": 1,
+        "origem": "Dor abdominal"
+      },
+      {
+        "tag": "diarreia",
+        "peso": 1,
+        "origem": "Diarreia"
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência"
+      },
+      {
+        "tag": "letargia",
+        "peso": 1,
+        "origem": "Sonolência"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 2,
+        "origem": "Convulsões"
+      },
+      {
+        "tag": "parestesias",
+        "peso": 1,
+        "origem": "Parestesias"
+      },
+      {
+        "tag": "espasmos_musculares",
+        "peso": 1,
+        "origem": "Espasmos musculares"
+      },
+      {
+        "tag": "marca_picada_local",
+        "peso": 2,
+        "origem": "Marca de picada"
+      }
+    ],
+    "excluidos": [
+      "Sabor metálico ou de borracha, Dor no local, Pele avermelhada, Edema local — muito subjetivos/inespecíficos"
+    ],
+    "categoria": "Intoxicações"
+  },
+  "tce": {
+    "nome": "Traumatismo Cranioencefálico (TCE)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência (desorientação a inconsciência)"
+      },
+      {
+        "tag": "ataxia",
+        "peso": 1,
+        "origem": "Perda de coordenação"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Tonturas e zumbidos"
+      },
+      {
+        "tag": "disartria_afasia",
+        "peso": 2,
+        "origem": "Disartria e/ou hemiparesia (pode confundir-se com AVC)"
+      },
+      {
+        "tag": "hemiparesia_hemiplegia",
+        "peso": 2,
+        "origem": "Disartria e/ou hemiparesia (pode confundir-se com AVC)"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias, náuseas ou vómitos"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Cefaleias, náuseas ou vómitos"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 2,
+        "origem": "Convulsões"
+      },
+      {
+        "tag": "equimose_periorbital_retroauricular",
+        "peso": 3,
+        "origem": "Equimose periorbital ('Racoon eyes') / retroauricular ('Sinal de Battle')",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "perda_liquido_cefalorraquidiano",
+        "peso": 3,
+        "origem": "Perda de LCR ou sangue pelos orifícios naturais da cabeça",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "postura_anomala_membros",
+        "peso": 3,
+        "origem": "Postura de descorticação ou descerebração",
+        "bandeira_vermelha": true
+      }
+    ],
+    "excluidos": [
+      "Confusão/alteração de comportamento, Amnésia anterógrada, Alteração pupilar, Hipertermia — redundantes com alteracao_consciencia já coberto ou de baixo valor isolado"
+    ],
+    "categoria": "Trauma"
+  },
+  "tvm": {
+    "nome": "Traumatismo Vertebromedular (TVM)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dor_a_palpacao_local",
+        "peso": 2,
+        "origem": "Dor ou hipersensibilidade ao movimento/palpação da coluna"
+      },
+      {
+        "tag": "deformidade_membro",
+        "peso": 1,
+        "origem": "Deformidade anatómica da coluna"
+      },
+      {
+        "tag": "dispneia",
+        "peso": 2,
+        "origem": "Dificuldade ou paragem ventilatória"
+      },
+      {
+        "tag": "hemiparesia_hemiplegia",
+        "peso": 2,
+        "origem": "Alterações da resposta motora/sensitiva das extremidades"
+      },
+      {
+        "tag": "parestesias",
+        "peso": 2,
+        "origem": "Parestesias ou dormência das extremidades"
+      },
+      {
+        "tag": "bradicardia",
+        "peso": 2,
+        "origem": "Sinais de choque neurogénico (bradicardia)"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Sinais de choque neurogénico (hipotensão)"
+      }
+    ],
+    "excluidos": [
+      "Incontinência de esfíncteres, Priapismo — pouco reportáveis/observáveis rotineiramente em campo, e raros"
+    ],
+    "categoria": "Trauma"
+  },
+  "trauma_toracico": {
+    "nome": "Traumatismo Torácico",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "fratura_de_costelas": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 2,
+          "origem": "Dor quando ventila, à movimentação e à palpação local"
+        },
+        {
+          "tag": "crepitacao_ossea",
+          "peso": 2,
+          "origem": "Crepitação óssea"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Ventilação superficial por defesa à dor"
+        }
+      ],
+      "retalho_vollet_costal": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 2,
+          "origem": "Dor intensa na grelha costal"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 2,
+          "origem": "Ventilação rápida e superficial"
+        },
+        {
+          "tag": "crepitacao_ossea",
+          "peso": 2,
+          "origem": "Crepitação óssea"
+        },
+        {
+          "tag": "equimose_local",
+          "peso": 1,
+          "origem": "Equimose ou abrasão (se presente)"
+        },
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Agitação e ansiedade inicial (hipoxia)"
+        }
+      ],
+      "pneumotorax_simples": [
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Taquipneia"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia"
+        },
+        {
+          "tag": "assimetria_toracica",
+          "peso": 3,
+          "origem": "Expansão assimétrica da parede torácica",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "spo2_baixo",
+          "peso": 1,
+          "origem": "Diminuição dos valores de oximetria"
+        },
+        {
+          "tag": "dor_toracica_opressiva",
+          "peso": 1,
+          "origem": "Dor pleurítica no lado da lesão"
+        }
+      ],
+      "pneumotorax_aberto": [
+        {
+          "tag": "ferida_aspirante_torax",
+          "peso": 3,
+          "origem": "Ferida aspirante do tórax (som aspirante na inspiração ou borbulhar na expiração)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Todos os sinais de pneumotórax"
+        },
+        {
+          "tag": "assimetria_toracica",
+          "peso": 2,
+          "origem": "Todos os sinais de pneumotórax"
+        }
+      ],
+      "pneumotorax_hipertensivo": [
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Ansiedade e agitação numa fase inicial"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Taquipneia superficial"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia progressiva"
+        },
+        {
+          "tag": "assimetria_toracica",
+          "peso": 2,
+          "origem": "Expansão assimétrica da parede torácica"
+        },
+        {
+          "tag": "ingurgitamento_jugular",
+          "peso": 3,
+          "origem": "Ingurgitamento das veias jugulares",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "desvio_traqueia",
+          "peso": 3,
+          "origem": "Desvio da traqueia para o lado oposto à lesão (sinal tardio)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquicardia"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 2,
+          "origem": "Hipotensão"
+        },
+        {
+          "tag": "cianose",
+          "peso": 1,
+          "origem": "Cianose"
+        }
+      ],
+      "hemotorax": [
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Agitação e ansiedade"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Taquipneia"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia"
+        },
+        {
+          "tag": "hemoptises",
+          "peso": 2,
+          "origem": "Hemoptises"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Sinais de choque hipovolémico (taquicardia)"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 2,
+          "origem": "Sinais de choque hipovolémico (hipotensão)"
+        },
+        {
+          "tag": "palidez",
+          "peso": 1,
+          "origem": "Sinais de choque hipovolémico (pele pálida e fria)"
+        }
+      ],
+      "tamponamento_cardiaco": [
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia"
+        },
+        {
+          "tag": "cianose",
+          "peso": 1,
+          "origem": "Cianose"
+        },
+        {
+          "tag": "ingurgitamento_jugular",
+          "peso": 2,
+          "origem": "Tríade de Beck: ingurgitamento das veias jugulares"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 2,
+          "origem": "Tríade de Beck: hipotensão"
+        },
+        {
+          "tag": "hipofonese_sons_cardiacos",
+          "peso": 3,
+          "origem": "Tríade de Beck: hipofonese dos sons cardíacos",
+          "bandeira_vermelha": true
+        }
+      ]
+    },
+    "excluidos": [
+      "lesao_grandes_vasos — só 2 sinais muito inespecíficos (diferença de pulsos/PA), já cobertos com mais peso em disseccao_aorta"
+    ],
+    "categoria": "Trauma"
+  },
+  "trauma_abdominal": {
+    "nome": "Traumatismo Abdominal",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "hemorragia_externa_visivel",
+        "peso": 1,
+        "origem": "Hemorragia"
+      },
+      {
+        "tag": "equimose_local",
+        "peso": 1,
+        "origem": "Abrasões / Equimoses"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Taquicardia"
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Hipotensão"
+      },
+      {
+        "tag": "dor_abdominal",
+        "peso": 2,
+        "origem": "Dor abdominal"
+      },
+      {
+        "tag": "dor_a_palpacao_local",
+        "peso": 1,
+        "origem": "Sensibilidade (dor à palpação)"
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Trauma"
+  },
+  "trauma_tecidos_moles": {
+    "nome": "Traumatismo de Tecidos Moles",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "sindrome_compartimental": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor local"
+        },
+        {
+          "tag": "palidez",
+          "peso": 1,
+          "origem": "Palidez"
+        },
+        {
+          "tag": "parestesias",
+          "peso": 2,
+          "origem": "Parestesia"
+        },
+        {
+          "tag": "impotencia_funcional",
+          "peso": 1,
+          "origem": "Paresia"
+        },
+        {
+          "tag": "ausencia_pulso_distal",
+          "peso": 3,
+          "origem": "Ausência de pulso distal",
+          "bandeira_vermelha": true
+        }
+      ],
+      "lesao_ouvidos": [
+        {
+          "tag": "equimose_local",
+          "peso": 1,
+          "origem": "Equimoses no pavilhão auricular"
+        },
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor"
+        },
+        {
+          "tag": "otorragia",
+          "peso": 2,
+          "origem": "Hemorragias"
+        },
+        {
+          "tag": "vertigem_tonturas",
+          "peso": 1,
+          "origem": "Vertigens"
+        }
+      ]
+    },
+    "excluidos": [
+      "A taxonomia de tipos de ferida (edema, equimose, hematoma, abrasão, laceração, incisão, avulsão, amputação, feridas perfurantes, objetos empalados) é classificação por INSPEÇÃO VISUAL direta da lesão, não um padrão de sinais/sintomas a comparar contra outras patologias — não faz sentido pontuar isso no motor de diferencial diagnóstico. A lesão dos olhos também foi excluída pelo mesmo motivo."
+    ],
+    "categoria": "Trauma"
+  },
+  "trauma_musculoesqueletico": {
+    "nome": "Traumatismo Musculoesquelético",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "fratura": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor (diminui com tração e imobilização)"
+        },
+        {
+          "tag": "impotencia_funcional",
+          "peso": 2,
+          "origem": "Impotência funcional (mobilização dolorosa e limitada)"
+        },
+        {
+          "tag": "deformidade_membro",
+          "peso": 3,
+          "origem": "Deformidade (angulação dos topos ósseos ou encurtamento do membro)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "crepitacao_ossea",
+          "peso": 2,
+          "origem": "Crepitação"
+        },
+        {
+          "tag": "edema_local",
+          "peso": 1,
+          "origem": "Edema"
+        },
+        {
+          "tag": "equimose_local",
+          "peso": 1,
+          "origem": "Equimoses ou hematomas"
+        }
+      ],
+      "luxacao": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 2,
+          "origem": "Dor ou pressão (geralmente intensa)"
+        },
+        {
+          "tag": "deformidade_membro",
+          "peso": 3,
+          "origem": "Deformidade evidente",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "impotencia_funcional",
+          "peso": 2,
+          "origem": "Impotência funcional"
+        }
+      ],
+      "entorse": [
+        {
+          "tag": "edema_local",
+          "peso": 2,
+          "origem": "Edema"
+        },
+        {
+          "tag": "equimose_local",
+          "peso": 1,
+          "origem": "Equimose"
+        },
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor que aumenta ao mobilizar"
+        }
+      ]
+    },
+    "excluidos": [],
+    "categoria": "Trauma"
+  },
+  "trauma_termico": {
+    "nome": "Trauma Térmico (Calor e Frio)",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "golpe_de_calor": [
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 2,
+          "origem": "Alteração do estado de consciência"
+        },
+        {
+          "tag": "tremores",
+          "peso": 1,
+          "origem": "Tremores e convulsões (iniciais ou tardios)"
+        },
+        {
+          "tag": "convulsao_presente",
+          "peso": 2,
+          "origem": "Tremores e convulsões (iniciais ou tardios)"
+        },
+        {
+          "tag": "miose",
+          "peso": 1,
+          "origem": "Pupilas mióticas"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquicardia inicial seguida de bradicardia"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 1,
+          "origem": "Perfil hipotensivo (conforme grau de desidratação)"
+        },
+        {
+          "tag": "sudorese",
+          "peso": 1,
+          "origem": "Sudorese (se em esforço)"
+        },
+        {
+          "tag": "febre",
+          "peso": 3,
+          "origem": "Temperatura ≥41ºC com disfunção do SNC",
+          "bandeira_vermelha": true
+        }
+      ],
+      "hipotermia_leve": [
+        {
+          "tag": "tremores",
+          "peso": 2,
+          "origem": "Tremores exacerbados"
+        },
+        {
+          "tag": "ataxia",
+          "peso": 1,
+          "origem": "Diminuição da coordenação/raciocínio"
+        },
+        {
+          "tag": "disartria_afasia",
+          "peso": 1,
+          "origem": "Fala arrastada"
+        }
+      ],
+      "hipotermia_moderada": [
+        {
+          "tag": "bradicardia",
+          "peso": 2,
+          "origem": "Bradicardia"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Depressão respiratória"
+        }
+      ],
+      "hipotermia_severa": [
+        {
+          "tag": "midriase",
+          "peso": 2,
+          "origem": "Pupilas dilatadas e arreativas"
+        },
+        {
+          "tag": "hipotermia_vital",
+          "peso": 3,
+          "origem": "Fibrilhação ventricular / temperatura <28ºC",
+          "bandeira_vermelha": true
+        }
+      ],
+      "congelamento_superficial": [
+        {
+          "tag": "parestesias",
+          "peso": 2,
+          "origem": "Parestesias, dormência"
+        },
+        {
+          "tag": "edema_local",
+          "peso": 1,
+          "origem": "Edema após 3 horas"
+        },
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor latejante"
+        }
+      ],
+      "congelamento_profundo": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor local durante descongelamento"
+        },
+        {
+          "tag": "equimose_local",
+          "peso": 1,
+          "origem": "Pele cianosada/escura"
+        }
+      ]
+    },
+    "excluidos": [
+      "Sinais muito raros ou não checáveis em campo (ex: flictenas com sangue, linhas de demarcação em dias/semanas) foram deixados de fora por não serem úteis no momento da triagem inicial"
+    ],
+    "categoria": "Trauma"
+  },
+  "afogamento_barotrauma": {
+    "nome": "Afogamento e Barotrauma",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "barotrauma_ouvido_seios": [
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 2,
+          "origem": "Dor intensa no ouvido/seios perinasais"
+        },
+        {
+          "tag": "otorragia",
+          "peso": 2,
+          "origem": "Hemorragia do globo ocular / Hemorragia"
+        }
+      ],
+      "hiperpressurizacao_pulmonar": [
+        {
+          "tag": "assimetria_toracica",
+          "peso": 2,
+          "origem": "Enfisema subcutâneo"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 2,
+          "origem": "Pneumotórax"
+        }
+      ],
+      "doenca_descompressao": [
+        {
+          "tag": "urticaria_eritema_prurido",
+          "peso": 1,
+          "origem": "Rash cutâneo generalizado"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia"
+        },
+        {
+          "tag": "dor_toracica_opressiva",
+          "peso": 2,
+          "origem": "Dor torácica"
+        },
+        {
+          "tag": "alteracao_visual",
+          "peso": 1,
+          "origem": "Perturbações da visão"
+        },
+        {
+          "tag": "ataxia",
+          "peso": 2,
+          "origem": "Ataxia"
+        },
+        {
+          "tag": "parestesias",
+          "peso": 1,
+          "origem": "Parestesias"
+        }
+      ]
+    },
+    "excluidos": [
+      "Narcose do azoto ('semelhante à intoxicação alcoólica') e síncope das águas pouco profundas (1 sinal só: perda de consciência) — não decomponíveis em critérios discretos suficientes",
+      "Progressão geral do afogamento (apneia -> laringospasmo -> hipóxia -> PCR) — é uma sequência fisiológica, não uma lista de sinais/sintomas a marcar"
+    ],
+    "categoria": "Trauma"
+  },
+  "queimaduras": {
+    "nome": "Queimaduras",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "queimadura_via_aerea": [
+        {
+          "tag": "fuligem_mucosas",
+          "peso": 3,
+          "origem": "Fuligem na mucosa da boca/nariz",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "rouquidao",
+          "peso": 2,
+          "origem": "Rouquidão"
+        },
+        {
+          "tag": "tosse",
+          "peso": 1,
+          "origem": "Tosse persistente"
+        },
+        {
+          "tag": "estridor",
+          "peso": 2,
+          "origem": "Estridor"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dificuldade ventilatória"
+        }
+      ]
+    },
+    "excluidos": [
+      "Classificação por grau (1º-4º) e cálculo de SCQ — são avaliações visuais/de medição diretas da queimadura, não sinais/sintomas a comparar com outras patologias no motor de diferencial"
+    ],
+    "categoria": "Trauma"
+  },
+  "trabalho_de_parto": {
+    "nome": "Trabalho de Parto (3 Estádios)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "contracoes_uterinas_frequentes",
+        "peso": 3,
+        "origem": "Contrações dolorosas e frequentes (a cada 5 min)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "rotura_membranas",
+        "peso": 3,
+        "origem": "Rotura de membranas amnióticas associada a contrações",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "dor_tipo_colica",
+        "peso": 1,
+        "origem": "Vontade incontrolável de 'puxar'/'fazer força' ou de evacuar"
+      }
+    ],
+    "excluidos": [
+      "Sensação de pressão na vagina e/ou ânus — só faz sentido já em contexto obstétrico, redundante com os 2 critérios de bandeira já fortes"
+    ],
+    "categoria": "Obstetrícia"
+  },
+  "hipertensao_gravidez": {
+    "nome": "Hipertensão na Gravidez",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "hipertensao",
+        "peso": 3,
+        "origem": "TA ≥ 140/90 mmHg após as 20 semanas",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 2,
+        "origem": "Cefaleias intensas"
+      },
+      {
+        "tag": "alteracao_visual",
+        "peso": 2,
+        "origem": "Perturbações visuais ('moscas volantes' ou visão turva)"
+      },
+      {
+        "tag": "dor_abdominal",
+        "peso": 2,
+        "origem": "Dores abdominais severas"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 3,
+        "origem": "Convulsões (eclâmpsia)",
+        "bandeira_vermelha": true
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Obstetrícia"
+  },
+  "aborto_abortamento": {
+    "nome": "Aborto ou Abortamento",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dor_abdominal",
+        "peso": 2,
+        "origem": "Dor abdominal severa"
+      },
+      {
+        "tag": "hemorragia_vaginal",
+        "peso": 3,
+        "origem": "Hemorragia vaginal significativa",
+        "bandeira_vermelha": true
+      }
+    ],
+    "excluidos": [],
+    "nota": "Ficha com apenas 2 critérios — no motor, precisa de ambos baterem para atingir o mínimo de 2 critérios exigido por rankear(); revisão humana recomendada para considerar adicionar mais achados (ex: sincope_lipotimia, palidez) se a ficha original permitir inferir isso com segurança clínica.",
+    "categoria": "Obstetrícia"
+  },
+  "alergia_pediatria": {
+    "nome": "Alergia e Anafilaxia (Pediatria)",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "alergia": [
+        {
+          "tag": "urticaria_eritema_prurido",
+          "peso": 2,
+          "origem": "Exantema urticariforme / Prurido"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Vómitos e diarreia"
+        },
+        {
+          "tag": "diarreia",
+          "peso": 1,
+          "origem": "Vómitos e diarreia"
+        },
+        {
+          "tag": "edema_mucosas_labios",
+          "peso": 2,
+          "origem": "Edema das estruturas da VA, lábios e rosto"
+        },
+        {
+          "tag": "tosse",
+          "peso": 1,
+          "origem": "Tosse e pieira"
+        },
+        {
+          "tag": "pieira",
+          "peso": 1,
+          "origem": "Tosse e pieira"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia"
+        }
+      ],
+      "anafilaxia_potencialmente_fatal": [
+        {
+          "tag": "edema_mucosas_labios",
+          "peso": 2,
+          "origem": "Via aérea: Edema, rouquidão"
+        },
+        {
+          "tag": "rouquidao",
+          "peso": 2,
+          "origem": "Via aérea: rouquidão"
+        },
+        {
+          "tag": "estridor",
+          "peso": 3,
+          "origem": "Via aérea: estridor",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Ventilação: Taquipneia"
+        },
+        {
+          "tag": "pieira",
+          "peso": 1,
+          "origem": "Ventilação: pieira"
+        },
+        {
+          "tag": "cianose",
+          "peso": 2,
+          "origem": "Ventilação: cianose"
+        },
+        {
+          "tag": "spo2_baixo",
+          "peso": 2,
+          "origem": "Ventilação: SpO2 <92%"
+        },
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 1,
+          "origem": "Ventilação: confusão"
+        },
+        {
+          "tag": "palidez",
+          "peso": 1,
+          "origem": "Circulação: Palidez"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 3,
+          "origem": "Circulação: hipotensão",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "sudorese",
+          "peso": 1,
+          "origem": "Circulação: sudorese"
+        },
+        {
+          "tag": "sincope_lipotimia",
+          "peso": 2,
+          "origem": "Circulação: desmaio"
+        },
+        {
+          "tag": "letargia",
+          "peso": 1,
+          "origem": "Circulação: sonolência/coma"
+        }
+      ]
+    },
+    "excluidos": [],
+    "categoria": "Pediatria"
+  },
+  "asma_pediatria": {
+    "nome": "Asma (Pediatria)",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "moderada": [
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia"
+        },
+        {
+          "tag": "tiragem_musculos_acessorios",
+          "peso": 1,
+          "origem": "Sinais de esforço ventilatório"
+        },
+        {
+          "tag": "dispneia_impede_falar",
+          "peso": 2,
+          "origem": "Dificuldade em completar frases"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Taquipneia e taquicardia"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquipneia e taquicardia"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Pieira ('chiar de chaleira')"
+        },
+        {
+          "tag": "cianose",
+          "peso": 2,
+          "origem": "Cianose ou pele marmoreada"
+        },
+        {
+          "tag": "pele_marmoreada",
+          "peso": 2,
+          "origem": "Cianose ou pele marmoreada"
+        },
+        {
+          "tag": "spo2_baixo",
+          "peso": 1,
+          "origem": "Saturação normal ou baixa"
+        },
+        {
+          "tag": "posicao_tripe",
+          "peso": 2,
+          "origem": "Posição de tripé"
+        }
+      ],
+      "grave": [
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 3,
+          "origem": "Alteração do estado de consciência",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "tiragem_musculos_acessorios",
+          "peso": 2,
+          "origem": "Tiragem e uso de musculatura acessória"
+        },
+        {
+          "tag": "silencio_ventilatorio",
+          "peso": 3,
+          "origem": "Diminuição ou ausência de sons ventilatórios",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "bradicardia",
+          "peso": 2,
+          "origem": "Bradipneia e/ou alteração do padrão ventilatório"
+        }
+      ]
+    },
+    "excluidos": [
+      "Uso excessivo de músculos abdominais — redundante com tiragem_musculos_acessorios já coberto"
+    ],
+    "categoria": "Pediatria"
+  },
+  "bronquiolite": {
+    "nome": "Bronquiolite",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "tosse",
+        "peso": 1,
+        "origem": "Evolução para tosse persistente"
+      },
+      {
+        "tag": "febre",
+        "peso": 1,
+        "origem": "Febre geralmente <39°C"
+      },
+      {
+        "tag": "apneia_periodos",
+        "peso": 3,
+        "origem": "Períodos de apneia (<2 meses de idade)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "taquipneia",
+        "peso": 1,
+        "origem": "Taquipneia"
+      },
+      {
+        "tag": "tiragem_musculos_acessorios",
+        "peso": 2,
+        "origem": "Tiragem"
+      },
+      {
+        "tag": "adejo_nasal",
+        "peso": 1,
+        "origem": "Adejo nasal"
+      },
+      {
+        "tag": "spo2_baixo",
+        "peso": 2,
+        "origem": "Hipoxemia"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Taquicardia"
+      },
+      {
+        "tag": "sinais_desidratacao",
+        "peso": 1,
+        "origem": "Sinais de desidratação (mucosas secas, fontanela deprimida)"
+      },
+      {
+        "tag": "fontanela_deprimida",
+        "peso": 1,
+        "origem": "Sinais de desidratação (fontanela deprimida)"
+      }
+    ],
+    "excluidos": [
+      "Quadro de constipação inicial, Diminuição do apetite — muito inespecíficos"
+    ],
+    "categoria": "Pediatria"
+  },
+  "laringite": {
+    "nome": "Laringite Aguda",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "tosse",
+        "peso": 2,
+        "origem": "Tosse laríngea ('tosse de cão')"
+      },
+      {
+        "tag": "rouquidao",
+        "peso": 2,
+        "origem": "Rouquidão ou mudanças na voz"
+      },
+      {
+        "tag": "estridor",
+        "peso": 3,
+        "origem": "Estridor (mais comum na inspiração)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dificuldade respiratória principalmente durante episódios de tosse"
+      }
+    ],
+    "excluidos": [],
+    "categoria": "Pediatria"
+  },
+  "desidratacao_pediatrica": {
+    "nome": "Desidratação (Pediatria)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "sinais_desidratacao",
+        "peso": 2,
+        "origem": "Mucosas secas, saliva espessa e branca / Pele seca, olhos sem brilho, prega cutânea"
+      },
+      {
+        "tag": "letargia",
+        "peso": 2,
+        "origem": "Apatia"
+      },
+      {
+        "tag": "fontanela_deprimida",
+        "peso": 2,
+        "origem": "Fontanela anterior deprimida (até aos 18 meses)"
+      }
+    ],
+    "excluidos": [
+      "Sede, Diminuição do débito urinário — difíceis de aferir objetivamente em campo no momento da avaliação"
+    ],
+    "categoria": "Pediatria"
+  },
+  "febre_pediatrica": {
+    "nome": "Febre (Pediatria)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "febre",
+        "peso": 1,
+        "origem": "Febre"
+      },
+      {
+        "tag": "pieira",
+        "peso": 2,
+        "origem": "Presença de pieira, convulsões, dificuldade respiratória, vómitos incoercíveis ou desidratação"
+      },
+      {
+        "tag": "convulsao_presente",
+        "peso": 3,
+        "origem": "Presença de ... convulsões ...",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "dispneia",
+        "peso": 2,
+        "origem": "Presença de ... dificuldade respiratória ..."
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Vómitos incoercíveis"
+      },
+      {
+        "tag": "sinais_desidratacao",
+        "peso": 1,
+        "origem": "Desidratação"
+      },
+      {
+        "tag": "letargia",
+        "peso": 2,
+        "origem": "Prostração/sonolência"
+      },
+      {
+        "tag": "rash_petequial",
+        "peso": 3,
+        "origem": "Presença de manchas ou pintas no corpo",
+        "bandeira_vermelha": true
+      }
+    ],
+    "excluidos": [
+      "Febre em lactente <3 meses, febre >3-4 dias, temp >40ºC, doença crónica — são critérios de CONTEXTO/RISCO do doente, não sinais/sintomas observáveis no momento; ficam melhor como perguntas de triagem separadas, não como criterios de match"
+    ],
+    "categoria": "Pediatria"
+  },
+  "convulsao_pediatrica": {
+    "nome": "Convulsão (Pediatria)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "convulsao_presente",
+        "peso": 3,
+        "origem": "Convulsão focal ou generalizada, espasmos involuntários ou aumento do tónus (rigidez)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 1,
+        "origem": "Confusão ou parestesias"
+      },
+      {
+        "tag": "parestesias",
+        "peso": 1,
+        "origem": "Confusão ou parestesias"
+      }
+    ],
+    "excluidos": [
+      "Sinais específicos de RN (apertar lábios, mastigar involuntariamente, olhos em direções diferentes) — muito específicos da faixa neonatal, baixa amostra esperada de uso"
+    ],
+    "categoria": "Pediatria"
+  },
+  "sepsis_meningococica": {
+    "nome": "Sépsis / Doença Meningocócica",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "sinais_precoces": [
+        {
+          "tag": "febre",
+          "peso": 1,
+          "origem": "Febre"
+        },
+        {
+          "tag": "dor_a_palpacao_local",
+          "peso": 1,
+          "origem": "Dor nas pernas"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dificuldade respiratória"
+        },
+        {
+          "tag": "palidez",
+          "peso": 1,
+          "origem": "Coloração da pele alterada / Mãos e pés frios"
+        }
+      ],
+      "sinais_classicos": [
+        {
+          "tag": "rash_hemorragico",
+          "peso": 3,
+          "origem": "Rash hemorrágico",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "rash_petequial",
+          "peso": 3,
+          "origem": "Rash petequial (criança já gravemente doente)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "rigidez_nuca",
+          "peso": 3,
+          "origem": "Rigidez da nuca",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "fotofobia",
+          "peso": 2,
+          "origem": "Fotofobia"
+        },
+        {
+          "tag": "fontanela_hipertensa",
+          "peso": 2,
+          "origem": "Fontanela hipertensa (lactentes)"
+        }
+      ],
+      "sinais_tardios": [
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 2,
+          "origem": "Confusão ou delírio / AEC"
+        },
+        {
+          "tag": "convulsao_presente",
+          "peso": 2,
+          "origem": "Convulsões"
+        }
+      ]
+    },
+    "excluidos": [
+      "Sede — muito inespecífico"
+    ],
+    "categoria": "Pediatria"
+  },
+  "hipoglicemia_pediatrica": {
+    "nome": "Hipoglicemia (Pediatria)",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "precoces": [
+        {
+          "tag": "glicemia_baixa",
+          "peso": 3,
+          "origem": "Glicemia capilar < 60 mg/dl (< 40 mg/dl em RN)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "palidez",
+          "peso": 1,
+          "origem": "Palidez"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Náuseas/Vómitos"
+        },
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Ansiedade"
+        },
+        {
+          "tag": "polifagia",
+          "peso": 1,
+          "origem": "Fome"
+        },
+        {
+          "tag": "palpitacoes",
+          "peso": 1,
+          "origem": "Palpitações"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquicardia"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Taquipneia"
+        },
+        {
+          "tag": "tremores",
+          "peso": 1,
+          "origem": "Tremores"
+        },
+        {
+          "tag": "sudorese",
+          "peso": 1,
+          "origem": "Suores frios"
+        }
+      ],
+      "tardios": [
+        {
+          "tag": "irritabilidade",
+          "peso": 1,
+          "origem": "Irritabilidade"
+        },
+        {
+          "tag": "letargia",
+          "peso": 2,
+          "origem": "Letargia/sonolência"
+        },
+        {
+          "tag": "alteracao_visual",
+          "peso": 1,
+          "origem": "Diminuição da acuidade visual"
+        },
+        {
+          "tag": "disartria_afasia",
+          "peso": 1,
+          "origem": "Dificuldade em falar"
+        },
+        {
+          "tag": "alteracao_consciencia",
+          "peso": 2,
+          "origem": "Confusão"
+        },
+        {
+          "tag": "ataxia",
+          "peso": 1,
+          "origem": "Falta de coordenação dos movimentos musculares"
+        },
+        {
+          "tag": "convulsao_presente",
+          "peso": 3,
+          "origem": "Convulsão",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "glasgow_baixo",
+          "peso": 3,
+          "origem": "Coma",
+          "bandeira_vermelha": true
+        }
+      ]
+    },
+    "excluidos": [
+      "Astenia, Fadiga — redundante com letargia já coberto"
+    ],
+    "categoria": "Pediatria"
+  },
+  "intoxicacao_pediatrica": {
+    "nome": "Intoxicação (Pediatria)",
+    "formato": "por_subtipo",
+    "subtipos": {
+      "anticolinergicos": [
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquicardia"
+        },
+        {
+          "tag": "hipertensao",
+          "peso": 1,
+          "origem": "Híper/hipotensão"
+        },
+        {
+          "tag": "midriase",
+          "peso": 2,
+          "origem": "Midríase"
+        },
+        {
+          "tag": "febre",
+          "peso": 1,
+          "origem": "Hipertermia"
+        },
+        {
+          "tag": "pele_seca_ruborizada",
+          "peso": 2,
+          "origem": "Pele vermelha e seca, mucosas secas"
+        },
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Agitação/delírio"
+        }
+      ],
+      "colinergicos": [
+        {
+          "tag": "bradicardia",
+          "peso": 1,
+          "origem": "Taqui/bradicardia"
+        },
+        {
+          "tag": "miose",
+          "peso": 2,
+          "origem": "Miose"
+        },
+        {
+          "tag": "sialorreia",
+          "peso": 2,
+          "origem": "Hipersecreção de glândulas exócrinas"
+        },
+        {
+          "tag": "diarreia",
+          "peso": 1,
+          "origem": "Diarreia"
+        },
+        {
+          "tag": "letargia",
+          "peso": 1,
+          "origem": "Depressão do SNC"
+        }
+      ],
+      "hipermetabolicos": [
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquicardia"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "Polipneia"
+        },
+        {
+          "tag": "febre",
+          "peso": 1,
+          "origem": "Febre"
+        },
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Agitação"
+        }
+      ],
+      "narcoticos": [
+        {
+          "tag": "bradicardia",
+          "peso": 2,
+          "origem": "Bradicardia"
+        },
+        {
+          "tag": "miose",
+          "peso": 2,
+          "origem": "Miose"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 2,
+          "origem": "Hipotensão"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 2,
+          "origem": "Depressão respiratória e do SNC"
+        }
+      ],
+      "simpaticomimeticos": [
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "Taquicardia"
+        },
+        {
+          "tag": "hipertensao",
+          "peso": 1,
+          "origem": "HTA"
+        },
+        {
+          "tag": "midriase",
+          "peso": 2,
+          "origem": "Midríase"
+        },
+        {
+          "tag": "nauseas_vomitos",
+          "peso": 1,
+          "origem": "Vómitos"
+        },
+        {
+          "tag": "dor_abdominal",
+          "peso": 1,
+          "origem": "Dor abdominal"
+        },
+        {
+          "tag": "sudorese",
+          "peso": 1,
+          "origem": "Sudorese"
+        }
+      ],
+      "sedativos_hipnoticos": [
+        {
+          "tag": "bradicardia",
+          "peso": 1,
+          "origem": "Bradicardia"
+        },
+        {
+          "tag": "hipotensao",
+          "peso": 1,
+          "origem": "Hipotensão"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 2,
+          "origem": "Depressão respiratória e do SNC"
+        },
+        {
+          "tag": "hipotermia_vital",
+          "peso": 1,
+          "origem": "Hipotermia"
+        }
+      ]
+    },
+    "excluidos": [
+      "Torcicolo, crises oculogíricas, disfonia (extrapiramidal) — síndrome com apenas achados muito específicos/raros, baixo valor esperado de uso",
+      "Alterações sugestivas de intoxicação (queimadura lábios/língua, hálito característico) — muito específicas do produto, mantidas fora do checklist genérico"
+    ],
+    "categoria": "Pediatria"
+  }
+}

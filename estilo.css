@@ -1,0 +1,24 @@
+/* ------------------------------------------------------------------
+   Design system compartilhado — "Central de Apps" (dark neon)
+   Cada app define seu próprio --brand/--brand-bg/--brand-ink (cor de
+   identidade) no <style> da própria página; o resto é comum a todos.
+   ------------------------------------------------------------------ */
+:root{
+  color-scheme: dark;
+
+  --bg: #0B0F14;
+  --panel: #101720;
+  --panel-2: #101720;
+  --line: #212A36;
+  --ink: #EAF2F5;
+  --ink-soft: #5B6472;
+
+  --teal: #14E8C4;  --teal-bg: #0E2621;   /* confirmações / normal */
+  --amber: #FFB454; --amber-bg: #2E2210; /* alertas */
+  --red: #E24B4A;   --red-bg: #2A1414;   /* crítico / gravidade */
+  --blue: #4FC3F7;  --blue-bg: #0E2733;  /* categoria de apoio (ex: respiratório) */
+
+  --radius: 14px;       /* cards / seções */
+  --radius-sm: 12px;    /* botões / inputs */
+  --radius-pill: 20px;  /* chips / badges */
+}

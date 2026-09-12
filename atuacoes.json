@@ -1,0 +1,1580 @@
+{
+  "asma": [
+    {
+      "texto": "Remover fator desencadeante ou retirar a vítima do local",
+      "grupo": null
+    },
+    {
+      "texto": "Posicionar para facilitar a respiração (elevação do tronco)",
+      "grupo": null
+    },
+    {
+      "texto": "Iniciar oxigenoterapia de acordo com a gravidade apresentada",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, história de episódios anteriores, fatores desencadeantes, história de patologias respiratórias, hábitos farmacológicos (ex: broncodilatadores)",
+      "grupo": null
+    },
+    {
+      "texto": "Reduzir ao mínimo o esforço físico da vítima",
+      "grupo": null
+    },
+    {
+      "texto": "Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar em posição de Fowler (elevação da cabeceira a 45º)",
+      "grupo": null
+    }
+  ],
+  "dor_toracica_cardiaca": [
+    {
+      "texto": "Evitar que a vítima faça esforços",
+      "grupo": null
+    },
+    {
+      "texto": "Posicionar em posição de conforto",
+      "grupo": null
+    },
+    {
+      "texto": "Fornecer oxigénio suplementar conforme a situação clínica",
+      "grupo": null
+    },
+    {
+      "texto": "Caracterizar a dor torácica",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, episódios anteriores, antecedentes cardíacos, hábitos farmacológicos (nitratos), trauma torácico",
+      "grupo": null
+    },
+    {
+      "texto": "Perante deterioração do quadro, identificar como vítima crítica e contactar o centro de orientação para apoio",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar em Fowler (45º)",
+      "grupo": null
+    }
+  ],
+  "choque_geral": [
+    {
+      "texto": "Identificar sintomatologia compatível com o tipo de choque",
+      "grupo": null
+    },
+    {
+      "texto": "Atuar sobre a causa do choque",
+      "grupo": null
+    },
+    {
+      "texto": "Garantir manutenção da temperatura corporal",
+      "grupo": null
+    },
+    {
+      "texto": "Fornecer oxigénio suplementar conforme a situação clínica",
+      "grupo": null
+    },
+    {
+      "texto": "Se PAS < 90mmHg, elevar os membros inferiores",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: etiologia do choque, progressão da sintomatologia, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte mantendo via aérea permeável",
+      "grupo": null
+    }
+  ],
+  "avc": [
+    {
+      "texto": "Identificar sintomatologia compatível com AVC",
+      "grupo": null
+    },
+    {
+      "texto": "Identificar critérios para inclusão em Via Verde AVC (início <24h e idade ≥18 anos)",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar conforme necessário",
+      "grupo": null
+    },
+    {
+      "texto": "Contactar precocemente o CODU para validação de inclusão em Via Verde AVC",
+      "grupo": null
+    },
+    {
+      "texto": "Avaliar escalas de Cincinnati e RACE",
+      "grupo": null
+    },
+    {
+      "texto": "Avaliar glicemia capilar",
+      "grupo": null
+    },
+    {
+      "texto": "Posicionar com elevação do tronco a 30º",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: hora de início dos sintomas (ou última vez visto bem), circunstâncias, dependência nas AVDs, episódios anteriores, anticoagulantes orais (Varfine®, Sintrom®, Xarelto®, Heparina)",
+      "grupo": null
+    },
+    {
+      "texto": "Perante sinais de gravidade, solicitar apoio diferenciado ao CODU",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte mantendo permeabilidade da via aérea, devido à AEC",
+      "grupo": null
+    }
+  ],
+  "sepsis": [
+    {
+      "texto": "Identificar sinais compatíveis com sépsis",
+      "grupo": null
+    },
+    {
+      "texto": "Iniciar oxigenoterapia de acordo com a gravidade apresentada",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: progressão da sintomatologia, história de infeção, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Perante sinais de gravidade ou caso suspeito/provável Via Verde Sépsis, contactar CODU",
+      "grupo": null
+    },
+    {
+      "texto": "Realizar pelo menos 2 avaliações completas de sinais vitais (antes e depois das medidas implementadas)",
+      "grupo": null
+    },
+    {
+      "texto": "Durante o transporte, garantir permeabilidade contínua da via aérea",
+      "grupo": null
+    }
+  ],
+  "disseccao_aorta": [
+    {
+      "texto": "Atuação similar à avaliação e atuação da dor torácica de origem cardíaca",
+      "grupo": null
+    }
+  ],
+  "dpoc": [
+    {
+      "texto": "Posicionar para facilitar a respiração (elevação do tronco)",
+      "grupo": null
+    },
+    {
+      "texto": "Perante secreções que a vítima não consegue expelir, aspirar",
+      "grupo": null
+    },
+    {
+      "texto": "Fornecer oxigénio suplementar conforme a situação clínica",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, história de agudizações anteriores, comorbilidades, hábitos farmacológicos, oxigenoterapia no domicílio",
+      "grupo": null
+    },
+    {
+      "texto": "Evitar que a vítima faça esforço desnecessário",
+      "grupo": null
+    },
+    {
+      "texto": "Reconhecendo sinais de gravidade, sinalizar a vítima como crítica e acionar apoio diferenciado",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar em posição de Fowler (45º)",
+      "grupo": null
+    }
+  ],
+  "eap": [
+    {
+      "texto": "Posicionar para facilitar a respiração (sentada/Fowler) com pernas pendentes",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar conforme necessário",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, episódios anteriores, antecedentes cardíacos, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Reduzir ao mínimo o esforço físico da vítima",
+      "grupo": null
+    },
+    {
+      "texto": "Perante deterioração do quadro, identificar como vítima crítica e contactar o centro de orientação para apoio",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar em Fowler com pernas pendentes",
+      "grupo": null
+    }
+  ],
+  "infecao_respiratoria": [
+    {
+      "texto": "Posicionar para facilitar a respiração (sentada/Fowler)",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio conforme indicado para o quadro",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, episódios anteriores, contacto com infetados, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Evitar que a vítima faça esforço desnecessário",
+      "grupo": null
+    },
+    {
+      "texto": "Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar em Fowler (45º)",
+      "grupo": null
+    }
+  ],
+  "pneumotorax": [
+    {
+      "texto": "Posicionar para facilitar a respiração (sentada/Fowler)",
+      "grupo": null
+    },
+    {
+      "texto": "Iniciar oxigenoterapia de acordo com a gravidade apresentada",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, episódios anteriores, alteração recente de pressão atmosférica (voo/mergulho), hábitos tabágicos, trauma torácico",
+      "grupo": null
+    },
+    {
+      "texto": "Reduzir ao mínimo o esforço físico da vítima",
+      "grupo": null
+    },
+    {
+      "texto": "Reconhecendo sinais de gravidade, sinalizar a vítima como crítica e acionar apoio diferenciado",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar em Fowler (45º)",
+      "grupo": null
+    }
+  ],
+  "sincope": [
+    {
+      "texto": "Se pré-síncope detetada, promover manobras de contrapressão física até deitar a vítima",
+      "grupo": null
+    },
+    {
+      "texto": "Se desidratação, promover ingestão de pequenas quantidades de água",
+      "grupo": null
+    },
+    {
+      "texto": "Avaliar glicemia capilar para despiste da causa",
+      "grupo": null
+    },
+    {
+      "texto": "Iniciar oxigenoterapia de acordo com a gravidade apresentada",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: história relatada por testemunhas, episódios anteriores, causa provável, doenças cardiovasculares, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Perante deterioração do quadro, identificar como vítima crítica e contactar o centro de orientação para apoio",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte mantendo permeabilidade da via aérea, devido à AEC",
+      "grupo": null
+    }
+  ],
+  "convulsao": [
+    {
+      "texto": "Afastar objetos que possam causar traumatismos e proteger a cabeça",
+      "grupo": "Durante crise tonico clonica"
+    },
+    {
+      "texto": "Permeabilizar a via aérea com adjuvantes básicos, se possível (sem forçar)",
+      "grupo": "Durante crise tonico clonica"
+    },
+    {
+      "texto": "Administrar O2",
+      "grupo": "Durante crise tonico clonica"
+    },
+    {
+      "texto": "Não restringir movimentos",
+      "grupo": "Durante crise tonico clonica"
+    },
+    {
+      "texto": "Registar duração, zonas do corpo envolvidas e intervalos",
+      "grupo": "Durante crise tonico clonica"
+    },
+    {
+      "texto": "Colocar em PLS (posição lateral de segurança)",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Avaliar temperatura corporal; se hipertermia, promover arrefecimento (retirar roupas, compressas de água tépida)",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Avaliar glicemia capilar; se hipoglicemia, administrar glicose (ver capítulo Diabetes)",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Se sinais de AVC, verificar critérios para Via Verde AVC",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Reduzir estimulação sensorial",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Fornecer oxigénio suplementar conforme a situação clínica",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Recolher informação: caracterizar a convulsão (duração, partes envolvidas, intervalos), despistar causa provável, episódios anteriores, hábitos farmacológicos (anticonvulsivantes)",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Perante sinais de gravidade ou convulsão tónico-clónica presenciada, identificar criticidade e solicitar apoio diferenciado ao CODU",
+      "grupo": "Pos crise"
+    },
+    {
+      "texto": "Transporte mantendo permeabilidade da via aérea, devido à AEC",
+      "grupo": "Pos crise"
+    }
+  ],
+  "hipoglicemia": [
+    {
+      "texto": "Avaliar a glicemia capilar",
+      "grupo": "Geral"
+    },
+    {
+      "texto": "Administrar oxigénio conforme indicado para o quadro",
+      "grupo": "Geral"
+    },
+    {
+      "texto": "Verificar existência de bomba infusora de insulina; se hipoglicemia, parar/desligar",
+      "grupo": "Geral"
+    },
+    {
+      "texto": "Procurar causa da hipoglicemia",
+      "grupo": "Geral"
+    },
+    {
+      "texto": "Administrar via oral 25g de glicose (gel ou ampolas hipertónicas)",
+      "grupo": "Glicemia menor 60 vitima consciente a"
+    },
+    {
+      "texto": "Promover ingestão de alimentos ricos em hidratos de carbono e açúcares (pão, bolachas)",
+      "grupo": "Glicemia menor 60 vitima consciente a"
+    },
+    {
+      "texto": "Repetir administração de glicose se sintomas se mantiverem",
+      "grupo": "Glicemia menor 60 vitima consciente a"
+    },
+    {
+      "texto": "Administrar papa espessa de açúcar na mucosa oral (gengivas, sob a língua), lateralizando a vítima para permeabilidade da via aérea",
+      "grupo": "Glicemia menor 60 vitima v d ou s escala avds"
+    },
+    {
+      "texto": "Se não houver recuperação, repetir administração e promover transporte precoce em articulação com o CODU",
+      "grupo": "Glicemia menor 60 vitima v d ou s escala avds"
+    },
+    {
+      "texto": "Promover ingestão de alimentos ricos em hidratos de carbono e açúcares",
+      "grupo": "Glicemia entre 60 e 80"
+    },
+    {
+      "texto": "Recolher informação: tempo de início, episódios anteriores, antecedentes de Diabetes, última refeição, hábitos farmacológicos",
+      "grupo": "Comum"
+    },
+    {
+      "texto": "Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação",
+      "grupo": "Comum"
+    },
+    {
+      "texto": "Transporte mantendo permeabilidade da via aérea",
+      "grupo": "Comum"
+    }
+  ],
+  "hiperglicemia": [],
+  "diabetes_mellitus_geral": [],
+  "hemorragia_digestiva": [
+    {
+      "texto": "Caracterizar o vómito/dejeção quanto a quantidade e aspeto",
+      "grupo": null
+    },
+    {
+      "texto": "Perante AEC ou incapacidade de expelir vómito, permeabilizar a via aérea",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar conforme necessário",
+      "grupo": null
+    },
+    {
+      "texto": "Posicionar em posição de conforto mantendo via aérea permeável",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, episódios anteriores, antecedentes digestivos, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Se houver sinais de gravidade, classificar como vítima crítica e pedir apoio diferenciado ao centro de orientação",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte mantendo permeabilidade da via aérea",
+      "grupo": null
+    }
+  ],
+  "apendicite": [
+    {
+      "texto": "Ver Dor abdominal: Atuação (comum às 3 causas deste capítulo)",
+      "grupo": null
+    }
+  ],
+  "oclusao_intestinal": [
+    {
+      "texto": "Ver Dor abdominal: Atuação (comum às 3 causas deste capítulo)",
+      "grupo": null
+    }
+  ],
+  "colica_renal": [
+    {
+      "texto": "Ver Dor abdominal: Atuação (comum às 3 causas deste capítulo)",
+      "grupo": null
+    }
+  ],
+  "anafilaxia": [
+    {
+      "texto": "Afastar o fator desencadeante ou retirar a vítima do local o mais precocemente possível",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio conforme indicado para o quadro",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: substância/alergénio causador, história de episódios anteriores, progressão da sintomatologia, antecedentes de alergias, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Perante sinais de gravidade (reação anafilática), identificar vítima crítica e solicitar apoio diferenciado ao CODU",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar assegurando que a via aérea se mantém desobstruída",
+      "grupo": null
+    }
+  ],
+  "intoxicacao_digestiva": [],
+  "intoxicacao_inalatoria": [],
+  "intoxicacao_monoxido_carbono": [
+    {
+      "texto": "Administrar O2 a 15L/min, independentemente dos valores de SpO2.",
+      "grupo": "Especifica"
+    }
+  ],
+  "intoxicacao_cutanea": [],
+  "intoxicacao_parenterica": [],
+  "tce": [
+    {
+      "texto": "Elevar a cabeceira da maca a 30º se PAS ≥ 110 mmHg (proclive em bloco se imobilizada; elevar cabeceira se não imobilizada)",
+      "grupo": null
+    },
+    {
+      "texto": "Se TAS < 110 mmHg, manter a vítima em posição neutra",
+      "grupo": null
+    },
+    {
+      "texto": "Não aplicar pensos compressivos em TCE",
+      "grupo": null
+    },
+    {
+      "texto": "Aspiração de vómito/secreções de forma não agressiva, minimizando o reflexo de vómito (aumenta PIC); transporte em maca de vácuo lateralizada até 45º",
+      "grupo": null
+    },
+    {
+      "texto": "Contraindicada a introdução de dispositivos nasais até exclusão de fraturas da base do crânio",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio de acordo com algoritmo",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte sem colar cervical se: alteração de 2 pontos na GCS ou 1 letra na AVDS; alterações pupilares de novo; hemiparesia; tríade de Cushing",
+      "grupo": null
+    },
+    {
+      "texto": "Transmitir dados ao CODU considerando apoio diferenciado se: sinais para remoção do colar; compromisso da via aérea; crise convulsiva; perda súbita de consciência",
+      "grupo": null
+    }
+  ],
+  "tvm": [
+    {
+      "texto": "Restrição de movimentos de coluna perante sinais de TVM: dor à palpação da coluna, défice sensitivo-motor ou incapacidade de se mobilizar sem ajuda",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio de acordo com algoritmo",
+      "grupo": null
+    },
+    {
+      "texto": "Transmitir dados ao CODU considerando apoio diferenciado se: compromisso da via aérea; dificuldade respiratória ou PCR; perda súbita de consciência; alteração de 2 pontos na GCS ou 1 letra na AVDS; alteração da resposta motora nos membros ou tronco; sinais de choque neurogénico",
+      "grupo": null
+    },
+    {
+      "texto": "Na vítima pediátrica considerar elevação do tronco para posição neutra da cabeça; na vítima geriátrica com cifose, preencher o espaço entre cabeça e dispositivo de imobilização",
+      "grupo": null
+    }
+  ],
+  "trauma_toracico": {
+    "fratura_de_costelas": [],
+    "retalho_vollet_costal": [
+      {
+        "texto": "Encorajar a vítima a ventilar profundamente",
+        "grupo": null
+      },
+      {
+        "texto": "Não aplicar ligaduras a envolver o tórax",
+        "grupo": null
+      },
+      {
+        "texto": "Nota: a imobilização com 'almofada' de compressas já não está indicada, dificulta a função pulmonar e aumenta o risco de atelectasia",
+        "grupo": null
+      }
+    ],
+    "pneumotorax_simples": [],
+    "pneumotorax_aberto": [],
+    "pneumotorax_hipertensivo": [
+      {
+        "texto": "Identificar e solicitar de imediato apoio diferenciado para descompressão do pneumotórax",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio conforme a orientação técnica em vigor",
+        "grupo": null
+      }
+    ],
+    "hemotorax": [
+      {
+        "texto": "Identificar e solicitar de imediato apoio diferenciado para drenar o hemotórax",
+        "grupo": null
+      },
+      {
+        "texto": "Iniciar oxigenoterapia segundo o procedimento aplicável",
+        "grupo": null
+      }
+    ],
+    "tamponamento_cardiaco": []
+  },
+  "trauma_abdominal": [
+    {
+      "texto": "Não reintroduzir as vísceras",
+      "grupo": "Evisceracao"
+    },
+    {
+      "texto": "Colocar compressas humedecidas em soro fisiológico",
+      "grupo": "Evisceracao"
+    },
+    {
+      "texto": "Tapar as compressas com película não porosa (p.ex. embalagem das compressas esterilizadas) para evitar secagem e hipotermia",
+      "grupo": "Evisceracao"
+    },
+    {
+      "texto": "Posicionar a vítima com joelhos fletidos, em caso de traumatismo isolado",
+      "grupo": "Evisceracao"
+    }
+  ],
+  "trauma_tecidos_moles": {
+    "sindrome_compartimental": [
+      {
+        "texto": "Aplicação de frio na área lesada 15-20 min, com intervalos da mesma duração",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "Compressão do local da lesão",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "Elevação da área lesionada acima do nível do coração",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "Manter o membro lesionado imóvel",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "1. Assegurar hemóstase: pressão direta, considerar torniquete se hemorragia incontrolável",
+        "grupo": "Lesao aberta"
+      },
+      {
+        "texto": "2. Preparação da ferida: antecipar necessidade de analgesia com apoio diferenciado, limpeza com compressas esterilizadas e agente de limpeza, tricotomia se necessário, irrigação com soro fisiológico (passo mais importante para reduzir contaminação), ligaduras sem apertar demasiado (avaliar estado neurovascular antes e depois)",
+        "grupo": "Lesao aberta"
+      },
+      {
+        "texto": "Lavar cuidadosa e abundantemente a parte amputada com SF",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Envolver em compressas humedecidas em soro fisiológico",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Colocar num saco plástico, dentro de outro saco/recipiente com frio",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Nunca manter quente, nunca colocar em água, nunca em contacto direto com frio, nunca usar frio seco",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Transportar a parte amputada afastada da vítima; não atrasar o transporte da vítima crítica por não encontrar a parte amputada",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Não remover o objeto (risco de hemorragia interna e lesão de estruturas adjacentes)",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Estabilizar o objeto com compressas sobrepostas, ligaduras ou panos",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Controlar hemorragia sem comprimir o objeto",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Não cortar/remover a parte exterior, exceto se demasiado grande/pesado ou impedir o transporte",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Nos olhos: usar copo de plástico sem tocar no objeto, tapar os dois olhos para prevenir movimento ocular",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Objetos inamovíveis (poste, pilar): retirar a vítima do objeto, articular com CODU para recursos (apoio médico, bombeiros)",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Remover apenas se afetar diretamente a via aérea ou interferir com compressões torácicas em RCP",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Tranquilizar a vítima; zona muito irrigada (risco de hemorragia abundante)",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Preparar para aspirar ou reposicionar por obstrução da VA por sangue",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Aplicar compressas/ligaduras com cuidado para não interferir com fluxo sanguíneo ou passagem de ar (penso oclusivo se necessário)",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Transportar sentada se não houver indicação para restringir movimentos da coluna",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Sentar a vítima em posição que não induza ingestão do sangue",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Compressão direta nas asas nasais com 2 dedos durante 10 min + frio no mesmo período",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Se não parar, tamponamento com esponja hemostática + frio por períodos de 10 min",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Se por trauma/queda, verificar perda de LCR - se existir, suspeitar de lesão cerebral e abordar como TCE",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Colocar compressa ao longo do ouvido externo, nunca dentro do canal auditivo",
+        "grupo": "Ouvido"
+      },
+      {
+        "texto": "Não tentar controlar diretamente sangue do canal auditivo (risco de aumentar PIC se houver perda de LCR)",
+        "grupo": "Ouvido"
+      },
+      {
+        "texto": "Penso no ouvido externo e transporte rápido",
+        "grupo": "Ouvido"
+      },
+      {
+        "texto": "Pressão direta para hemorragia externa",
+        "grupo": "Cintura escapular"
+      },
+      {
+        "texto": "Imobilizar se indicado, para prevenir movimento",
+        "grupo": "Cintura escapular"
+      },
+      {
+        "texto": "Ligadura sobre toda a área; manter posição anatómica ou ligadura enrolada na mão para a vítima segurar",
+        "grupo": "Mao punho dedos"
+      },
+      {
+        "texto": "Imobilizar a zona para impedir movimento (materiais podem deslocar-se)",
+        "grupo": "Joelho cotovelo"
+      },
+      {
+        "texto": "Controlo de hemorragia se indicado; ligadura sem apertar demasiado; avaliar função neurovascular antes e após",
+        "grupo": "Pe tornozelo"
+      }
+    ],
+    "lesao_ouvidos": [
+      {
+        "texto": "Aplicação de frio na área lesada 15-20 min, com intervalos da mesma duração",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "Compressão do local da lesão",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "Elevação da área lesionada acima do nível do coração",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "Manter o membro lesionado imóvel",
+        "grupo": "Lesao fechada"
+      },
+      {
+        "texto": "1. Assegurar hemóstase: pressão direta, considerar torniquete se hemorragia incontrolável",
+        "grupo": "Lesao aberta"
+      },
+      {
+        "texto": "2. Preparação da ferida: antecipar necessidade de analgesia com apoio diferenciado, limpeza com compressas esterilizadas e agente de limpeza, tricotomia se necessário, irrigação com soro fisiológico (passo mais importante para reduzir contaminação), ligaduras sem apertar demasiado (avaliar estado neurovascular antes e depois)",
+        "grupo": "Lesao aberta"
+      },
+      {
+        "texto": "Lavar cuidadosa e abundantemente a parte amputada com SF",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Envolver em compressas humedecidas em soro fisiológico",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Colocar num saco plástico, dentro de outro saco/recipiente com frio",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Nunca manter quente, nunca colocar em água, nunca em contacto direto com frio, nunca usar frio seco",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Transportar a parte amputada afastada da vítima; não atrasar o transporte da vítima crítica por não encontrar a parte amputada",
+        "grupo": "Amputacao"
+      },
+      {
+        "texto": "Não remover o objeto (risco de hemorragia interna e lesão de estruturas adjacentes)",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Estabilizar o objeto com compressas sobrepostas, ligaduras ou panos",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Controlar hemorragia sem comprimir o objeto",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Não cortar/remover a parte exterior, exceto se demasiado grande/pesado ou impedir o transporte",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Nos olhos: usar copo de plástico sem tocar no objeto, tapar os dois olhos para prevenir movimento ocular",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Objetos inamovíveis (poste, pilar): retirar a vítima do objeto, articular com CODU para recursos (apoio médico, bombeiros)",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Remover apenas se afetar diretamente a via aérea ou interferir com compressões torácicas em RCP",
+        "grupo": "Objetos empalados"
+      },
+      {
+        "texto": "Tranquilizar a vítima; zona muito irrigada (risco de hemorragia abundante)",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Preparar para aspirar ou reposicionar por obstrução da VA por sangue",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Aplicar compressas/ligaduras com cuidado para não interferir com fluxo sanguíneo ou passagem de ar (penso oclusivo se necessário)",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Transportar sentada se não houver indicação para restringir movimentos da coluna",
+        "grupo": "Face e pescoco"
+      },
+      {
+        "texto": "Sentar a vítima em posição que não induza ingestão do sangue",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Compressão direta nas asas nasais com 2 dedos durante 10 min + frio no mesmo período",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Se não parar, tamponamento com esponja hemostática + frio por períodos de 10 min",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Se por trauma/queda, verificar perda de LCR - se existir, suspeitar de lesão cerebral e abordar como TCE",
+        "grupo": "Epistaxis"
+      },
+      {
+        "texto": "Colocar compressa ao longo do ouvido externo, nunca dentro do canal auditivo",
+        "grupo": "Ouvido"
+      },
+      {
+        "texto": "Não tentar controlar diretamente sangue do canal auditivo (risco de aumentar PIC se houver perda de LCR)",
+        "grupo": "Ouvido"
+      },
+      {
+        "texto": "Penso no ouvido externo e transporte rápido",
+        "grupo": "Ouvido"
+      },
+      {
+        "texto": "Pressão direta para hemorragia externa",
+        "grupo": "Cintura escapular"
+      },
+      {
+        "texto": "Imobilizar se indicado, para prevenir movimento",
+        "grupo": "Cintura escapular"
+      },
+      {
+        "texto": "Ligadura sobre toda a área; manter posição anatómica ou ligadura enrolada na mão para a vítima segurar",
+        "grupo": "Mao punho dedos"
+      },
+      {
+        "texto": "Imobilizar a zona para impedir movimento (materiais podem deslocar-se)",
+        "grupo": "Joelho cotovelo"
+      },
+      {
+        "texto": "Controlo de hemorragia se indicado; ligadura sem apertar demasiado; avaliar função neurovascular antes e após",
+        "grupo": "Pe tornozelo"
+      }
+    ]
+  },
+  "trauma_musculoesqueletico": {
+    "fratura": [],
+    "luxacao": [],
+    "entorse": []
+  },
+  "trauma_termico": {
+    "golpe_de_calor": [],
+    "hipotermia_leve": [],
+    "hipotermia_moderada": [],
+    "hipotermia_severa": [],
+    "congelamento_superficial": [],
+    "congelamento_profundo": []
+  },
+  "afogamento_barotrauma": {
+    "barotrauma_ouvido_seios": [
+      {
+        "texto": "Considerar imobilização vertebromedular",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Prevenir hipotermia: remover roupas molhadas, secar e envolver em cobertores/manta térmica, considerar aquecimento da célula sanitária",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Administrar oxigénio conforme a orientação técnica em vigor",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Estar atento à possibilidade de vómito",
+        "grupo": "Afogamento"
+      }
+    ],
+    "hiperpressurizacao_pulmonar": [
+      {
+        "texto": "Considerar imobilização vertebromedular",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Prevenir hipotermia: remover roupas molhadas, secar e envolver em cobertores/manta térmica, considerar aquecimento da célula sanitária",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Administrar oxigénio conforme a orientação técnica em vigor",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Estar atento à possibilidade de vómito",
+        "grupo": "Afogamento"
+      }
+    ],
+    "doenca_descompressao": [
+      {
+        "texto": "Considerar imobilização vertebromedular",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Prevenir hipotermia: remover roupas molhadas, secar e envolver em cobertores/manta térmica, considerar aquecimento da célula sanitária",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Administrar oxigénio conforme a orientação técnica em vigor",
+        "grupo": "Afogamento"
+      },
+      {
+        "texto": "Estar atento à possibilidade de vómito",
+        "grupo": "Afogamento"
+      }
+    ]
+  },
+  "queimaduras": {
+    "queimadura_via_aerea": [
+      {
+        "texto": "Dividir tarefas: um elemento avalia a vítima (sinais de gravidade como queimadura de VA, choque hipovolémico), outro inicia o tratamento da queimadura",
+        "grupo": "Geral"
+      },
+      {
+        "texto": "Se em espaço fechado, avaliar provável queimadura da via aérea",
+        "grupo": "Geral"
+      },
+      {
+        "texto": "Caracterizar a queimadura quanto a causa, extensão e profundidade",
+        "grupo": "Geral"
+      },
+      {
+        "texto": "Arrefecer irrigando com água tépida ou soro fisiológico durante 5-10 minutos (evitar hipotermia)",
+        "grupo": "Termicas"
+      },
+      {
+        "texto": "Remover roupas e adornos não aderidos; cortar ao redor da roupa aderente, não arrancar",
+        "grupo": "Termicas"
+      },
+      {
+        "texto": "Após arrefecer, tapar com compressas secas ou lençol de queimados (ou hidrogel se disponível); manter a vítima e a célula da ambulância aquecidas",
+        "grupo": "Termicas"
+      },
+      {
+        "texto": "Não transportar sobre lençóis/roupas molhadas (hipotermia)",
+        "grupo": "Termicas"
+      },
+      {
+        "texto": "Transportar para unidade com unidade de queimados, se indicado pelo CODU",
+        "grupo": "Termicas"
+      },
+      {
+        "texto": "Não tocar na vítima nem em nada em contacto com ela sem garantir que a corrente foi desligada",
+        "grupo": "Eletricas"
+      },
+      {
+        "texto": "Em média/alta tensão, considerar cinemática de trauma associada (restrição de movimentos da coluna)",
+        "grupo": "Eletricas"
+      },
+      {
+        "texto": "Avaliar tipo/quantidade de corrente, trajeto e duração do contacto; solicitar apoio diferenciado",
+        "grupo": "Eletricas"
+      },
+      {
+        "texto": "Monitorização do ritmo cardíaco pelas equipas diferenciadas",
+        "grupo": "Eletricas"
+      },
+      {
+        "texto": "Consultar ficha de dados de segurança e contactar o CIAV",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "EPI adequado ao produto químico",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "Abordar com o 'vento pelas costas' se pó",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "Evitar contaminação da ambulância e equipamentos",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "Remover vestuário e fechar em saco",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "Remover a maior quantidade possível de substância com compressas secas (exceto olhos)",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "Se indicado pelo CIAV, lavar abundantemente com água tépida corrente (pequenas áreas com SF)",
+        "grupo": "Quimicas"
+      },
+      {
+        "texto": "Lavar com água ou SF no local e durante o transporte",
+        "grupo": "Olhos"
+      },
+      {
+        "texto": "Remover lentes de contacto se existirem",
+        "grupo": "Olhos"
+      },
+      {
+        "texto": "Lavar do canto interno para o externo",
+        "grupo": "Olhos"
+      }
+    ]
+  },
+  "trabalho_de_parto": [],
+  "hipertensao_gravidez": [
+    {
+      "texto": "Contactar imediatamente o CODU",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Proteger a cabeça da grávida",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Afastar objetos potencialmente lesantes",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Administrar oxigénio a 15 L/min por máscara de alto débito",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Esperar que a convulsão cesse",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Avaliar a grávida, elevando a anca da direita para a esquerda",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Estar preparado para recorrência da convulsão",
+      "grupo": "Grávida em convulsao"
+    },
+    {
+      "texto": "Transportar idealmente para hospital com obstetrícia, neonatologia e cuidados intensivos, designado pelo CODU",
+      "grupo": "Grávida em convulsao"
+    }
+  ],
+  "aborto_abortamento": [
+    {
+      "texto": "Posicionar a grávida em Trendelenburg",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar e gerir oxigenoterapia visando SpO2 92-96%",
+      "grupo": null
+    },
+    {
+      "texto": "Colocar pensos higiénicos e vigiar perdas hemáticas",
+      "grupo": null
+    },
+    {
+      "texto": "Vigiar sinais de choque hipovolémico",
+      "grupo": null
+    },
+    {
+      "texto": "Em caso de dor severa e sinais de choque, pedir apoio diferenciado",
+      "grupo": null
+    },
+    {
+      "texto": "Manter a grávida aquecida",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar para hospital com bloco de partos, designado pelo CODU",
+      "grupo": null
+    },
+    {
+      "texto": "Se o produto da conceção for expulso, recolher, acondicionar em saco e transportar junto da mulher, mas fora do seu alcance visual",
+      "grupo": null
+    }
+  ],
+  "alergia_pediatria": [
+    {
+      "texto": "Afastar o fator desencadeante ou retirar a vítima do local o mais precocemente possível",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar conforme necessário",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação sobre o eventual alergénio",
+      "grupo": null
+    },
+    {
+      "texto": "Perante sinais de gravidade, nomeadamente reação anafilática, identificar vítima crítica e solicitar apoio diferenciado ao CODU",
+      "grupo": null
+    },
+    {
+      "texto": "Transportar assegurando que a via aérea se mantém desobstruída",
+      "grupo": null
+    }
+  ],
+  "asma_pediatria": [
+    {
+      "texto": "Recolher informação sobre esquema de tratamento habitual, doses e medicação/câmara expansora que a criança já tenha consigo",
+      "grupo": null
+    },
+    {
+      "texto": "Atuação compatível com a do adulto, diferindo na administração de O2",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar de acordo com orientação técnica",
+      "grupo": null
+    },
+    {
+      "texto": "Sem oximetria disponível, administrar O2 a 15L/min nas crises moderadas ou graves",
+      "grupo": null
+    }
+  ],
+  "bronquiolite": [
+    {
+      "texto": "Elevação da cabeceira da cama, maca ou berço a 30º",
+      "grupo": null
+    },
+    {
+      "texto": "Desobstrução nasal com limpeza suave das secreções",
+      "grupo": null
+    },
+    {
+      "texto": "Aspiração suave das secreções nasais, evitando aspiração nasofaríngea (risco de trauma e agravamento do edema)",
+      "grupo": null
+    },
+    {
+      "texto": "Perante bradipneia ou exaustão respiratória, iniciar suporte ventilatório com máscara e insuflador com O2 alto débito",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio de acordo com orientação técnica; sem oximetria disponível, administrar O2 a 15L/min nas dispneias moderadas ou graves",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte com elevação da cabeceira, posição sentada ou Fowler",
+      "grupo": null
+    }
+  ],
+  "laringite": [
+    {
+      "texto": "Elevação da cabeceira da cama, maca ou berço a 30º",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar de acordo com orientação técnica",
+      "grupo": null
+    },
+    {
+      "texto": "Minimizar stress que provoque choro na criança",
+      "grupo": null
+    },
+    {
+      "texto": "Não aquecer demasiado o ambiente em volta da criança",
+      "grupo": null
+    },
+    {
+      "texto": "Considerar colocar a criança junto à janela para respirar ar frio se estridor em repouso",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte com elevação da cabeceira, posição sentada ou Fowler",
+      "grupo": null
+    }
+  ],
+  "desidratacao_pediatrica": [
+    {
+      "texto": "Identificar sinais de desidratação: quantificar episódios de vómitos/diarreia, número de fraldas e intervalo de tempo",
+      "grupo": null
+    },
+    {
+      "texto": "Se vómitos: pausa alimentar de pelo menos 30 minutos; dar líquidos em pequena quantidade de cada vez (não encher o estômago)",
+      "grupo": null
+    },
+    {
+      "texto": "Hidratar com colher de sopa de 5 em 5 minutos, avaliando tolerância",
+      "grupo": null
+    },
+    {
+      "texto": "Vigiar a quantidade de urina produzida (aumento do volume indica hidratação eficaz)",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte seguro",
+      "grupo": null
+    }
+  ],
+  "febre_pediatrica": [
+    {
+      "texto": "Medidas de arrefecimento apenas se a vítima não tiver tremores: retirar roupa excessiva, manter protegida do ambiente frio",
+      "grupo": null
+    },
+    {
+      "texto": "Perante via aérea permeável, oferecer líquidos de acordo com a preferência (água, chás, sumos)",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, sinais de infeção, episódio convulsivo, sintomas associados, patologia prévia, hábitos farmacológicos",
+      "grupo": null
+    },
+    {
+      "texto": "Durante o transporte, garantir permeabilidade contínua da via aérea",
+      "grupo": null
+    }
+  ],
+  "convulsao_pediatrica": [
+    {
+      "texto": "Por impossibilidade de avaliar ABC adequadamente, administrar O2 alto débito a 15L/min",
+      "grupo": "Durante a convulsao"
+    },
+    {
+      "texto": "Solicitar apoio diferenciado de imediato",
+      "grupo": "Durante a convulsao"
+    },
+    {
+      "texto": "Se os pais tiverem medicação SOS anticonvulsivante, auxiliar no posicionamento da criança",
+      "grupo": "Durante a convulsao"
+    },
+    {
+      "texto": "Avaliar e corrigir ABCDE",
+      "grupo": "Pos crise convulsiva"
+    },
+    {
+      "texto": "Posição de recuperação quando indicado, mantendo permeabilidade da VA",
+      "grupo": "Pos crise convulsiva"
+    },
+    {
+      "texto": "Suspender ou limitar o fator desencadeante",
+      "grupo": "Pos crise convulsiva"
+    },
+    {
+      "texto": "Administrar O2 suplementar se SpO2 <92%, mantendo até recuperação completa da consciência",
+      "grupo": "Pos crise convulsiva"
+    },
+    {
+      "texto": "Sem oximetria e com alterações significativas em A, B, C, administrar O2 a 15L/min",
+      "grupo": "Pos crise convulsiva"
+    },
+    {
+      "texto": "Recolher informação: tempo de início, duração, tipo (focal/generalizada), sintomas associados, patologia prévia, hábitos farmacológicos, causas",
+      "grupo": "Pos crise convulsiva"
+    },
+    {
+      "texto": "Transportar assegurando que a via aérea se mantém desobstruída",
+      "grupo": "Pos crise convulsiva"
+    }
+  ],
+  "sepsis_meningococica": [
+    {
+      "texto": "Na suspeita de meningococemia, abordar com EPI adequado (transmissão por gotículas)",
+      "grupo": null
+    },
+    {
+      "texto": "Questionar sobre alterações cutâneas, dificuldade respiratória, alterações neurológicas, débito urinário e confirmar vacinação",
+      "grupo": null
+    },
+    {
+      "texto": "Se confirmada a suspeita, contactar CODU para agilizar com o delegado de saúde pública eventual profilaxia antibiótica aos contactos",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar segundo orientação técnica; sem oximetria e com alterações em A, B e C, administrar O2 a 15L/min",
+      "grupo": null
+    },
+    {
+      "texto": "Prevenir a hipertermia",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, evolução, sintomas associados, hábitos farmacológicos e história prévia",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte seguro",
+      "grupo": null
+    }
+  ],
+  "hipoglicemia_pediatrica": [
+    {
+      "texto": "Avaliar glicemia na criança com alteração da 'Aparência' no TAP, história compatível de diabetes/hipoglicémia, ou AEC",
+      "grupo": null
+    },
+    {
+      "texto": "Administrar oxigénio suplementar segundo orientação técnica",
+      "grupo": null
+    },
+    {
+      "texto": "Se sem vómito e com reflexos de sucção/deglutição mantidos: colocar ao peito ou dar biberão",
+      "grupo": null
+    },
+    {
+      "texto": "Se capaz de se alimentar sem risco de engasgamento/aspiração e sem vómitos: fornecer refeição (açúcar, fruta, pão com doce ou compotas)",
+      "grupo": null
+    },
+    {
+      "texto": "Sem reflexos de deglutição mantidos (risco de aspiração): preparar papa de açúcar e espalhar pequena quantidade sob a língua e bochechas, com atenção à quantidade (risco de obstrução da VA)",
+      "grupo": null
+    },
+    {
+      "texto": "Recolher informação: tempo de início, evolução, sintomas associados, hábitos farmacológicos e história prévia",
+      "grupo": null
+    },
+    {
+      "texto": "Transporte seguro mantendo VA permeável",
+      "grupo": null
+    }
+  ],
+  "intoxicacao_pediatrica": {
+    "anticolinergicos": [
+      {
+        "texto": "Informar CODU com possível colaboração do CIAV",
+        "grupo": null
+      },
+      {
+        "texto": "Em função do tipo de tóxico, abordar o cenário com o EPI recomendado",
+        "grupo": null
+      },
+      {
+        "texto": "Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio suplementar segundo procedimento em vigor",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por monóxido de carbono, administrar O2 a 15L/min",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%",
+        "grupo": null
+      },
+      {
+        "texto": "Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível",
+        "grupo": null
+      },
+      {
+        "texto": "Seguir recomendações do CIAV/CODU",
+        "grupo": null
+      },
+      {
+        "texto": "Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência",
+        "grupo": null
+      }
+    ],
+    "colinergicos": [
+      {
+        "texto": "Informar CODU com possível colaboração do CIAV",
+        "grupo": null
+      },
+      {
+        "texto": "Em função do tipo de tóxico, abordar o cenário com o EPI recomendado",
+        "grupo": null
+      },
+      {
+        "texto": "Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio suplementar segundo procedimento em vigor",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por monóxido de carbono, administrar O2 a 15L/min",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%",
+        "grupo": null
+      },
+      {
+        "texto": "Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível",
+        "grupo": null
+      },
+      {
+        "texto": "Seguir recomendações do CIAV/CODU",
+        "grupo": null
+      },
+      {
+        "texto": "Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência",
+        "grupo": null
+      }
+    ],
+    "hipermetabolicos": [
+      {
+        "texto": "Informar CODU com possível colaboração do CIAV",
+        "grupo": null
+      },
+      {
+        "texto": "Em função do tipo de tóxico, abordar o cenário com o EPI recomendado",
+        "grupo": null
+      },
+      {
+        "texto": "Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio suplementar segundo procedimento em vigor",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por monóxido de carbono, administrar O2 a 15L/min",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%",
+        "grupo": null
+      },
+      {
+        "texto": "Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível",
+        "grupo": null
+      },
+      {
+        "texto": "Seguir recomendações do CIAV/CODU",
+        "grupo": null
+      },
+      {
+        "texto": "Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência",
+        "grupo": null
+      }
+    ],
+    "narcoticos": [
+      {
+        "texto": "Informar CODU com possível colaboração do CIAV",
+        "grupo": null
+      },
+      {
+        "texto": "Em função do tipo de tóxico, abordar o cenário com o EPI recomendado",
+        "grupo": null
+      },
+      {
+        "texto": "Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio suplementar segundo procedimento em vigor",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por monóxido de carbono, administrar O2 a 15L/min",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%",
+        "grupo": null
+      },
+      {
+        "texto": "Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível",
+        "grupo": null
+      },
+      {
+        "texto": "Seguir recomendações do CIAV/CODU",
+        "grupo": null
+      },
+      {
+        "texto": "Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência",
+        "grupo": null
+      }
+    ],
+    "simpaticomimeticos": [
+      {
+        "texto": "Informar CODU com possível colaboração do CIAV",
+        "grupo": null
+      },
+      {
+        "texto": "Em função do tipo de tóxico, abordar o cenário com o EPI recomendado",
+        "grupo": null
+      },
+      {
+        "texto": "Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio suplementar segundo procedimento em vigor",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por monóxido de carbono, administrar O2 a 15L/min",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%",
+        "grupo": null
+      },
+      {
+        "texto": "Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível",
+        "grupo": null
+      },
+      {
+        "texto": "Seguir recomendações do CIAV/CODU",
+        "grupo": null
+      },
+      {
+        "texto": "Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência",
+        "grupo": null
+      }
+    ],
+    "sedativos_hipnoticos": [
+      {
+        "texto": "Informar CODU com possível colaboração do CIAV",
+        "grupo": null
+      },
+      {
+        "texto": "Em função do tipo de tóxico, abordar o cenário com o EPI recomendado",
+        "grupo": null
+      },
+      {
+        "texto": "Remover roupas contaminadas; despistar outras lesões (trauma, queimaduras) e sinais compatíveis com consumo",
+        "grupo": null
+      },
+      {
+        "texto": "Administrar oxigénio suplementar segundo procedimento em vigor",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por monóxido de carbono, administrar O2 a 15L/min",
+        "grupo": null
+      },
+      {
+        "texto": "Na intoxicação por paraquat, administrar O2 apenas se SpO2 <85%",
+        "grupo": null
+      },
+      {
+        "texto": "Recolher informação detalhada (quem, o quê, quanto, quando, onde, como) — se dose desconhecida, considerar a dose máxima possível",
+        "grupo": null
+      },
+      {
+        "texto": "Seguir recomendações do CIAV/CODU",
+        "grupo": null
+      },
+      {
+        "texto": "Transportar, quando possível e viável, o tóxico em segurança para o serviço de urgência",
+        "grupo": null
+      }
+    ]
+  }
+}

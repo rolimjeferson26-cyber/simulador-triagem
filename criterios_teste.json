@@ -1,0 +1,288 @@
+{
+  "asma": {
+    "nome": "Asma",
+    "formato": "por_gravidade",
+    "niveis_gravidade": {
+      "crise_ligeira": [
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia com a marcha"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Possibilidade de pieira discreta na fase expiratória"
+        }
+      ],
+      "crise_moderada": [
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Ansiedade"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 1,
+          "origem": "Dispneia em pequenos esforços"
+        },
+        {
+          "tag": "dispneia_impede_falar",
+          "peso": 2,
+          "origem": "Incapacidade de completar frases curtas"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Pieira"
+        },
+        {
+          "tag": "tiragem_musculos_acessorios",
+          "peso": 2,
+          "origem": "Uso de músculos acessórios e tiragens"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "FR aumentada"
+        },
+        {
+          "tag": "spo2_baixo",
+          "peso": 2,
+          "origem": "Decréscimo da SpO2"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "FC aumentada"
+        }
+      ],
+      "crise_grave": [
+        {
+          "tag": "ansiedade",
+          "peso": 1,
+          "origem": "Ansiedade ou agitação"
+        },
+        {
+          "tag": "dispneia",
+          "peso": 2,
+          "origem": "Dispneia em repouso"
+        },
+        {
+          "tag": "pieira",
+          "peso": 2,
+          "origem": "Pieira"
+        },
+        {
+          "tag": "posicao_tripe",
+          "peso": 3,
+          "origem": "Posição de tripé",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "dispneia_impede_falar",
+          "peso": 2,
+          "origem": "Incapacidade de completar frases curtas"
+        },
+        {
+          "tag": "tiragem_musculos_acessorios",
+          "peso": 2,
+          "origem": "Uso de músculos acessórios e tiragens"
+        },
+        {
+          "tag": "taquipneia",
+          "peso": 1,
+          "origem": "FR aumentada"
+        },
+        {
+          "tag": "taquicardia",
+          "peso": 1,
+          "origem": "FC aumentada"
+        }
+      ],
+      "paragem_ventilatoria_iminente": [
+        {
+          "tag": "prostracao",
+          "peso": 2,
+          "origem": "Prostração ou desorientação"
+        },
+        {
+          "tag": "silencio_ventilatorio",
+          "peso": 3,
+          "origem": "Sons ventilatórios inaudíveis (silêncio ventilatório)",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "apneia",
+          "peso": 3,
+          "origem": "Apneia",
+          "bandeira_vermelha": true
+        },
+        {
+          "tag": "bradicardia",
+          "peso": 2,
+          "origem": "Bradicardia"
+        }
+      ]
+    },
+    "excluidos": [
+      "FR normal ou ligeiramente elevada (crise_ligeira) — ambíguo demais pra virar critério útil de pontuação",
+      "Vítima calma ou ligeiramente ansiosa (crise_ligeira) — não discrimina de outras patologias",
+      "Prefere estar sentada (crise_moderada) — sinal fraco isoladamente, redundante com outros já cobertos"
+    ]
+  },
+  "dor_toracica_cardiaca": {
+    "nome": "Dor Torácica de Origem Cardíaca",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "dispneia",
+        "peso": 1,
+        "origem": "Dispneia"
+      },
+      {
+        "tag": "fadiga_inicio_subito",
+        "peso": 1,
+        "origem": "Cansaço de início súbito"
+      },
+      {
+        "tag": "dor_toracica_opressiva",
+        "peso": 3,
+        "origem": "Dor/desconforto retroesternal tipo opressão, peso, ardor ou pressão",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "dor_epigastrica",
+        "peso": 1,
+        "origem": "Dor epigástrica"
+      },
+      {
+        "tag": "dor_irradiada_msuperior_mandibula",
+        "peso": 3,
+        "origem": "Irradiação para membros superiores (principalmente esquerdo), pescoço, mandíbula",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "palpitacoes",
+        "peso": 1,
+        "origem": "Palpitações"
+      },
+      {
+        "tag": "palidez",
+        "peso": 1,
+        "origem": "Palidez"
+      },
+      {
+        "tag": "sudorese",
+        "peso": 1,
+        "origem": "Sudorese"
+      },
+      {
+        "tag": "nauseas_vomitos",
+        "peso": 1,
+        "origem": "Náuseas e/ou vómitos"
+      },
+      {
+        "tag": "ansiedade",
+        "peso": 1,
+        "origem": "Ansiedade e agitação"
+      },
+      {
+        "tag": "sincope_lipotimia",
+        "peso": 2,
+        "origem": "Lipotimia ou síncope"
+      }
+    ],
+    "excluidos": [
+      "Angústia — redundante com ansiedade/agitação já mapeado, e muito subjetivo pra ser um critério isolado"
+    ]
+  },
+  "choque_geral": {
+    "nome": "Choque (Hipoperfusão) - Geral",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "alteracao_consciencia",
+        "peso": 2,
+        "origem": "Alteração do estado de consciência (ansiedade progredindo para agitação, confusão, prostração, sonolência)"
+      },
+      {
+        "tag": "taquipneia",
+        "peso": 1,
+        "origem": "Taquipneia (sinal clássico de choque)"
+      },
+      {
+        "tag": "taquicardia",
+        "peso": 1,
+        "origem": "Taquicardia (inicialmente ligeira, evoluindo, pulsos periféricos finos/ausentes)"
+      },
+      {
+        "tag": "pele_fria_palida_sudorese",
+        "peso": 3,
+        "origem": "Pele pálida, fria, viscosa, cianótica, suada",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "hipotensao",
+        "peso": 2,
+        "origem": "Diminuição da pressão arterial (sinal mais tardio)",
+        "bandeira_vermelha": true
+      }
+    ],
+    "excluidos": [],
+    "nota": "Ficha 'geral' — não diferencia subtipos (hipovolêmico/distributivo/etc). O JSON tem uma tabela comparativa hipovolêmico x neurogênico que fica pra uma segunda iteração, não vale a pena modelar já na amostra de teste."
+  },
+  "avc": {
+    "nome": "AVC (Acidente Vascular Cerebral)",
+    "formato": "plano",
+    "criterios": [
+      {
+        "tag": "assimetria_facial",
+        "peso": 3,
+        "origem": "Alteração da mímica facial / Desvio da comissura labial",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "hemiparesia_hemiplegia",
+        "peso": 3,
+        "origem": "Diminuição ou perda de força/sensibilidade nos membros (hemiparesia/hemiplegia)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "disartria_afasia",
+        "peso": 3,
+        "origem": "Alteração da linguagem/fala (disartria/afasia)",
+        "bandeira_vermelha": true
+      },
+      {
+        "tag": "alteracao_visual",
+        "peso": 1,
+        "origem": "Alterações da visão"
+      },
+      {
+        "tag": "desvio_olhar",
+        "peso": 2,
+        "origem": "Desvio conjugado do olhar"
+      },
+      {
+        "tag": "cefaleia_intensa",
+        "peso": 1,
+        "origem": "Cefaleias intensas"
+      },
+      {
+        "tag": "ataxia",
+        "peso": 2,
+        "origem": "Ataxia cerebelosa (desequilíbrio da marcha/coordenação)"
+      },
+      {
+        "tag": "vertigem_tonturas",
+        "peso": 1,
+        "origem": "Vertigem e tonturas"
+      }
+    ],
+    "excluidos": [
+      "Ausência de reconhecimento do défice (anosognosia) — dificílimo de avaliar em campo, baixo valor prático como critério de pontuação"
+    ],
+    "nota": "assimetria_facial, hemiparesia_hemiplegia e disartria_afasia são exatamente os 3 critérios da escala de Cincinnati — os 3 juntos batendo = 85% de probabilidade segundo a própria ficha, então fazem sentido como bandeira_vermelha tripla."
+  }
+}
