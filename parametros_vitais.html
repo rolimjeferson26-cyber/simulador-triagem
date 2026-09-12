@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Parâmetros Vitais — Consulta Rápida</title>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  :root{
+    /* mesma identidade da aba Consultas: os dados vêm da mesma fonte */
+    --brand: #4FC3F7; --brand-bg: #0E1E29; --brand-ink: #0E1E29;
+  }
+  header{
+    position: sticky; top:0; z-index: 20;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  header h1{ margin:0; font-size: 19px; line-height:1.15; color:var(--ink); }
+  header .tag{ font-size: 10.5px; letter-spacing: .04em; color: var(--ink-soft); margin-top:2px; }
+  .card-head.plain{ cursor:default; }
+
+  #trainingBanner{ position:sticky; top:0; z-index:30; background:var(--amber); color:var(--bg);
+    font-size:11px; font-weight:800; text-align:center; padding:6px 10px; letter-spacing:.03em; }
+  header{ top:26px; }
+</style>
+</head>
+<body>
+
+<div id="trainingBanner">MODO TREINO — simulação para formação, não usar em ocorrência real</div>
+
+<header>
+  <h1 class="display">Parâmetros Vitais</h1>
+  <div class="tag">Valores de referência por idade</div>
+  <nav class="app-nav">
+    <a href="emergencias_medicas.html">Consultas</a>
+    <a href="index.html">Caso Treino</a>
+    <a href="parametros_vitais.html" class="active">Parâmetros Vitais</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="empty">A carregar dados de referência...</div>
+</main>
+
+<footer><b>Material de estudo para formação.</b> Não substitui a formação certificada, os protocolos oficiais em vigor, nem deve ser usado para apoio a decisão em ocorrência real. Confirmar sempre junto de fontes e protocolos atualizados.</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // Estes dados NÃO são duplicados aqui: esta página lê, em tempo de
+  // execução, os mesmos arquivos JSON que alimentam a aba Consultas
+  // (emergencias_medicas.json) e o motor de triagem (taxonomia.json).
+  // Corrigir um valor num desses arquivos atualiza as duas páginas.
+  const CONDICAO_ID = "abordagem_avaliacao_pediatrica";
+  const PARAMS_ADULTO = ["PAD", "SpO2", "Glicemia", "Temp"];
+
+  function humanKey(k){
+    return k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function renderIdadeTable(rows){
+    let t = '<table class="cmp"><tr><th>Idade</th><th>Peso (kg)</th><th>FC (bpm)</th><th>FR (cpm)</th><th>PAS normal (mmHg)</th></tr>';
+    rows.forEach(r => {
+      const peso = (r.peso_kg === null || r.peso_kg === undefined) ? '—' : r.peso_kg;
+      const pas = (r.pa_sistolica_normal_mmHg === null || r.pa_sistolica_normal_mmHg === undefined) ? '—' : r.pa_sistolica_normal_mmHg;
+      t += `<tr><th>${r.idade}</th><td>${peso}</td><td>${r.fc_bpm}</td><td>${r.fr_cpm}</td><td>${pas}</td></tr>`;
+    });
+    t += '</table>';
+    return t;
+  }
+
+  function renderFlatDictList(obj){
+    let html = '<ul class="list-plain gy">';
+    Object.entries(obj).forEach(([k, v]) => {
+      html += `<li><b>${humanKey(k)}:</b> ${v}</li>`;
+    });
+    html += '</ul>';
+    return html;
+  }
+
+  function renderAdultThresholds(regras){
+    let html = '';
+    PARAMS_ADULTO.forEach(param => {
+      const matching = regras.filter(r => r.parametro === param);
+      if(!matching.length) return;
+      html += `<div class="subgroup"><div class="subgroup-title">${param}</div><ul class="list-plain gy">`;
+      matching.forEach(r => {
+        let faixa;
+        if(r.min !== null && r.max !== null) faixa = `${r.min} – ${r.max}`;
+        else if(r.min !== null) faixa = `≥ ${r.min}`;
+        else faixa = `≤ ${r.max}`;
+        html += `<li><b>${r.label}:</b> ${faixa} ${r.unidade}</li>`;
+      });
+      html += '</ul></div>';
+    });
+    return html;
+  }
+
+  function encontrarCondicao(emerg){
+    let achada = null;
+    emerg.categorias.forEach(cat => {
+      cat.condicoes.forEach(c => { if(c.id === CONDICAO_ID) achada = c; });
+    });
+    return achada;
+  }
+
+  async function init(){
+    const main = document.getElementById('main');
+    try{
+      const [emergRes, taxRes] = await Promise.all([
+        fetch('emergencias_medicas.json'),
+        fetch('taxonomia.json')
+      ]);
+      if(!emergRes.ok || !taxRes.ok) throw new Error('Falha ao carregar JSON');
+      const emerg = await emergRes.json();
+      const tax = await taxRes.json();
+      const cond = encontrarCondicao(emerg);
+
+      let html = '';
+
+      html += '<div class="section"><div class="section-title def">Fonte dos dados</div>' +
+        '<div class="def-text">Os valores abaixo são lidos diretamente do mesmo JSON usado na aba ' +
+        '<b>Consultas</b> (categoria "Emergências Pediátricas" → "Abordagem e Avaliação da Vítima ' +
+        'Pediátrica") e do JSON de sinais vitais do simulador de triagem. Corrigir um valor num ' +
+        'desses arquivos atualiza automaticamente ambas as páginas.</div></div>';
+
+      html += '<div class="cat-label">Por idade (do recém-nascido ao adulto)</div>';
+      html += '<div class="card"><div class="card-head plain"><h2>FC · FR · PAS</h2></div><div class="card-body" style="display:block;">';
+      if(cond && cond.parametros_referencia_por_idade){
+        html += renderIdadeTable(cond.parametros_referencia_por_idade);
+      } else {
+        html += '<div class="empty">Tabela por idade não encontrada na fonte.</div>';
+      }
+      if(cond){
+        [
+          ['frequencia_cardiaca_referencia', 'FC — faixas por grupo etário'],
+          ['frequencia_respiratoria_referencia', 'FR — faixas por grupo etário'],
+          ['pressao_arterial_sistolica_limite_inferior_aceitavel', 'PAS — limite inferior aceitável'],
+          ['pressao_arterial_minima_aceitavel', 'PA — mínima aceitável']
+        ].forEach(([key, titulo]) => {
+          if(cond[key]){
+            html += `<div class="subgroup"><div class="subgroup-title">${titulo}</div>${renderFlatDictList(cond[key])}</div>`;
+          }
+        });
+      }
+      html += '</div></div>';
+
+      html += '<div class="cat-label">Valores de referência — adulto (sem variação por idade)</div>';
+      html += '<div class="card"><div class="card-head plain"><h2>PAD · SpO2 · Glicemia · Temperatura</h2></div><div class="card-body" style="display:block;">';
+      if(tax && Array.isArray(tax.sinais_vitais)){
+        html += renderAdultThresholds(tax.sinais_vitais);
+      } else {
+        html += '<div class="empty">Limiares de adulto não encontrados na fonte.</div>';
+      }
+      html += '</div></div>';
+
+      main.innerHTML = html;
+    } catch(err){
+      main.innerHTML = '<div class="empty">Não foi possível carregar os dados de referência.<br>' +
+        'Esta página precisa de ser aberta através de um servidor (http/https) — não abra o arquivo ' +
+        'diretamente do disco.</div>';
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

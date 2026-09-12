@@ -10,16 +10,6 @@
     /* identidade deste app dentro da central: azul */
     --brand: #4FC3F7; --brand-bg: #0E1E29; --brand-ink: #0E1E29;
   }
-  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-  html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  .display{
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-  }
 
   header{
     position: sticky; top:0; z-index: 20;
@@ -66,99 +56,6 @@
   }
   .chip.active{ background:var(--brand-bg); border-color:var(--brand); color:var(--brand); }
 
-  main{ padding: 14px 12px 60px; max-width:720px; margin:0 auto; }
-
-  .empty{
-    text-align:center; color:var(--ink-soft); padding:40px 20px; font-size:14px;
-  }
-
-  .cat-label{
-    font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;
-    color: var(--ink-soft); margin: 18px 4px 8px; font-weight:700;
-  }
-  .cat-label:first-child{ margin-top:4px; }
-
-  .card{
-    background:var(--panel); border:1px solid var(--line); border-radius: var(--radius);
-    margin-bottom:8px; overflow:hidden;
-  }
-  .card-head{
-    padding: 13px 14px; display:flex; align-items:center; justify-content:space-between;
-    gap:10px; cursor:pointer; min-height:44px;
-  }
-  .card-head h2{
-    font-size:15.5px; margin:0; line-height:1.3; color:var(--ink);
-  }
-  .chevron{
-    width:11px; height:11px; border-right:2px solid var(--ink-soft); border-bottom:2px solid var(--ink-soft);
-    transform: rotate(-45deg); transition: transform .15s ease; flex:0 0 auto; margin-right:2px;
-  }
-  .card.open .chevron{ transform: rotate(45deg); }
-
-  .card-body{ display:none; padding: 0 14px 16px; }
-  .card.open .card-body{ display:block; }
-
-  .section{ margin-top: 12px; }
-  .section-title{
-    font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800;
-    margin-bottom:6px; display:flex; align-items:center; gap:6px;
-  }
-  .section-title.def{ color: var(--ink-soft); }
-  .section-title.ss{ color: var(--amber); }
-  .section-title.at{ color: var(--teal); }
-  .section-title.param{ color: var(--red); }
-
-  .def-text{ font-size:13.5px; line-height:1.55; color:var(--ink); }
-
-  ul.list-plain{ margin:0; padding:0; list-style:none; }
-  ul.list-plain li{
-    font-size:13.5px; line-height:1.5; padding: 6px 0 6px 18px; position:relative;
-    border-bottom: 1px solid var(--line);
-  }
-  ul.list-plain li:last-child{ border-bottom:none; }
-  ul.list-plain.ss li::before{
-    content:""; position:absolute; left:2px; top:13px; width:6px; height:6px;
-    background: var(--amber); border-radius:1px;
-  }
-  ul.list-plain.at li::before{
-    content:""; position:absolute; left:2px; top:13px; width:6px; height:6px;
-    background: var(--teal); border-radius:1px;
-  }
-  ul.list-plain.gy li::before{
-    content:""; position:absolute; left:2px; top:13px; width:6px; height:6px;
-    background: var(--ink-soft); border-radius:1px;
-  }
-
-  .subgroup{ margin-top:10px; }
-  .subgroup-title{
-    font-size:12px; font-weight:700; color:var(--ink); margin-bottom:4px;
-    text-transform: capitalize;
-  }
-
-  .param-box{
-    background: var(--red-bg); border-left:2px solid var(--red); padding:9px 11px;
-    font-size:13px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-top:8px;
-    line-height:1.5;
-  }
-  .param-box b{ color:var(--red); }
-
-  table.cmp{
-    width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px;
-  }
-  table.cmp th, table.cmp td{
-    border:1px solid var(--line); padding:6px 7px; text-align:left; vertical-align:top;
-  }
-  table.cmp th{ background:var(--panel-2); color:var(--ink-soft); font-size:11px; text-transform:uppercase; letter-spacing:.03em; }
-
-  .note-box{
-    background: var(--teal-bg); border-left:2px solid var(--teal); padding:9px 11px;
-    font-size:13px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-top:8px; line-height:1.5;
-  }
-
-  footer{
-    text-align:center; color:var(--ink-soft); font-size:11px; padding:18px 16px 30px;
-  }
-
   #siglasBtn{
     display:block; width:calc(100% - 24px); min-height:44px; margin:16px auto 0; padding:11px;
     background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-sm);
@@ -188,6 +85,11 @@
   <div class="top-row">
     <h1 class="display">Consultas</h1>
   </div>
+  <nav class="app-nav">
+    <a href="emergencias_medicas.html" class="active">Consultas</a>
+    <a href="index.html">Caso Treino</a>
+    <a href="parametros_vitais.html">Parâmetros Vitais</a>
+  </nav>
   <div class="search-wrap">
     <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#EAF2F5" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input id="search" type="text" placeholder="Pesquisar sinal, sintoma ou patologia..." autocomplete="off">
