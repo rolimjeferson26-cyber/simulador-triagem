@@ -11,7 +11,7 @@
     --brand: #4FC3F7; --brand-bg: #0E1E29; --brand-ink: #0E1E29;
   }
   header{
-    position: sticky; top:0; z-index: 20;
+    position: sticky; top:26px; z-index: 20;
     background: var(--bg);
     color: var(--ink);
     padding: 14px 16px 12px;
@@ -19,11 +19,46 @@
   }
   header h1{ margin:0; font-size: 19px; line-height:1.15; color:var(--ink); }
   header .tag{ font-size: 10.5px; letter-spacing: .04em; color: var(--ink-soft); margin-top:2px; }
-  .card-head.plain{ cursor:default; }
 
   #trainingBanner{ position:sticky; top:0; z-index:30; background:var(--amber); color:var(--bg);
     font-size:11px; font-weight:800; text-align:center; padding:6px 10px; letter-spacing:.03em; }
-  header{ top:26px; }
+
+  /* ---------- formulário de busca ---------- */
+  .search-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 15px; margin-bottom:14px; }
+  .search-title{ font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--ink-soft); margin-bottom:12px; }
+  .idade-row{ display:flex; gap:10px; }
+  .idade-field{ flex:1; }
+  .idade-field label{ display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-soft); font-weight:700; margin-bottom:7px; }
+  .idade-field input{ width:100%; min-height:48px; padding:11px 12px; border-radius:var(--radius-sm); border:1px solid var(--line);
+    font-size:17px; font-weight:700; background:var(--panel-2); color:var(--ink); font-family:inherit;
+    -moz-appearance:textfield; }
+  .idade-field input::-webkit-outer-spin-button, .idade-field input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .idade-field input:focus{ outline:none; border-color:var(--brand); }
+  .idade-field input.field-error{ border-color:var(--red); }
+
+  .search-error{ font-size:12.5px; color:var(--red); font-weight:700; margin-top:10px; display:flex; align-items:flex-start; gap:6px; }
+  .search-error svg{ width:15px; height:15px; flex:0 0 auto; margin-top:1px; }
+
+  .btn-buscar{ width:100%; min-height:48px; background:var(--brand); color:var(--brand-ink); border:none; border-radius:var(--radius-sm);
+    padding:14px; font-size:15px; font-weight:800; text-align:center; cursor:pointer; margin-top:14px; font-family:inherit; }
+  .btn-buscar:active{ opacity:.85; }
+
+  /* ---------- cartão de resultado ---------- */
+  .resultado{ background:var(--panel); border:1.5px solid var(--brand); border-radius:var(--radius); padding:16px 16px 6px; margin-bottom:16px; }
+  .resultado-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--brand); margin-bottom:6px; }
+  .resultado-titulo{ font-size:21px; font-weight:800; color:var(--ink); margin-bottom:14px; line-height:1.2; }
+
+  .vitais-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+  @media (min-width:480px){ .vitais-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  .vital-item{ background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:10px 12px 11px; }
+  .vital-item .vlabel{ font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; }
+  .vital-item .vval{ font-size:17px; font-weight:800; color:var(--ink); margin-top:3px; line-height:1.25; }
+  .vital-item .vsub{ font-size:11px; color:var(--ink-soft); margin-top:2px; line-height:1.4; }
+
+  .empty{
+    text-align:center; color:var(--ink-soft); padding:40px 20px; font-size:14px;
+  }
 </style>
 </head>
 <body>
@@ -32,7 +67,7 @@
 
 <header>
   <h1 class="display">Parâmetros Vitais</h1>
-  <div class="tag">Valores de referência por idade</div>
+  <div class="tag">Busque a faixa de referência por idade</div>
   <nav class="app-nav">
     <a href="emergencias_medicas.html">Consultas</a>
     <a href="index.html">Caso Treino</a>
@@ -41,7 +76,30 @@
 </header>
 
 <main id="main">
-  <div class="empty">A carregar dados de referência...</div>
+
+  <div class="search-card">
+    <div class="search-title">Idade da vítima</div>
+    <div class="idade-row">
+      <div class="idade-field">
+        <label for="inAnos">Anos</label>
+        <input id="inAnos" type="number" inputmode="numeric" min="0" placeholder="0">
+      </div>
+      <div class="idade-field">
+        <label for="inMeses">Meses</label>
+        <input id="inMeses" type="number" inputmode="numeric" min="0" max="11" placeholder="0">
+      </div>
+    </div>
+    <div class="search-error" id="searchError" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>
+      <span id="searchErrorText">Erro.</span>
+    </div>
+    <button type="button" class="btn-buscar" id="btnBuscar">Buscar</button>
+  </div>
+
+  <div id="resultadoWrap">
+    <div class="empty">Informe a idade e toque em Buscar para ver os valores de referência.</div>
+  </div>
+
 </main>
 
 <footer><b>Material de estudo para formação.</b> Não substitui a formação certificada, os protocolos oficiais em vigor, nem deve ser usado para apoio a decisão em ocorrência real. Confirmar sempre junto de fontes e protocolos atualizados.</footer>
@@ -50,54 +108,14 @@
 (function(){
   "use strict";
 
-  // Estes dados NÃO são duplicados aqui: esta página lê, em tempo de
-  // execução, os mesmos arquivos JSON que alimentam a aba Consultas
-  // (emergencias_medicas.json) e o motor de triagem (taxonomia.json).
-  // Corrigir um valor num desses arquivos atualiza as duas páginas.
+  // Este motor de busca NÃO duplica os valores de referência: ele lê, em
+  // tempo de execução, o mesmo emergencias_medicas.json que alimenta a aba
+  // Consultas (categoria "Emergências Pediátricas" → "Abordagem e Avaliação
+  // da Vítima Pediátrica" → parametros_referencia_por_idade). Corrigir um
+  // valor nesse arquivo atualiza automaticamente as duas páginas.
   const CONDICAO_ID = "abordagem_avaliacao_pediatrica";
-  const PARAMS_ADULTO = ["PAD", "SpO2", "Glicemia", "Temp"];
 
-  function humanKey(k){
-    return k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-  }
-
-  function renderIdadeTable(rows){
-    let t = '<table class="cmp"><tr><th>Idade</th><th>Peso (kg)</th><th>FC (bpm)</th><th>FR (cpm)</th><th>PAS normal (mmHg)</th></tr>';
-    rows.forEach(r => {
-      const peso = (r.peso_kg === null || r.peso_kg === undefined) ? '—' : r.peso_kg;
-      const pas = (r.pa_sistolica_normal_mmHg === null || r.pa_sistolica_normal_mmHg === undefined) ? '—' : r.pa_sistolica_normal_mmHg;
-      t += `<tr><th>${r.idade}</th><td>${peso}</td><td>${r.fc_bpm}</td><td>${r.fr_cpm}</td><td>${pas}</td></tr>`;
-    });
-    t += '</table>';
-    return t;
-  }
-
-  function renderFlatDictList(obj){
-    let html = '<ul class="list-plain gy">';
-    Object.entries(obj).forEach(([k, v]) => {
-      html += `<li><b>${humanKey(k)}:</b> ${v}</li>`;
-    });
-    html += '</ul>';
-    return html;
-  }
-
-  function renderAdultThresholds(regras){
-    let html = '';
-    PARAMS_ADULTO.forEach(param => {
-      const matching = regras.filter(r => r.parametro === param);
-      if(!matching.length) return;
-      html += `<div class="subgroup"><div class="subgroup-title">${param}</div><ul class="list-plain gy">`;
-      matching.forEach(r => {
-        let faixa;
-        if(r.min !== null && r.max !== null) faixa = `${r.min} – ${r.max}`;
-        else if(r.min !== null) faixa = `≥ ${r.min}`;
-        else faixa = `≤ ${r.max}`;
-        html += `<li><b>${r.label}:</b> ${faixa} ${r.unidade}</li>`;
-      });
-      html += '</ul></div>';
-    });
-    return html;
-  }
+  let FAIXAS = null; // ordenado da maior idade_min_meses para a menor
 
   function encontrarCondicao(emerg){
     let achada = null;
@@ -107,61 +125,102 @@
     return achada;
   }
 
+  function showError(msg){
+    const el = document.getElementById('searchError');
+    document.getElementById('searchErrorText').textContent = msg;
+    el.hidden = false;
+    document.getElementById('inAnos').classList.add('field-error');
+    document.getElementById('inMeses').classList.add('field-error');
+  }
+
+  function clearError(){
+    document.getElementById('searchError').hidden = true;
+    document.getElementById('inAnos').classList.remove('field-error');
+    document.getElementById('inMeses').classList.remove('field-error');
+  }
+
+  function buscarFaixa(totalMeses){
+    for(let i = 0; i < FAIXAS.length; i++){
+      if(FAIXAS[i].idade_min_meses <= totalMeses) return FAIXAS[i];
+    }
+    return null;
+  }
+
+  function renderResultado(faixa){
+    const wrap = document.getElementById('resultadoWrap');
+    wrap.innerHTML = `
+      <div class="resultado">
+        <div class="resultado-label">Faixa correspondente</div>
+        <div class="resultado-titulo">${faixa.idade}</div>
+        <div class="vitais-grid">
+          <div class="vital-item"><div class="vlabel">Peso</div><div class="vval">${faixa.peso_kg} kg</div></div>
+          <div class="vital-item"><div class="vlabel">FC</div><div class="vval">${faixa.fc_bpm}</div><div class="vsub">bpm</div></div>
+          <div class="vital-item"><div class="vlabel">FR</div><div class="vval">${faixa.fr_cpm}</div><div class="vsub">cpm</div></div>
+          <div class="vital-item"><div class="vlabel">TA (PAS/PAD)</div><div class="vval">${faixa.TA_sistolica_mmHg} / ${faixa.TA_diastolica_mmHg}</div><div class="vsub">mmHg</div></div>
+          <div class="vital-item"><div class="vlabel">SpO2</div><div class="vval">${faixa.spo2_percent}</div><div class="vsub">%</div></div>
+          <div class="vital-item"><div class="vlabel">Glicemia</div><div class="vval">${faixa.glicemia_mg_dl}</div><div class="vsub">mg/dL</div></div>
+          <div class="vital-item"><div class="vlabel">Temperatura</div><div class="vval">${faixa.temperatura_c}</div><div class="vsub">°C</div></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function onBuscar(){
+    clearError();
+    const anosRaw = document.getElementById('inAnos').value.trim();
+    const mesesRaw = document.getElementById('inMeses').value.trim();
+
+    if(anosRaw === '' || mesesRaw === ''){
+      showError('Preencha os anos e os meses.');
+      return;
+    }
+
+    const anos = Number(anosRaw);
+    const meses = Number(mesesRaw);
+
+    if(!Number.isInteger(anos) || !Number.isInteger(meses)){
+      showError('Use apenas números inteiros.');
+      return;
+    }
+    if(anos < 0 || meses < 0){
+      showError('A idade não pode ser negativa.');
+      return;
+    }
+    if(meses > 11){
+      showError('Meses deve estar entre 0 e 11.');
+      return;
+    }
+
+    const totalMeses = anos * 12 + meses;
+    const faixa = buscarFaixa(totalMeses);
+    if(!faixa){
+      showError('Não foi possível encontrar uma faixa para esta idade.');
+      return;
+    }
+    renderResultado(faixa);
+  }
+
   async function init(){
-    const main = document.getElementById('main');
+    const wrap = document.getElementById('resultadoWrap');
     try{
-      const [emergRes, taxRes] = await Promise.all([
-        fetch('emergencias_medicas.json'),
-        fetch('taxonomia.json')
-      ]);
-      if(!emergRes.ok || !taxRes.ok) throw new Error('Falha ao carregar JSON');
-      const emerg = await emergRes.json();
-      const tax = await taxRes.json();
+      const res = await fetch('emergencias_medicas.json');
+      if(!res.ok) throw new Error('Falha ao carregar JSON');
+      const emerg = await res.json();
       const cond = encontrarCondicao(emerg);
-
-      let html = '';
-
-      html += '<div class="section"><div class="section-title def">Fonte dos dados</div>' +
-        '<div class="def-text">Os valores abaixo são lidos diretamente do mesmo JSON usado na aba ' +
-        '<b>Consultas</b> (categoria "Emergências Pediátricas" → "Abordagem e Avaliação da Vítima ' +
-        'Pediátrica") e do JSON de sinais vitais do simulador de triagem. Corrigir um valor num ' +
-        'desses arquivos atualiza automaticamente ambas as páginas.</div></div>';
-
-      html += '<div class="cat-label">Por idade (do recém-nascido ao adulto)</div>';
-      html += '<div class="card"><div class="card-head plain"><h2>FC · FR · PAS</h2></div><div class="card-body" style="display:block;">';
-      if(cond && cond.parametros_referencia_por_idade){
-        html += renderIdadeTable(cond.parametros_referencia_por_idade);
-      } else {
-        html += '<div class="empty">Tabela por idade não encontrada na fonte.</div>';
+      if(!cond || !Array.isArray(cond.parametros_referencia_por_idade)){
+        throw new Error('Tabela de referência não encontrada na fonte.');
       }
-      if(cond){
-        [
-          ['frequencia_cardiaca_referencia', 'FC — faixas por grupo etário'],
-          ['frequencia_respiratoria_referencia', 'FR — faixas por grupo etário'],
-          ['pressao_arterial_sistolica_limite_inferior_aceitavel', 'PAS — limite inferior aceitável'],
-          ['pressao_arterial_minima_aceitavel', 'PA — mínima aceitável']
-        ].forEach(([key, titulo]) => {
-          if(cond[key]){
-            html += `<div class="subgroup"><div class="subgroup-title">${titulo}</div>${renderFlatDictList(cond[key])}</div>`;
-          }
-        });
-      }
-      html += '</div></div>';
+      FAIXAS = cond.parametros_referencia_por_idade.slice().sort((a, b) => b.idade_min_meses - a.idade_min_meses);
 
-      html += '<div class="cat-label">Valores de referência — adulto (sem variação por idade)</div>';
-      html += '<div class="card"><div class="card-head plain"><h2>PAD · SpO2 · Glicemia · Temperatura</h2></div><div class="card-body" style="display:block;">';
-      if(tax && Array.isArray(tax.sinais_vitais)){
-        html += renderAdultThresholds(tax.sinais_vitais);
-      } else {
-        html += '<div class="empty">Limiares de adulto não encontrados na fonte.</div>';
-      }
-      html += '</div></div>';
-
-      main.innerHTML = html;
+      document.getElementById('btnBuscar').addEventListener('click', onBuscar);
+      [document.getElementById('inAnos'), document.getElementById('inMeses')].forEach(inp => {
+        inp.addEventListener('keydown', e => { if(e.key === 'Enter') onBuscar(); });
+      });
     } catch(err){
-      main.innerHTML = '<div class="empty">Não foi possível carregar os dados de referência.<br>' +
+      wrap.innerHTML = '<div class="empty">Não foi possível carregar os dados de referência.<br>' +
         'Esta página precisa de ser aberta através de um servidor (http/https) — não abra o arquivo ' +
         'diretamente do disco.</div>';
+      document.getElementById('btnBuscar').disabled = true;
     }
   }
 
