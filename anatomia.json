@@ -1,0 +1,70 @@
+{
+  "sistemas": [
+    {
+      "id": "respiratorio",
+      "nome": "Sistema Respiratório",
+      "introducao": "Responsável por garantir a troca constante de oxigénio e dióxido de carbono entre o ar e o sangue. Divide-se em trato respiratório superior (fora da caixa torácica) e trato respiratório inferior (dentro da caixa torácica), sendo a epiglote a estrutura que separa os dois.",
+      "orgaos": [
+        {
+          "id": "fossas_nasais",
+          "nome": "Fossas Nasais",
+          "trato": "superior",
+          "descricao": "Ponto de entrada do ar no sistema respiratório. Aquecem, filtram e humidificam o ar antes de este seguir para as vias respiratórias mais profundas."
+        },
+        {
+          "id": "faringe",
+          "nome": "Faringe",
+          "trato": "superior",
+          "descricao": "Canal muscular dividido em três partes: nasofaringe (só respiratória, situada atrás das fossas nasais), orofaringe (partilhada com a via digestiva, entre o palato mole e a base da língua) e hipofaringe ou laringofaringe (abaixo da epiglote, também partilhada com a via digestiva)."
+        },
+        {
+          "id": "laringe",
+          "nome": "Laringe",
+          "trato": "superior",
+          "descricao": "Liga a faringe à traqueia, ao nível da primeira vértebra cervical. Estrutura tubular composta por nove cartilagens (destacam-se a tiroideia, a epiglótica e a cricoide), músculos e ligamentos, e é onde se encontram as cordas vocais. É muito inervada pelo nervo vago, por isso estímulos intensos nesta zona (por exemplo, uma aspiração) podem provocar uma reação vagal e bradicardia."
+        },
+        {
+          "id": "traqueia",
+          "nome": "Traqueia",
+          "trato": "inferior",
+          "descricao": "Tubo rígido e incompleto, com cerca de 10 a 13 cm de comprimento e 2,5 cm de diâmetro, que liga a laringe aos brônquios principais. O ponto onde se divide em dois chama-se carina. É revestida por músculo liso e por cílios que ajudam a filtrar o ar."
+        },
+        {
+          "id": "bronquios",
+          "nome": "Brônquios e Bronquíolos",
+          "trato": "inferior",
+          "descricao": "A partir da carina, a via aérea ramifica-se em brônquios principais (direito e esquerdo), depois em brônquios secundários e, por fim, em bronquíolos, que regulam o fluxo de ar até aos alvéolos. O brônquio principal direito é mais curto, mais largo e mais reto do que o esquerdo."
+        },
+        {
+          "id": "alveolos",
+          "nome": "Alvéolos Pulmonares",
+          "trato": "inferior",
+          "descricao": "Pequenos sacos de ar revestidos por capilares pulmonares. É ao nível da membrana alvéolo-capilar que ocorre a hematose pulmonar, ou seja, a troca de oxigénio e dióxido de carbono entre o ar e o sangue."
+        },
+        {
+          "id": "pulmoes",
+          "nome": "Pulmões",
+          "trato": "inferior",
+          "descricao": "Principais órgãos da respiração, feitos de tecido elástico. O pulmão direito tem três lobos e o esquerdo tem dois. Cada pulmão é envolvido por duas membranas (pleura visceral e pleura parietal), com um espaço entre elas preenchido por líquido pleural que lubrifica e facilita o movimento durante a ventilação."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "mecanica_ventilatoria",
+          "titulo": "Mecânica da Ventilação",
+          "descricao": "A ventilação é o processo mecânico de movimentação do ar. Na inspiração (fase ativa), o diafragma e os músculos intercostais externos contraem, o diafragma desce, as costelas sobem e a caixa torácica expande, criando uma pressão negativa que puxa o ar para dentro. Na expiração (fase passiva), esses músculos relaxam, o volume torácico diminui e o ar é empurrado para fora. Em situações de esforço respiratório entram em ação músculos acessórios, como o escaleno, o esternocleidomastóideo e os músculos abdominais."
+        },
+        {
+          "id": "trocas_gasosas",
+          "titulo": "Trocas Gasosas (Respiração)",
+          "descricao": "Depois de o ar percorrer fossas nasais, faringe, laringe, traqueia, brônquios e bronquíolos, chega aos alvéolos. É aí que ocorre a respiração propriamente dita: a captação de oxigénio para o sangue e a libertação de dióxido de carbono, através da membrana alvéolo-capilar."
+        },
+        {
+          "id": "controlo_ventilacao",
+          "titulo": "Controlo da Ventilação",
+          "descricao": "A ventilação é controlada automaticamente pelo centro respiratório, no tronco cerebral, com base nos níveis de CO2 e O2 no sangue — por isso não é possível prender a respiração ou hiperventilar de forma prolongada por vontade própria. Normalmente, o CO2 é o principal estímulo: quando sobe, aumenta a frequência e a amplitude da ventilação. Em pessoas com hipoventilação crónica, esse papel passa a ser feito pelo O2, o que exige cuidado com a oxigenoterapia, já que o excesso de oxigénio pode, nesses casos, reduzir o estímulo para respirar."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Anatomia Interativa — Consulta Rápida</title>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  :root{
+    /* identidade deste app dentro da central: verde-água (saúde/anatomia) */
+    --brand: #14E8C4; --brand-bg: #0E2621; --brand-ink: #0E2621;
+    --organ-fill: rgba(20,232,196,.28);
+  }
+
+  #trainingBanner{ position:sticky; top:0; z-index:30; background:var(--amber); color:var(--bg);
+    font-size:11px; font-weight:800; text-align:center; padding:6px 10px; letter-spacing:.03em; }
+
+  header{ position: sticky; top:26px; z-index: 20; background: var(--bg); color: var(--ink);
+    padding: 14px 16px 12px; border-bottom: 1px solid var(--line); }
+  header h1{ margin:0; font-size: 19px; line-height:1.15; color:var(--ink); }
+  header .tag{ font-size: 10.5px; letter-spacing: .04em; color: var(--ink-soft); margin-top:2px; }
+
+  .sistema-chips{ display:flex; gap:6px; overflow-x:auto; padding:12px 0 0; margin-top:10px; scrollbar-width:none; }
+  .sistema-chips::-webkit-scrollbar{ display:none; }
+  .sis-chip{ flex:0 0 auto; min-height:36px; display:inline-flex; align-items:center; font-size:12.5px; padding:6px 13px;
+    border-radius:var(--radius-pill); background:var(--panel-2); color:var(--ink-soft); border:1.5px solid var(--line);
+    white-space:nowrap; cursor:pointer; font-weight:700; }
+  .sis-chip.active{ background:var(--brand-bg); border-color:var(--brand); color:var(--brand); }
+
+  .intro-box{ background:var(--panel); border-left:2px solid var(--brand); border-radius:0 var(--radius) var(--radius) 0;
+    padding:12px 14px; font-size:13px; line-height:1.55; color:var(--ink); margin-bottom:14px; }
+
+  .anatomy-layout{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:760px){ .anatomy-layout{ grid-template-columns:3fr 2fr; align-items:start; } }
+
+  .diagram-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:10px; }
+  .diagram-wrap{ width:100%; max-width:340px; margin:0 auto; }
+  .diagram-wrap svg{ width:100%; height:auto; display:block; }
+  .diagram-hint{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:8px; }
+  .diagram-empty{ text-align:center; color:var(--ink-soft); padding:30px 14px; font-size:13px; line-height:1.5; }
+
+  .estrutura-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line); }
+  .estrutura-chip{ flex:0 0 auto; font-size:12px; font-weight:600; padding:7px 12px; border-radius:var(--radius-pill);
+    background:var(--panel-2); color:var(--ink); border:1.5px solid var(--line); cursor:pointer; min-height:36px;
+    display:inline-flex; align-items:center; }
+  .estrutura-chip:hover{ border-color:var(--brand); }
+  .estrutura-chip.selected{ background:var(--brand-bg); border-color:var(--brand); color:var(--brand); }
+
+  .panel-card{ background:var(--panel); border:1.5px solid var(--brand); border-radius:var(--radius); padding:16px 16px 15px;
+    position:sticky; top:96px; }
+  .panel-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--brand); margin-bottom:6px; }
+  .panel-titulo{ font-size:18px; font-weight:800; color:var(--ink); margin-bottom:10px; line-height:1.25; }
+  .panel-desc{ font-size:13.5px; line-height:1.6; color:var(--ink); }
+  .panel-empty{ text-align:center; color:var(--ink-soft); padding:20px 6px; font-size:13px; line-height:1.6; }
+  .panel-empty svg{ width:28px; height:28px; opacity:.5; margin-bottom:8px; }
+
+  .fisio-section{ margin-top:18px; }
+
+  .empty{ text-align:center; color:var(--ink-soft); padding:40px 20px; font-size:14px; }
+</style>
+</head>
+<body>
+
+<div id="trainingBanner">MODO TREINO — simulação para formação, não usar em ocorrência real</div>
+
+<header>
+  <h1 class="display">Anatomia Interativa</h1>
+  <div class="tag">Toque numa estrutura do diagrama para ver detalhes</div>
+  <nav class="app-nav">
+    <a href="emergencias_medicas.html">Consultas</a>
+    <a href="index.html">Caso Treino</a>
+    <a href="parametros_vitais.html">Parâmetros Vitais</a>
+    <a href="anatomia.html" class="active">Anatomia</a>
+    <button type="button" class="about-btn" data-about-open>Sobre</button>
+  </nav>
+  <div class="sistema-chips" id="sistemaChips"></div>
+</header>
+
+<main id="main">
+  <div class="empty">A carregar...</div>
+</main>
+
+<footer class="app-footer">
+  <b>Material de estudo para formação.</b> Não substitui a formação certificada, os protocolos oficiais em vigor, nem deve ser usado para apoio a decisão em ocorrência real. Confirmar sempre junto de fontes e protocolos atualizados.
+  <div class="app-footer-author">Criado por Jeferson Rolim</div>
+</footer>
+
+<div class="modal-overlay" id="aboutModal" hidden>
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 class="display">Sobre</h2>
+      <button type="button" class="modal-close" id="aboutModalClose" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="about-dev">Desenvolvido por <b>Jeferson Rolim</b></div>
+    <div class="about-text">Este é um projeto de treino/simulado para apoio ao estudo, pensado para uso em sala de aula e formação de socorristas/TAS — não é um produto médico nem uma ferramenta de trabalho.</div>
+    <div class="about-warning">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FFB454" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>
+      <div><b>Atenção:</b> não deve ser usado para apoio a decisão em ocorrência real. Uso exclusivamente educacional.</div>
+    </div>
+    <div class="about-contact">
+      <span class="about-contact-placeholder">Contato: em breve</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ------------------------------------------------------------------
+  // Módulo de Anatomia Interativa.
+  // Fonte única de conteúdo: anatomia.json ("sistemas" -> cada um com
+  // "orgaos" e "fisiologia"). Para adicionar um novo sistema (esquelético,
+  // muscular, nervoso...) basta:
+  //   1) acrescentar um novo objeto em "sistemas" no anatomia.json;
+  //   2) opcionalmente criar um diagrama "anatomia_<id-do-sistema>.svg"
+  //      com um <g id="..."> por órgão, usando os MESMOS ids do JSON.
+  // Nenhum código desta página precisa de ser alterado.
+  // ------------------------------------------------------------------
+
+  let DATA = null;
+  let sistemaAtualId = null;
+  let orgaoSelecionadoId = null;
+
+  function svgFilenameFor(sistemaId){
+    return 'anatomia_' + sistemaId + '.svg';
+  }
+
+  function getSistema(id){
+    return DATA.sistemas.find(s => s.id === id) || null;
+  }
+
+  function renderChips(){
+    const wrap = document.getElementById('sistemaChips');
+    wrap.innerHTML = '';
+    DATA.sistemas.forEach(sis => {
+      const chip = document.createElement('div');
+      chip.className = 'sis-chip' + (sis.id === sistemaAtualId ? ' active' : '');
+      chip.textContent = sis.nome;
+      chip.onclick = () => {
+        if(sis.id === sistemaAtualId) return;
+        sistemaAtualId = sis.id;
+        loadSistema(sistemaAtualId);
+      };
+      wrap.appendChild(chip);
+    });
+  }
+
+  function renderPanelEmpty(introTexto){
+    const panel = document.getElementById('panelBody');
+    if(!panel) return;
+    panel.innerHTML = `
+      <div class="panel-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div>${introTexto || 'Toque numa estrutura do diagrama (ou na lista abaixo) para ver o nome e a descrição.'}</div>
+      </div>
+    `;
+  }
+
+  function renderPanelOrgao(orgao){
+    const panel = document.getElementById('panelBody');
+    if(!panel) return;
+    panel.innerHTML = `
+      <div class="panel-label">Estrutura selecionada</div>
+      <div class="panel-titulo">${orgao.nome}</div>
+      <div class="panel-desc">${orgao.descricao}</div>
+    `;
+  }
+
+  function clearSelection(){
+    document.querySelectorAll('.diagram-wrap .organ.selected').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.estrutura-chip.selected').forEach(el => el.classList.remove('selected'));
+  }
+
+  function selecionarOrgao(orgao){
+    orgaoSelecionadoId = orgao.id;
+    clearSelection();
+    const svgEl = document.getElementById(orgao.id);
+    if(svgEl) svgEl.classList.add('selected');
+    const chipEl = document.querySelector('.estrutura-chip[data-id="' + orgao.id + '"]');
+    if(chipEl) chipEl.classList.add('selected');
+    renderPanelOrgao(orgao);
+  }
+
+  function renderEstruturaList(sistema){
+    const list = document.getElementById('estruturaList');
+    if(!list) return;
+    list.innerHTML = '';
+    sistema.orgaos.forEach(orgao => {
+      const chip = document.createElement('div');
+      chip.className = 'estrutura-chip';
+      chip.dataset.id = orgao.id;
+      chip.textContent = orgao.nome;
+      chip.onclick = () => selecionarOrgao(orgao);
+      list.appendChild(chip);
+    });
+  }
+
+  function renderFisiologia(sistema){
+    const wrap = document.getElementById('fisioCards');
+    if(!wrap) return;
+    if(!Array.isArray(sistema.fisiologia) || sistema.fisiologia.length === 0){
+      wrap.innerHTML = '';
+      return;
+    }
+    wrap.innerHTML = sistema.fisiologia.map(f => `
+      <div class="card" data-id="${f.id}">
+        <div class="card-head" onclick="this.parentElement.classList.toggle('open')">
+          <h2>${f.titulo}</h2>
+          <div class="chevron"></div>
+        </div>
+        <div class="card-body"><div class="def-text">${f.descricao}</div></div>
+      </div>
+    `).join('');
+  }
+
+  function wireOrganClicks(sistema){
+    const diagramWrap = document.getElementById('diagramWrap');
+    if(!diagramWrap) return;
+    sistema.orgaos.forEach(orgao => {
+      const el = diagramWrap.querySelector('#' + CSS.escape(orgao.id));
+      if(!el) return;
+      el.classList.add('organ-linked');
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', orgao.nome);
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = orgao.nome;
+      el.insertBefore(title, el.firstChild);
+      el.addEventListener('click', () => selecionarOrgao(orgao));
+      el.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); selecionarOrgao(orgao); }
+      });
+    });
+  }
+
+  async function loadDiagram(sistema){
+    const diagramCard = document.getElementById('diagramCard');
+    try{
+      const res = await fetch(svgFilenameFor(sistema.id));
+      if(!res.ok) throw new Error('SVG não encontrado');
+      const svgText = await res.text();
+      diagramCard.innerHTML = `<div class="diagram-wrap" id="diagramWrap">${svgText}</div>
+        <div class="diagram-hint">Toque numa estrutura para ver detalhes</div>`;
+      wireOrganClicks(sistema);
+    } catch(err){
+      diagramCard.innerHTML = `<div class="diagram-empty">Ainda não existe um diagrama para "${sistema.nome}".<br>Pode consultar as estruturas na lista abaixo.</div>`;
+    }
+  }
+
+  function renderMain(){
+    const main = document.getElementById('main');
+    main.innerHTML = `
+      <div class="intro-box" id="introBox"></div>
+      <div class="anatomy-layout">
+        <div class="diagram-card" id="diagramCard"></div>
+        <div class="panel-card">
+          <div id="panelBody"></div>
+        </div>
+      </div>
+      <div class="estrutura-list" id="estruturaList"></div>
+      <div class="fisio-section">
+        <div class="cat-label">Fisiologia</div>
+        <div id="fisioCards"></div>
+      </div>
+    `;
+  }
+
+  function loadSistema(id){
+    const sistema = getSistema(id);
+    if(!sistema) return;
+    orgaoSelecionadoId = null;
+    renderChips();
+    renderMain();
+    document.getElementById('introBox').textContent = sistema.introducao || '';
+    renderPanelEmpty();
+    renderEstruturaList(sistema);
+    renderFisiologia(sistema);
+    loadDiagram(sistema);
+  }
+
+  async function init(){
+    const main = document.getElementById('main');
+    try{
+      const res = await fetch('anatomia.json');
+      if(!res.ok) throw new Error('Falha ao carregar JSON');
+      DATA = await res.json();
+      if(!Array.isArray(DATA.sistemas) || DATA.sistemas.length === 0){
+        throw new Error('Nenhum sistema encontrado no anatomia.json');
+      }
+      sistemaAtualId = DATA.sistemas[0].id;
+      loadSistema(sistemaAtualId);
+    } catch(err){
+      main.innerHTML = '<div class="empty">Não foi possível carregar os dados de anatomia.<br>' +
+        'Esta página precisa de ser aberta através de um servidor (http/https) — não abra o arquivo ' +
+        'diretamente do disco.</div>';
+    }
+  }
+
+  init();
+
+  // ---------- modal "Sobre" (idêntico às outras páginas) ----------
+  const modal = document.getElementById('aboutModal');
+  const closeBtn = document.getElementById('aboutModalClose');
+  document.querySelectorAll('[data-about-open]').forEach(btn => {
+    btn.addEventListener('click', () => { modal.hidden = false; });
+  });
+  closeBtn.addEventListener('click', () => { modal.hidden = true; });
+  modal.addEventListener('click', e => { if(e.target === modal) modal.hidden = true; });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && !modal.hidden) modal.hidden = true; });
+})();
+</script>
+</body>
+</html>

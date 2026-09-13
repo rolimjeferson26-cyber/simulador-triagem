@@ -1,0 +1,90 @@
+<svg viewBox="0 0 320 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema respiratório">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:8; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:9; }
+    .organ.organ-tree.selected *{ stroke-width:10; }
+
+    .organ.organ-dots circle{ fill:var(--organ-fill, rgba(20,232,196,.55)); stroke:var(--brand, #14E8C4); stroke-width:1; }
+    .organ.organ-dots:hover circle{ fill:var(--brand, #14E8C4); }
+    .organ.organ-dots.selected circle{ fill:var(--brand, #14E8C4); }
+  </style>
+
+  <!-- Silhueta decorativa (cabeça, pescoço, tórax) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <ellipse cx="160" cy="78" rx="50" ry="58"/>
+    <path d="M138,122 L122,186 M182,122 L198,186"/>
+    <path d="M60,232 Q160,192 260,232 L275,468 Q160,508 45,468 Z"/>
+  </g>
+
+  <!-- Pulmões -->
+  <g id="pulmoes" class="organ">
+    <path d="M150,258 C120,238 80,244 64,280 C50,314 48,380 56,420 C62,450 92,466 120,460 C140,456 150,440 150,410 Z"/>
+    <path d="M170,254 C206,234 250,240 262,278 C276,314 278,382 268,422 C262,452 230,466 200,460 C178,455 170,438 170,404 Z"/>
+  </g>
+  <g class="fissure">
+    <path d="M78,340 Q112,352 148,336"/>
+    <path d="M186,300 Q220,308 258,298"/>
+    <path d="M182,360 Q216,372 254,360"/>
+  </g>
+
+  <!-- Brônquios e Bronquíolos -->
+  <g id="bronquios" class="organ organ-tree">
+    <path d="M160,300 L130,335"/>
+    <path d="M160,300 L190,335"/>
+    <path d="M130,335 L106,364" stroke-width="6"/>
+    <path d="M130,335 L140,372" stroke-width="6"/>
+    <path d="M190,335 L214,364" stroke-width="6"/>
+    <path d="M190,335 L180,372" stroke-width="6"/>
+  </g>
+
+  <!-- Alvéolos Pulmonares -->
+  <g id="alveolos" class="organ organ-dots">
+    <circle cx="104" cy="368" r="5"/>
+    <circle cx="94" cy="380" r="4.5"/>
+    <circle cx="112" cy="384" r="4.5"/>
+    <circle cx="140" cy="376" r="5"/>
+    <circle cx="132" cy="390" r="4.5"/>
+    <circle cx="150" cy="392" r="4.5"/>
+    <circle cx="216" cy="368" r="5"/>
+    <circle cx="226" cy="380" r="4.5"/>
+    <circle cx="208" cy="384" r="4.5"/>
+    <circle cx="180" cy="376" r="5"/>
+    <circle cx="188" cy="390" r="4.5"/>
+    <circle cx="170" cy="392" r="4.5"/>
+  </g>
+
+  <!-- Traqueia -->
+  <g id="traqueia" class="organ">
+    <rect x="149" y="216" width="22" height="86" rx="8"/>
+  </g>
+
+  <!-- Laringe -->
+  <g id="laringe" class="organ">
+    <path d="M142,188 L178,188 L182,205 L172,219 L148,219 L138,205 Z"/>
+  </g>
+
+  <!-- Faringe -->
+  <g id="faringe" class="organ">
+    <rect x="147" y="126" width="26" height="64" rx="11"/>
+  </g>
+
+  <!-- Fossas Nasais -->
+  <g id="fossas_nasais" class="organ">
+    <ellipse cx="150" cy="121" rx="8" ry="6"/>
+    <ellipse cx="170" cy="121" rx="8" ry="6"/>
+  </g>
+</svg>
