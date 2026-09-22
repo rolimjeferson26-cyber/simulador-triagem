@@ -1,0 +1,100 @@
+<svg viewBox="0 0 320 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema esquelético">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    /* Ossos longos dos membros: traço grosso (só contorno) */
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:8; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:9; }
+    .organ.organ-tree.selected *{ stroke-width:10; }
+
+    /* Articulações: pontos marcados */
+    .organ.organ-dots circle{ fill:var(--organ-fill, rgba(20,232,196,.55)); stroke:var(--brand, #14E8C4); stroke-width:1; }
+    .organ.organ-dots:hover circle{ fill:var(--brand, #14E8C4); }
+    .organ.organ-dots.selected circle{ fill:var(--brand, #14E8C4); }
+  </style>
+
+  <!-- Coluna Vertebral -->
+  <g id="coluna_vertebral" class="organ">
+    <rect x="153" y="96" width="14" height="235" rx="4"/>
+  </g>
+  <g class="fissure">
+    <path d="M153,115 L167,115"/>
+    <path d="M153,135 L167,135"/>
+    <path d="M153,155 L167,155"/>
+    <path d="M153,175 L167,175"/>
+    <path d="M153,195 L167,195"/>
+    <path d="M153,215 L167,215"/>
+    <path d="M153,235 L167,235"/>
+    <path d="M153,255 L167,255"/>
+    <path d="M153,275 L167,275"/>
+    <path d="M153,295 L167,295"/>
+    <path d="M153,315 L167,315"/>
+  </g>
+
+  <!-- Crânio e Face -->
+  <g id="cranio" class="organ">
+    <path d="M160,10 C185,10 202,28 202,52 C202,68 194,80 182,88 L178,96 L142,96 L138,88 C126,80 118,68 118,52 C118,28 135,10 160,10 Z"/>
+  </g>
+
+  <!-- Tórax (Caixa Torácica) -->
+  <g id="torax_esqueleto" class="organ">
+    <path d="M118,120 Q160,105 202,120 L208,150 Q212,190 202,225 Q160,245 118,225 Q108,190 112,150 Z"/>
+    <rect x="153" y="112" width="14" height="110" rx="3"/>
+  </g>
+  <g class="fissure">
+    <path d="M118,140 Q160,150 202,140"/>
+    <path d="M114,165 Q160,178 206,165"/>
+    <path d="M114,195 Q160,208 206,195"/>
+  </g>
+
+  <!-- Cintura Escapular e Membro Superior -->
+  <g id="cintura_escapular_membro_superior" class="organ organ-tree">
+    <path d="M152,118 L100,112"/>
+    <path d="M168,118 L220,112"/>
+    <path d="M100,112 L75,190"/>
+    <path d="M75,190 L62,270"/>
+    <path d="M62,270 L58,290"/>
+    <path d="M220,112 L245,190"/>
+    <path d="M245,190 L258,270"/>
+    <path d="M258,270 L262,290"/>
+  </g>
+
+  <!-- Cintura Pélvica e Membro Inferior -->
+  <g id="cintura_pelvica_membro_inferior" class="organ organ-tree">
+    <path d="M120,331 C110,345 108,365 120,378 L145,378 L150,350 L170,350 L175,378 L200,378 C212,365 210,345 200,331 Z"/>
+    <path d="M130,378 L120,465"/>
+    <path d="M120,465 L115,555"/>
+    <path d="M115,555 L98,570"/>
+    <path d="M190,378 L200,465"/>
+    <path d="M200,465 L205,555"/>
+    <path d="M205,555 L222,570"/>
+  </g>
+
+  <!-- Articulações -->
+  <g id="articulacoes" class="organ organ-dots">
+    <circle cx="100" cy="112" r="6"/>
+    <circle cx="220" cy="112" r="6"/>
+    <circle cx="75" cy="190" r="6"/>
+    <circle cx="245" cy="190" r="6"/>
+    <circle cx="62" cy="270" r="5"/>
+    <circle cx="258" cy="270" r="5"/>
+    <circle cx="130" cy="378" r="6"/>
+    <circle cx="190" cy="378" r="6"/>
+    <circle cx="120" cy="465" r="6"/>
+    <circle cx="200" cy="465" r="6"/>
+    <circle cx="115" cy="555" r="5"/>
+    <circle cx="205" cy="555" r="5"/>
+  </g>
+</svg>

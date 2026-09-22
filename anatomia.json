@@ -324,6 +324,55 @@
           "descricao": "Depois de uma refeição, os níveis de glicose no sangue sobem e o pâncreas liberta insulina, que ajuda as células a captar essa glicose e reduz a produção de glicose pelo fígado. Se os níveis de glicose descerem, o pâncreas liberta glucagon, que estimula o fígado a produzir mais glicose, elevando novamente os níveis no sangue. Este é um exemplo clássico de regulação por feedback negativo."
         }
       ]
+    },
+    {
+      "id": "esqueletico",
+      "nome": "Sistema Esquelético",
+      "introducao": "Conjunto de 206 ossos que formam a estrutura do corpo adulto, dividido em esqueleto axial (cabeça, coluna vertebral e caixa torácica) e esqueleto apendicular (membros superiores, membros inferiores, cintura escapular e cintura pélvica). Tem cinco funções principais: suportar o peso do corpo, proteger órgãos internos, permitir o movimento em conjunto com músculos e articulações, armazenar minerais como cálcio e fósforo, e produzir células sanguíneas na medula óssea.",
+      "orgaos": [
+        {
+          "id": "cranio",
+          "nome": "Crânio e Face",
+          "descricao": "Protege o encéfalo e suporta os órgãos da visão, audição, olfato e paladar. Composto por 28 ossos (8 da caixa craniana, 14 da face e 6 ossículos dos ouvidos). O único osso móvel do crânio e face é a mandíbula. Na infância, os ossos estão separados por espaços membranosos (fontanelas) que permitem a movimentação durante o parto e fecham por volta dos 18 meses, formando linhas fixas chamadas suturas."
+        },
+        {
+          "id": "coluna_vertebral",
+          "nome": "Coluna Vertebral",
+          "descricao": "Estrutura óssea com 33 vértebras que suporta o corpo na posição vertical e protege a medula espinhal. Divide-se em região cervical (7 vértebras, C1-C7), torácica (12 vértebras, T1-T12), lombar (5 vértebras, L1-L5) e sacrococcígea (sacro com 5 vértebras fundidas e cóccix com 4). As vértebras são separadas por discos intervertebrais, que absorvem impactos e permitem alguma mobilidade."
+        },
+        {
+          "id": "torax_esqueleto",
+          "nome": "Tórax (Caixa Torácica)",
+          "descricao": "Estrutura oca formada por 12 pares de costelas, que se ligam à coluna vertebral atrás e ao esterno à frente através de cartilagens. O esterno é dividido em manúbrio, corpo e apêndice xifoide. As costelas dividem-se em verdadeiras (7 pares, ligadas diretamente ao esterno), falsas (3 pares, ligadas por cartilagem comum) e flutuantes (2 pares, sem ligação ao esterno)."
+        },
+        {
+          "id": "cintura_escapular_membro_superior",
+          "nome": "Cintura Escapular e Membro Superior",
+          "descricao": "A cintura escapular é formada pelas omoplatas (escápulas) e clavículas. O braço (ombro ao cotovelo) contém o úmero; o antebraço contém o cúbito e o rádio; e a mão é formada pelo carpo, metacarpo e falanges."
+        },
+        {
+          "id": "cintura_pelvica_membro_inferior",
+          "nome": "Cintura Pélvica e Membro Inferior",
+          "descricao": "A cintura pélvica é formada pelos ossos ilíacos, ligados ao púbis e ao ísquio; o acetábulo é a região onde se encaixa a cabeça do fémur. Cada membro inferior divide-se em coxa (fémur, com o colo do fémur e o grande trocânter), perna (tíbia, mais acessível à palpação, e perónio) e pé (tarso, metatarso e falanges, sendo o calcâneo o maior osso do tarso, suscetível a fratura em quedas de pé)."
+        },
+        {
+          "id": "articulacoes",
+          "nome": "Articulações",
+          "descricao": "Pontos de junção entre dois ou mais ossos, classificadas em três tipos: imóveis ou fibrosas (como as suturas do crânio, sem movimento); semimóveis ou cartilaginosas (permitem pequenos movimentos com grande força, como entre as vértebras); e móveis ou sinoviais (grande amplitude de movimento, com uma cápsula que produz líquido lubrificante, trabalhando junto com músculos e tendões)."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "funcoes_esqueleto",
+          "titulo": "As Cinco Funções do Sistema Esquelético",
+          "descricao": "Suporte: sustenta o peso do corpo e dos órgãos. Proteção: o osso rígido protege estruturas vitais, como o crânio que envolve o encéfalo. Movimento: os músculos inserem-se nos ossos por tendões, e os ossos ligam-se entre si por articulações, permitindo o movimento coordenado com o sistema nervoso. Armazenamento: os ossos guardam minerais como cálcio e fósforo, libertando-os no sangue quando os níveis baixam. Produção de células sanguíneas: a medula óssea, dentro de certos ossos, produz células do sangue."
+        },
+        {
+          "id": "tipos_ossos",
+          "titulo": "Tipos de Ossos",
+          "descricao": "Os ossos classificam-se pela forma em quatro tipos: longos (mais compridos do que largos, como o fémur), curtos (quase tão largos como compridos, como os ossos do carpo), planos (finos e achatados, como os ossos do crânio) e irregulares (formas que não se encaixam nas outras categorias, como as vértebras e os ossos da face)."
+        }
+      ]
     }
   ]
 }
