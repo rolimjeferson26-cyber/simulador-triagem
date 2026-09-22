@@ -1,0 +1,79 @@
+<svg viewBox="0 0 320 440" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema reprodutor">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:6; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:7; }
+    .organ.organ-tree.selected *{ stroke-width:7.5; }
+  </style>
+
+  <!-- Símbolos decorativos e divisória entre os dois aparelhos — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <path d="M160,70 L160,420"/>
+    <circle cx="80" cy="88" r="10"/>
+    <path d="M80,98 L80,118 M72,109 L88,109"/>
+    <circle cx="226" cy="92" r="10"/>
+    <path d="M233,85 L246,72 M246,72 L237,72 M246,72 L246,81"/>
+  </g>
+
+  <!-- ===== Aparelho Reprodutor Feminino ===== -->
+
+  <!-- Trompas de Falópio -->
+  <g id="trompas_falopio" class="organ organ-tree">
+    <path d="M65,182 C50,175 38,165 30,155"/>
+    <path d="M95,182 C110,175 122,165 130,155"/>
+  </g>
+
+  <!-- Ovários -->
+  <g id="ovarios" class="organ">
+    <ellipse cx="26" cy="148" rx="10" ry="14"/>
+    <ellipse cx="134" cy="148" rx="10" ry="14"/>
+  </g>
+
+  <!-- Útero -->
+  <g id="utero" class="organ">
+    <path d="M80,180 C65,180 55,195 58,215 C60,230 68,245 80,260 C92,245 100,230 102,215 C105,195 95,180 80,180 Z"/>
+  </g>
+
+  <!-- Vagina -->
+  <g id="vagina" class="organ">
+    <rect x="73" y="258" width="14" height="90" rx="6"/>
+  </g>
+
+  <!-- ===== Aparelho Reprodutor Masculino ===== -->
+
+  <!-- Vesículas Seminais -->
+  <g id="vesiculas_seminais" class="organ">
+    <ellipse cx="214" cy="248" rx="9" ry="13" transform="rotate(-25 214 248)"/>
+    <ellipse cx="246" cy="248" rx="9" ry="13" transform="rotate(25 246 248)"/>
+  </g>
+
+  <!-- Próstata -->
+  <g id="prostata" class="organ">
+    <circle cx="230" cy="270" r="15"/>
+  </g>
+
+  <!-- Testículos -->
+  <g id="testiculos" class="organ">
+    <ellipse cx="205" cy="395" rx="15" ry="19"/>
+    <ellipse cx="255" cy="395" rx="15" ry="19"/>
+  </g>
+
+  <!-- Pénis -->
+  <g id="penis" class="organ">
+    <rect x="222" y="286" width="16" height="85" rx="8"/>
+    <ellipse cx="230" cy="376" rx="11" ry="13"/>
+  </g>
+</svg>

@@ -451,6 +451,73 @@
           "descricao": "Além de filtrar o sangue, o rim tem um papel importante na regulação da pressão arterial, controlando os níveis de água e sódio no corpo e enviando informação ao sistema nervoso simpático e ao sistema nervoso central."
         }
       ]
+    },
+    {
+      "id": "reprodutor",
+      "nome": "Sistema Reprodutor",
+      "introducao": "A reprodução não é essencial à sobrevivência do indivíduo, mas é essencial à continuidade da espécie. Na espécie humana, a reprodução só acontece pela junção de um óvulo (produzido pela mulher) com um espermatozoide (produzido pelo homem), daí a existência de dois aparelhos reprodutores distintos: o feminino e o masculino.",
+      "orgaos": [
+        {
+          "id": "ovarios",
+          "nome": "Ovários",
+          "divisao": "Aparelho Reprodutor Feminino",
+          "descricao": "Produzem as hormonas sexuais femininas e os óvulos, as células reprodutivas da mulher. Libertam um óvulo aproximadamente a cada 28 dias (ciclo ovulatório), desde a primeira menstruação até à menopausa. O estrogénio, produzido pelos ovários, está associado ao aparecimento dos caracteres sexuais femininos."
+        },
+        {
+          "id": "trompas_falopio",
+          "nome": "Trompas de Falópio",
+          "divisao": "Aparelho Reprodutor Feminino",
+          "descricao": "Estruturas tubulares que ligam os ovários ao útero. É normalmente aqui que ocorre a fecundação, o encontro entre o óvulo e o espermatozoide."
+        },
+        {
+          "id": "utero",
+          "nome": "Útero",
+          "divisao": "Aparelho Reprodutor Feminino",
+          "descricao": "Órgão em forma de pera, oco e muscular, suspenso por ligamentos, dentro do qual se desenvolve o embrião. É formado pelo fundo (parte de cima), corpo (porção central) e colo (que abre para a vagina através do orifício do colo uterino, por onde passa o esperma e sai o fluxo menstrual)."
+        },
+        {
+          "id": "vagina",
+          "nome": "Vagina",
+          "divisao": "Aparelho Reprodutor Feminino",
+          "descricao": "Canal muscular e elástico que liga o útero à vulva. Permite a deposição do esperma junto ao orifício do útero durante o ato sexual e a saída do fluxo menstrual."
+        },
+        {
+          "id": "testiculos",
+          "nome": "Testículos",
+          "divisao": "Aparelho Reprodutor Masculino",
+          "descricao": "Alojados numa bolsa de pele chamada escroto, contêm células com funções específicas: umas produzem hormonas sexuais masculinas (como a testosterona), responsáveis pelos caracteres sexuais secundários (barba, tom de voz, etc.), e outras produzem os espermatozoides."
+        },
+        {
+          "id": "vesiculas_seminais",
+          "nome": "Vesículas Seminais",
+          "divisao": "Aparelho Reprodutor Masculino",
+          "descricao": "Estruturas em forma de pequenos sacos onde é armazenado o líquido seminal, que se junta aos espermatozoides vindos dos testículos e ao líquido produzido pela próstata."
+        },
+        {
+          "id": "prostata",
+          "nome": "Próstata",
+          "divisao": "Aparelho Reprodutor Masculino",
+          "descricao": "Pequena glândula, com a forma e tamanho aproximado de uma castanha, que envolve a uretra logo após esta sair da bexiga. Produz um líquido que se junta ao das vesículas seminais durante o ato sexual."
+        },
+        {
+          "id": "penis",
+          "nome": "Pénis",
+          "divisao": "Aparelho Reprodutor Masculino",
+          "descricao": "Órgão constituído por tecido esponjoso altamente vascularizado, que se enche de sangue durante a ereção. É responsável por depositar o esperma (espermatozoides e líquido seminal) nos órgãos genitais femininos durante o ato sexual."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "ciclo_reprodutivo_feminino",
+          "titulo": "Ciclo Reprodutivo Feminino",
+          "descricao": "Ao longo da vida fértil da mulher (da primeira menstruação até à menopausa), os ovários libertam um óvulo aproximadamente a cada 28 dias. Se esse óvulo for fecundado por um espermatozoide, geralmente dentro das trompas de Falópio, inicia-se uma gravidez, com o desenvolvimento do embrião no útero."
+        },
+        {
+          "id": "producao_transporte_esperma",
+          "titulo": "Produção e Transporte do Esperma",
+          "descricao": "Os espermatozoides são produzidos nos testículos e transportados através dos canais deferentes, misturando-se pelo caminho com o líquido produzido pelas vesículas seminais e pela próstata, formando o sémen. Mecanismos do sistema nervoso, ao nível da medula espinhal, impedem a passagem simultânea de urina pela uretra durante este processo."
+        }
+      ]
     }
   ]
 }
