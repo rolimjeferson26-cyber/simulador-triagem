@@ -1,0 +1,74 @@
+<svg viewBox="0 0 320 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema endócrino">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    .organ.organ-dots circle{ fill:var(--organ-fill, rgba(20,232,196,.55)); stroke:var(--brand, #14E8C4); stroke-width:1; }
+    .organ.organ-dots:hover circle{ fill:var(--brand, #14E8C4); }
+    .organ.organ-dots.selected circle{ fill:var(--brand, #14E8C4); }
+  </style>
+
+  <!-- Silhueta decorativa (cabeça, pescoço, tronco, pélvis) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <ellipse cx="160" cy="55" rx="38" ry="42"/>
+    <path d="M132,92 L122,145 M188,92 L198,145"/>
+    <path d="M75,175 Q160,140 245,175 L258,480 Q160,545 62,480 Z"/>
+  </g>
+
+  <!-- Hipotálamo -->
+  <g id="hipotalamo" class="organ">
+    <circle cx="153" cy="58" r="7"/>
+  </g>
+
+  <!-- Hipófise -->
+  <g id="hipofise" class="organ">
+    <circle cx="160" cy="75" r="6"/>
+  </g>
+
+  <!-- Glândula Pineal -->
+  <g id="glandula_pineal" class="organ">
+    <circle cx="173" cy="55" r="5"/>
+  </g>
+
+  <!-- Tiroide -->
+  <g id="tiroide" class="organ">
+    <path d="M128,116 C118,113 108,120 109,131 C110,141 122,147 135,143 L138,119 Z"/>
+    <path d="M192,116 C202,113 212,120 211,131 C210,141 198,147 185,143 L182,119 Z"/>
+    <rect x="138" y="122" width="44" height="12" rx="5"/>
+  </g>
+
+  <!-- Paratiroides -->
+  <g id="paratiroides" class="organ organ-dots">
+    <circle cx="120" cy="122" r="3"/>
+    <circle cx="124" cy="136" r="3"/>
+    <circle cx="200" cy="122" r="3"/>
+    <circle cx="196" cy="136" r="3"/>
+  </g>
+
+  <!-- Glândulas Suprarrenais -->
+  <g id="suprarrenais" class="organ">
+    <path d="M108,228 C104,222 108,214 118,214 C126,214 130,222 126,229 C122,235 112,235 108,228 Z"/>
+    <path d="M212,228 C216,222 212,214 202,214 C194,214 190,222 194,229 C198,235 208,235 212,228 Z"/>
+  </g>
+
+  <!-- Pâncreas (função endócrina) -->
+  <g id="pancreas_endocrino" class="organ">
+    <path d="M125,285 C145,275 185,275 205,282 C218,286 220,296 210,302 C188,310 152,309 132,300 C124,296 121,290 125,285 Z"/>
+  </g>
+
+  <!-- Gónadas -->
+  <g id="gonadas" class="organ">
+    <ellipse cx="140" cy="492" rx="14" ry="18"/>
+    <ellipse cx="180" cy="492" rx="14" ry="18"/>
+  </g>
+</svg>

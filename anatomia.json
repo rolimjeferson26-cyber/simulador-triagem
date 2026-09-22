@@ -265,6 +265,65 @@
           "descricao": "As duas divisões do sistema nervoso autónomo têm funções antagónicas, equilibrando-se mutuamente: quando o simpático aumenta a frequência cardíaca, o parassimpático entra em ação para reduzi-la; quando o simpático diminui a motilidade do estômago e intestinos, o parassimpático aumenta essas contrações. De forma geral, o simpático predomina em ações excitatórias e o parassimpático em ações inibitórias/relaxantes."
         }
       ]
+    },
+    {
+      "id": "endocrino",
+      "nome": "Sistema Endócrino",
+      "introducao": "Sistema regulador do corpo, formado por glândulas que produzem hormonas — substâncias que circulam no sangue e controlam funções específicas noutros órgãos. Tem três papéis principais: manter o equilíbrio interno do corpo (homeostasia), ajudar a responder a situações de stress em conjunto com o sistema nervoso, e regular o crescimento e o desenvolvimento, incluindo o sexual e reprodutivo.",
+      "orgaos": [
+        {
+          "id": "hipotalamo",
+          "nome": "Hipotálamo",
+          "descricao": "Faz a ponte entre o sistema nervoso e o sistema endócrino. Produz as suas próprias hormonas de regulação e reúne vários centros de controlo fisiológico e emocional, sendo essencial no controlo da secreção hormonal do corpo."
+        },
+        {
+          "id": "hipofise",
+          "nome": "Hipófise",
+          "descricao": "Glândula que recebe estímulos do hipotálamo e, por sua vez, estimula outras glândulas endócrinas a produzirem as suas hormonas — funciona como uma espécie de \"centro de comando\" hormonal."
+        },
+        {
+          "id": "glandula_pineal",
+          "nome": "Glândula Pineal",
+          "descricao": "Uma das glândulas do sistema endócrino, referida no esquema geral do sistema, com um papel regulador dentro do conjunto de estruturas que produzem hormonas."
+        },
+        {
+          "id": "tiroide",
+          "nome": "Tiroide",
+          "descricao": "Uma das principais glândulas do sistema endócrino, com um papel importante na regulação do metabolismo do corpo."
+        },
+        {
+          "id": "paratiroides",
+          "nome": "Paratiroides",
+          "descricao": "Pequenas glândulas associadas à tiroide, com um papel importante na regulação dos níveis de cálcio no organismo."
+        },
+        {
+          "id": "suprarrenais",
+          "nome": "Glândulas Suprarrenais",
+          "descricao": "Glândulas endócrinas envolvidas na resposta do corpo a situações de stress, trabalhando em conjunto com o sistema nervoso."
+        },
+        {
+          "id": "pancreas_endocrino",
+          "nome": "Pâncreas (função endócrina)",
+          "descricao": "Além da sua função digestiva, o pâncreas tem um papel endócrino central: produz insulina, que reduz os níveis de glicose no sangue, e glucagon, que os aumenta, mantendo o equilíbrio da glicémia."
+        },
+        {
+          "id": "gonadas",
+          "nome": "Gónadas (Ovários e Testículos)",
+          "descricao": "Glândulas responsáveis pela produção de hormonas sexuais, com papel central na regulação do desenvolvimento sexual e dos mecanismos da reprodução."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "regulacao_feedback",
+          "titulo": "Regulação Hormonal por Feedback",
+          "descricao": "As hormonas não são libertadas de forma contínua: o corpo produz apenas a quantidade necessária para manter o equilíbrio (homeostasia), regulado por um sistema de feedback. No feedback negativo (o mais comum), níveis altos de uma hormona sinalizam ao hipotálamo e à hipófise para reduzirem o estímulo à glândula que a produz, travando a produção. No feedback positivo (mais raro, porque tende a causar instabilidade), o estímulo inicial é reforçado — como acontece com a oxitocina durante o trabalho de parto, onde a contração uterina estimula a produção de ainda mais oxitocina."
+        },
+        {
+          "id": "regulacao_glicemia",
+          "titulo": "Regulação da Glicemia (Exemplo Prático)",
+          "descricao": "Depois de uma refeição, os níveis de glicose no sangue sobem e o pâncreas liberta insulina, que ajuda as células a captar essa glicose e reduz a produção de glicose pelo fígado. Se os níveis de glicose descerem, o pâncreas liberta glucagon, que estimula o fígado a produzir mais glicose, elevando novamente os níveis no sangue. Este é um exemplo clássico de regulação por feedback negativo."
+        }
+      ]
     }
   ]
 }
