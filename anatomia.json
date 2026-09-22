@@ -518,6 +518,40 @@
           "descricao": "Os espermatozoides são produzidos nos testículos e transportados através dos canais deferentes, misturando-se pelo caminho com o líquido produzido pelas vesículas seminais e pela próstata, formando o sémen. Mecanismos do sistema nervoso, ao nível da medula espinhal, impedem a passagem simultânea de urina pela uretra durante este processo."
         }
       ]
+    },
+    {
+      "id": "pele",
+      "nome": "Pele",
+      "introducao": "A pele é o maior órgão do corpo humano. Protege os tecidos internos de lesões, ajuda a regular a temperatura corporal, previne a perda excessiva de água e funciona como órgão sensitivo, informando o cérebro sobre o ambiente externo (temperatura, tato, posição do corpo, dor). É composta por três camadas: epiderme, derme e hipoderme.",
+      "orgaos": [
+        {
+          "id": "epiderme",
+          "nome": "Epiderme",
+          "descricao": "A camada mais exterior da pele, funcionando como a primeira linha de defesa do corpo contra pó, microrganismos e outras agressões externas."
+        },
+        {
+          "id": "derme",
+          "nome": "Derme",
+          "descricao": "Camada situada logo abaixo da epiderme, composta por proteínas, substâncias químicas e pregas cutâneas (papilas dérmicas) que aumentam a superfície de contacto com a epiderme — importante porque é a derme que fornece nutrição à epiderme através dos vasos sanguíneos. Contém terminais nervosos (que informam sobre toque, pressão, temperatura e dor), folículos pilosos, vasos sanguíneos, glândulas sudoríparas (produzem suor, ajudando a arrefecer o corpo) e glândulas sebáceas (produzem sebo, uma substância oleosa que protege a pele)."
+        },
+        {
+          "id": "hipoderme",
+          "nome": "Hipoderme",
+          "descricao": "Também chamada tecido celular subcutâneo, é a camada mais profunda, formada por tecido conjuntivo que envolve células de gordura (adipócitos). Serve para armazenar energia em forma de gordura e proteger o corpo contra traumatismos."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "funcoes_pele",
+          "titulo": "Funções da Pele",
+          "descricao": "A pele protege os tecidos internos de lesões (temperaturas extremas, radiação ultravioleta, forças mecânicas, substâncias tóxicas e microrganismos), regula a temperatura corporal (retendo calor quando desce e libertando-o quando sobe), previne a perda excessiva de água e mantém o equilíbrio químico interno, e funciona como órgão sensitivo, transmitindo ao cérebro informações sobre o ambiente."
+        },
+        {
+          "id": "regulacao_temperatura_pele",
+          "titulo": "Regulação da Temperatura pela Pele",
+          "descricao": "Quando a temperatura do corpo sobe acima do normal, as glândulas sudoríparas produzem suor, que ao evaporar arrefece o corpo. Este processo está ligado ao sistema nervoso simpático, podendo também ocorrer como resposta a stress emocional, sobretudo nas palmas das mãos, plantas dos pés e axilas."
+        }
+      ]
     }
   ]
 }

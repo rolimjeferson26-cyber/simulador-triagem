@@ -1,0 +1,54 @@
+<svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Corte transversal da pele">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.5; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+  </style>
+
+  <!-- Hipoderme (camada mais profunda) -->
+  <g id="hipoderme" class="organ">
+    <path d="M10,190 L310,190 L310,270 Q290,280 270,270 Q250,260 230,270 Q210,280 190,270 Q170,260 150,270 Q130,280 110,270 Q90,260 70,270 Q50,280 30,270 Q20,265 10,270 Z"/>
+  </g>
+  <!-- Textura decorativa: células de gordura (adipócitos) — não clicável -->
+  <g class="silhouette">
+    <circle cx="45" cy="222" r="12"/>
+    <circle cx="80" cy="238" r="13"/>
+    <circle cx="118" cy="215" r="11"/>
+    <circle cx="155" cy="240" r="13"/>
+    <circle cx="192" cy="218" r="12"/>
+    <circle cx="228" cy="240" r="12"/>
+    <circle cx="264" cy="216" r="11"/>
+    <circle cx="60" cy="255" r="9"/>
+    <circle cx="140" cy="258" r="9"/>
+    <circle cx="210" cy="256" r="9"/>
+    <circle cx="278" cy="248" r="10"/>
+  </g>
+
+  <!-- Derme -->
+  <g id="derme" class="organ">
+    <path d="M10,80 Q40,65 70,80 Q100,95 130,80 Q160,65 190,80 Q220,95 250,80 Q280,65 310,80 L310,190 L10,190 Z"/>
+  </g>
+  <!-- Detalhes decorativos: vaso sanguíneo, folículo piloso, glândula — não clicáveis -->
+  <g class="fissure">
+    <path d="M55,150 Q75,138 95,150 Q115,162 135,150"/>
+    <path d="M245,45 C243,28 248,12 251,0"/>
+    <path d="M251,80 L247,135"/>
+    <circle cx="247" cy="138" r="5"/>
+    <path d="M175,165 Q180,155 175,148 Q170,155 175,162 Q180,167 175,172"/>
+    <path d="M175,148 L175,82"/>
+  </g>
+
+  <!-- Epiderme (camada mais externa) -->
+  <g id="epiderme" class="organ">
+    <path d="M10,40 L310,40 L310,80 Q280,65 250,80 Q220,95 190,80 Q160,65 130,80 Q100,95 70,80 Q40,65 10,80 Z"/>
+  </g>
+</svg>
