@@ -1,0 +1,50 @@
+<svg viewBox="0 0 320 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema urinário">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:8; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:9; }
+    .organ.organ-tree.selected *{ stroke-width:10; }
+  </style>
+
+  <!-- Silhueta decorativa (cabeça, pescoço, tronco) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <ellipse cx="160" cy="45" rx="34" ry="38"/>
+    <path d="M136,80 L124,130 M184,80 L196,130"/>
+    <path d="M58,170 Q160,135 262,170 L275,520 Q160,558 45,520 Z"/>
+  </g>
+
+  <!-- Rins -->
+  <g id="rins" class="organ">
+    <ellipse cx="105" cy="252" rx="26" ry="34" transform="rotate(-10 105 252)"/>
+    <ellipse cx="215" cy="252" rx="26" ry="34" transform="rotate(10 215 252)"/>
+  </g>
+
+  <!-- Ureteres -->
+  <g id="ureteres" class="organ organ-tree">
+    <path d="M100,285 C95,330 90,380 105,420 C112,438 120,448 130,455"/>
+    <path d="M220,285 C225,330 230,380 215,420 C208,438 200,448 190,455"/>
+  </g>
+
+  <!-- Bexiga -->
+  <g id="bexiga" class="organ">
+    <path d="M160,440 C135,440 118,458 120,478 C122,495 140,505 160,505 C180,505 198,495 200,478 C202,458 185,440 160,440 Z"/>
+  </g>
+
+  <!-- Uretra -->
+  <g id="uretra" class="organ">
+    <rect x="153" y="503" width="14" height="35" rx="6"/>
+  </g>
+</svg>

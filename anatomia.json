@@ -412,6 +412,45 @@
           "descricao": "O tónus muscular é a tensão interna constante a que os músculos estão submetidos, permitindo que o corpo e os seus segmentos se mantenham em equilíbrio tanto em movimento como parados. Está ligado à propriocepção — a capacidade do corpo de reconhecer a sua própria posição e orientação no espaço, o que permite desenvolver movimentos coordenados e precisos."
         }
       ]
+    },
+    {
+      "id": "urinario",
+      "nome": "Sistema Urinário",
+      "introducao": "Responsável por manter o equilíbrio de água no corpo, regular a composição química do meio interno e eliminar substâncias nocivas através da filtração do sangue e formação de urina. É formado por dois rins, dois ureteres, a bexiga e a uretra. Os rins e os ureteres formam o aparelho urinário superior; a bexiga e a uretra formam o aparelho urinário inferior.",
+      "orgaos": [
+        {
+          "id": "rins",
+          "nome": "Rins",
+          "descricao": "Órgãos pares, situados atrás dos órgãos abdominais, um de cada lado da coluna vertebral (o esquerdo costuma ser um pouco maior e ligeiramente mais alto). Cada rim tem cerca de 1 milhão de nefrónios, as unidades responsáveis por formar a urina — o rim não consegue regenerar novos nefrónios, por isso o número diminui com lesões, doenças ou o próprio envelhecimento. Recebem cerca de 25% do sangue bombeado pelo coração em repouso e também ajudam a regular a pressão arterial."
+        },
+        {
+          "id": "ureteres",
+          "nome": "Ureteres",
+          "descricao": "Estruturas pares, com 25 a 30 cm de comprimento e cerca de 3 mm de diâmetro, que transportam a urina produzida nos rins até à bexiga."
+        },
+        {
+          "id": "bexiga",
+          "nome": "Bexiga",
+          "descricao": "Órgão feito principalmente de tecido muscular, onde a urina é armazenada até ser eliminada. Diminui de tamanho quando vazia e dilata à medida que enche; essa dilatação estimula o reflexo que provoca a vontade de urinar, normalmente controlada pelo cérebro através do esfíncter urinário externo."
+        },
+        {
+          "id": "uretra",
+          "nome": "Uretra",
+          "descricao": "Canal que começa na parte inferior da bexiga e termina nos genitais, por onde a urina é eliminada do corpo. No homem, mede cerca de 20 cm e também faz parte do sistema reprodutor; na mulher, mede cerca de 4 cm."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "formacao_eliminacao_urina",
+          "titulo": "Formação e Eliminação da Urina",
+          "descricao": "Os rins filtram continuamente o sangue e produzem urina, num volume normal de cerca de 1,5 a 2 litros por dia. A urina desce pelos ureteres até à bexiga, onde fica armazenada. Quando a bexiga enche, um reflexo (mictório) provoca a contração do músculo liso da bexiga e a vontade de urinar; a pessoa controla esse momento mantendo o esfíncter urinário externo contraído até decidir urinar."
+        },
+        {
+          "id": "papel_regulador_rim",
+          "titulo": "Papel Regulador do Rim",
+          "descricao": "Além de filtrar o sangue, o rim tem um papel importante na regulação da pressão arterial, controlando os níveis de água e sódio no corpo e enviando informação ao sistema nervoso simpático e ao sistema nervoso central."
+        }
+      ]
     }
   ]
 }
