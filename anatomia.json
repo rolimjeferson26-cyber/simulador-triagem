@@ -193,6 +193,78 @@
           "descricao": "Fígado, vesícula biliar e pâncreas não fazem parte do tubo digestivo em si, mas produzem substâncias fundamentais para a digestão: a bílis (produzida no fígado, armazenada na vesícula) ajuda a digerir gorduras, e as enzimas pancreáticas completam a digestão que começou no estômago, já dentro do intestino delgado."
         }
       ]
+    },
+    {
+      "id": "nervoso",
+      "nome": "Sistema Nervoso",
+      "introducao": "Responsável por regular as funções de todos os outros sistemas do corpo e pela interação com o ambiente à volta. Divide-se em Sistema Nervoso Central (SNC), formado pelo encéfalo e pela medula espinhal, e Sistema Nervoso Periférico, que se subdivide em somático (atividades voluntárias) e autónomo (atividades involuntárias, com as divisões simpática e parassimpática).",
+      "orgaos": [
+        {
+          "id": "cerebro",
+          "nome": "Cérebro",
+          "divisao": "SNC - Encéfalo",
+          "descricao": "Dividido em quatro lobos, cada um com funções próprias: o lobo frontal controla a atividade motora voluntária, o pensamento e a personalidade; o lobo parietal interpreta sensações como dor, tato e temperatura; o lobo occipital processa estímulos visuais; e o lobo temporal está ligado à audição, olfato, memória e reconhecimento de pessoas e objetos."
+        },
+        {
+          "id": "cerebelo",
+          "nome": "Cerebelo",
+          "divisao": "SNC - Encéfalo",
+          "descricao": "Responsável pelo equilíbrio, movimento ocular, controlo da postura e da locomoção, e pela coordenação motora fina — os movimentos suaves e precisos. Também participa, junto com o lobo frontal, no planeamento e aprendizagem de movimentos complexos."
+        },
+        {
+          "id": "tronco_cerebral",
+          "nome": "Tronco Cerebral",
+          "divisao": "SNC - Encéfalo",
+          "descricao": "Centro de controlo das funções vitais do corpo: regula a postura, o controlo da deglutição, e as frequências ventilatória e cardíaca, além de aumentar o estado de alerta quando necessário. Uma lesão grave nesta região pode ser fatal."
+        },
+        {
+          "id": "medula_espinhal",
+          "nome": "Medula Espinhal",
+          "divisao": "SNC",
+          "descricao": "Aloja-se dentro do canal formado pela sobreposição das vértebras (canal raquidiano). É responsável pelos atos reflexos, respostas rápidas do corpo que não precisam de passar pelo encéfalo para acontecer."
+        },
+        {
+          "id": "meninges",
+          "nome": "Meninges",
+          "divisao": "SNC - Proteção",
+          "descricao": "Três membranas que envolvem e protegem o encéfalo e a medula espinhal: a dura-máter (mais resistente, reveste o interior do crânio), a aracnoideia (camada intermédia) e a pia-máter (mais fina, em contacto direto com o tecido nervoso). Entre elas circula o líquido cefalorraquidiano (LCR), que funciona como amortecedor entre a caixa óssea e o sistema nervoso central."
+        },
+        {
+          "id": "sistema_nervoso_somatico",
+          "nome": "Sistema Nervoso Somático",
+          "divisao": "SN Periférico",
+          "descricao": "Parte do sistema nervoso periférico responsável pelas atividades voluntárias, formada pelos feixes nervosos que enervam o tecido muscular esquelético."
+        },
+        {
+          "id": "sistema_nervoso_simpatico",
+          "nome": "Sistema Nervoso Simpático",
+          "divisao": "SN Periférico - Autónomo",
+          "descricao": "Uma das divisões do sistema nervoso autónomo, ativa respostas de mobilização de energia diante de situações de stress: aumenta a frequência e a força dos batimentos cardíacos e a pressão arterial, entre outros efeitos excitatórios."
+        },
+        {
+          "id": "sistema_nervoso_parassimpatico",
+          "nome": "Sistema Nervoso Parassimpático",
+          "divisao": "SN Periférico - Autónomo",
+          "descricao": "A outra divisão do sistema nervoso autónomo, com função oposta e complementar à simpática: promove atividades de relaxamento, como a redução da frequência cardíaca e da pressão arterial."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "organizacao_geral",
+          "titulo": "Organização Geral do Sistema Nervoso",
+          "descricao": "O sistema nervoso divide-se em Sistema Nervoso Central (encéfalo + medula espinhal) e Sistema Nervoso Periférico (somático + autónomo). O autónomo, por sua vez, divide-se em simpático e parassimpático. É o principal produtor e recetor de estímulos do corpo, coordenando todos os outros sistemas e a resposta ao ambiente."
+        },
+        {
+          "id": "protecao_snc",
+          "titulo": "Proteção do Sistema Nervoso Central",
+          "descricao": "Por serem estruturas delicadas e vitais, o encéfalo e a medula espinhal são protegidos por ossos (crânio e coluna vertebral) e pelas meninges. O líquido cefalorraquidiano funciona como amortecedor mecânico. Em certas fraturas do crânio pode haver perda deste líquido pelos ouvidos ou fossas nasais, um sinal de gravidade — embora costume aparecer misturado com sangue, dificultando a deteção."
+        },
+        {
+          "id": "equilibrio_simpatico_parassimpatico",
+          "titulo": "Equilíbrio entre Simpático e Parassimpático",
+          "descricao": "As duas divisões do sistema nervoso autónomo têm funções antagónicas, equilibrando-se mutuamente: quando o simpático aumenta a frequência cardíaca, o parassimpático entra em ação para reduzi-la; quando o simpático diminui a motilidade do estômago e intestinos, o parassimpático aumenta essas contrações. De forma geral, o simpático predomina em ações excitatórias e o parassimpático em ações inibitórias/relaxantes."
+        }
+      ]
     }
   ]
 }

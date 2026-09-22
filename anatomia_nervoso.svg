@@ -1,0 +1,81 @@
+<svg viewBox="0 0 320 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema nervoso">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    /* Meninges: contorno de proteção tracejado */
+    .organ.organ-shell *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:3; stroke-dasharray:2 4; fill-opacity:0; }
+    .organ.organ-shell:hover *{ stroke-width:4; }
+    .organ.organ-shell.selected *{ stroke-width:4.5; }
+
+    /* Ramos do sistema nervoso periférico: feixes finos */
+    .organ.organ-nerve *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:4; stroke-linecap:round; fill-opacity:0; }
+    .organ.organ-nerve:hover *{ stroke-width:5; }
+    .organ.organ-nerve.selected *{ stroke-width:5.5; }
+  </style>
+
+  <!-- Silhueta decorativa (crânio em perfil, ombros) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <path d="M95,70 Q150,35 210,55 Q245,68 255,105 Q262,135 250,160 Q244,175 228,182 L215,210 L205,230 L165,230 L158,205 Q120,195 100,165 Q82,135 85,105 Q86,85 95,70 Z"/>
+    <path d="M120,235 Q160,222 200,235 L235,258 M120,235 L85,258"/>
+  </g>
+
+  <!-- Cérebro -->
+  <g id="cerebro" class="organ">
+    <path d="M110,90 Q150,60 205,75 Q235,85 240,115 Q243,140 225,155 Q195,170 155,165 Q120,160 105,135 Q98,112 110,90 Z"/>
+  </g>
+
+  <!-- Cerebelo -->
+  <g id="cerebelo" class="organ">
+    <path d="M108,140 Q100,155 108,170 Q120,182 140,178 Q150,174 148,160 Q144,145 128,140 Q116,137 108,140 Z"/>
+  </g>
+
+  <!-- Tronco Cerebral -->
+  <g id="tronco_cerebral" class="organ">
+    <path d="M148,178 L168,178 L172,210 L150,212 Z"/>
+  </g>
+
+  <!-- Medula Espinhal -->
+  <g id="medula_espinhal" class="organ">
+    <rect x="155" y="212" width="14" height="343" rx="6"/>
+  </g>
+
+  <!-- Meninges: envolvem encéfalo e topo da medula -->
+  <g id="meninges" class="organ organ-shell">
+    <path d="M100,80 Q150,50 215,68 Q248,80 256,112 Q262,145 246,168 Q230,185 205,196 Q195,205 172,214 L172,240 L152,240 L152,214 Q125,200 108,178 Q92,155 90,120 Q90,98 100,80 Z"/>
+  </g>
+
+  <!-- Sistema Nervoso Somático (ramos torácicos, atividades voluntárias) -->
+  <g id="sistema_nervoso_somatico" class="organ organ-nerve">
+    <path d="M169,265 L215,255"/>
+    <path d="M169,285 L225,278"/>
+    <path d="M169,305 L218,312"/>
+    <path d="M169,325 L228,335"/>
+  </g>
+
+  <!-- Sistema Nervoso Simpático (ramos toracolombares) -->
+  <g id="sistema_nervoso_simpatico" class="organ organ-nerve">
+    <path d="M169,355 L220,345"/>
+    <path d="M169,380 L228,375"/>
+    <path d="M169,405 L222,415"/>
+    <path d="M169,428 L230,438"/>
+  </g>
+
+  <!-- Sistema Nervoso Parassimpático (ramos craniano + sacral) -->
+  <g id="sistema_nervoso_parassimpatico" class="organ organ-nerve">
+    <path d="M172,206 L212,193"/>
+    <path d="M169,485 L218,478"/>
+    <path d="M169,508 L226,512"/>
+    <path d="M169,530 L215,542"/>
+  </g>
+</svg>
