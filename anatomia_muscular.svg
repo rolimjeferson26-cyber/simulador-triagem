@@ -1,0 +1,71 @@
+<svg viewBox="0 0 320 620" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema muscular">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    /* Fibras onduladas do músculo liso: só contorno */
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:6; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:7; }
+    .organ.organ-tree.selected *{ stroke-width:7.5; }
+  </style>
+
+  <!-- Silhueta decorativa (cabeça/pescoço + molduras dos esquemas) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <ellipse cx="160" cy="52" rx="26" ry="30"/>
+    <path d="M148,80 L145,92 M172,80 L175,92"/>
+    <rect x="20" y="445" width="130" height="110" rx="10"/>
+    <rect x="180" y="445" width="130" height="110" rx="10"/>
+  </g>
+
+  <!-- Músculo Esquelético (Voluntário): silhueta muscular do corpo inteiro -->
+  <g id="musculo_esqueletico" class="organ">
+    <!-- tronco: peitorais e abdominais -->
+    <path d="M115,90 Q160,75 205,90 L212,140 Q215,175 205,205 Q160,222 115,205 Q105,175 108,140 Z"/>
+    <!-- braço esquerdo -->
+    <path d="M115,95 C90,98 78,115 80,138 C82,158 95,165 100,150 C104,138 100,120 108,108 Z"/>
+    <path d="M90,150 C78,165 74,190 82,210 C88,222 100,220 100,205 C100,190 92,172 96,158 Z"/>
+    <!-- braço direito -->
+    <path d="M205,95 C230,98 242,115 240,138 C238,158 225,165 220,150 C216,138 220,120 212,108 Z"/>
+    <path d="M230,150 C242,165 246,190 238,210 C232,222 220,220 220,205 C220,190 228,172 224,158 Z"/>
+    <!-- perna esquerda -->
+    <path d="M118,208 C108,225 106,250 112,272 C116,288 130,290 132,272 C134,255 126,235 132,218 Z"/>
+    <path d="M114,272 C106,300 105,335 115,360 C120,372 134,370 132,352 C130,332 122,305 126,282 Z"/>
+    <!-- perna direita -->
+    <path d="M202,208 C212,225 214,250 208,272 C204,288 190,290 188,272 C186,255 194,235 188,218 Z"/>
+    <path d="M206,272 C214,300 215,335 205,360 C200,372 186,370 188,352 C190,332 198,305 194,282 Z"/>
+  </g>
+
+  <!-- Tendão (destaque no tendão de Aquiles) -->
+  <g id="tendao" class="organ">
+    <path d="M118,362 C116,372 116,382 120,390 C123,395 129,395 130,388 C131,378 128,368 124,360 Z"/>
+  </g>
+
+  <!-- Músculo Liso (Involuntário): esquema de fibras em camadas (ex.: parede intestinal) -->
+  <g id="musculo_liso" class="organ organ-tree">
+    <path d="M32,468 Q50,458 68,468 Q86,478 104,468 Q122,458 138,466"/>
+    <path d="M32,488 Q50,498 68,488 Q86,478 104,488 Q122,498 138,490"/>
+    <path d="M32,508 Q50,498 68,508 Q86,518 104,508 Q122,498 138,506"/>
+    <path d="M32,528 Q50,538 68,528 Q86,518 104,528 Q122,538 138,530"/>
+  </g>
+
+  <!-- Músculo Cardíaco: coração com fibras ramificadas -->
+  <g id="musculo_cardiaco" class="organ">
+    <path d="M235,470 C235,458 225,450 215,450 C203,450 195,460 195,472 C195,490 215,505 235,522 C255,505 275,490 275,472 C275,460 267,450 255,450 C245,450 235,458 235,470 Z"/>
+  </g>
+  <g class="fissure">
+    <path d="M210,470 L220,478 L215,486"/>
+    <path d="M255,470 L248,480 L258,488"/>
+    <path d="M235,495 L228,505 L240,512"/>
+  </g>
+</svg>

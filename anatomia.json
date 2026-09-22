@@ -373,6 +373,45 @@
           "descricao": "Os ossos classificam-se pela forma em quatro tipos: longos (mais compridos do que largos, como o fémur), curtos (quase tão largos como compridos, como os ossos do carpo), planos (finos e achatados, como os ossos do crânio) e irregulares (formas que não se encaixam nas outras categorias, como as vértebras e os ossos da face)."
         }
       ]
+    },
+    {
+      "id": "muscular",
+      "nome": "Sistema Muscular",
+      "introducao": "Os músculos são os órgãos que geram a força necessária para o movimento, através da capacidade das fibras musculares de se contraírem e alongarem. Ligam-se aos ossos por tendões e têm três funções principais: manter e facilitar o posicionamento do corpo, permitir a execução de movimentos, e produzir calor através da contração.",
+      "orgaos": [
+        {
+          "id": "musculo_esqueletico",
+          "nome": "Músculo Esquelético (Voluntário)",
+          "descricao": "Representa cerca de 40% do peso corporal. Liga-se aos ossos através de tendões e permite movimentos voluntários, sob controlo consciente da pessoa — como andar, mastigar, engolir, sorrir, falar e mover os olhos. É constituído por fibras musculares mais compridas e também ajuda a dar forma ao corpo e a produzir calor."
+        },
+        {
+          "id": "musculo_liso",
+          "nome": "Músculo Liso (Involuntário)",
+          "descricao": "Músculo de fibras mais curtas, cuja ação não depende da vontade da pessoa. Está envolvido na mobilização dos alimentos ao longo do tubo digestivo, no esvaziamento da bexiga, na regulação do diâmetro dos vasos sanguíneos, na alteração do tamanho das pupilas, no movimento dos pelos, entre outras funções involuntárias do corpo."
+        },
+        {
+          "id": "musculo_cardiaco",
+          "nome": "Músculo Cardíaco",
+          "descricao": "Forma a parede do coração e é constituído por fibras que se ramificam entre si. A sua ação é involuntária e rítmica. A diferença mais importante em relação aos outros tipos de músculo é ser automático — consegue gerar o seu próprio estímulo elétrico para se contrair, sem depender de um comando externo. As suas contrações são a principal força que impulsiona o sangue pelos vasos sanguíneos."
+        },
+        {
+          "id": "tendao",
+          "nome": "Tendão",
+          "descricao": "Tecido fibroso que liga o músculo ao osso, permitindo que a força gerada pela contração muscular seja transmitida ao esqueleto e produza movimento."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "forca_muscular",
+          "titulo": "Força Muscular",
+          "descricao": "Corresponde à carga ou peso que um músculo consegue suportar ou movimentar ao contrair-se. Depende de vários fatores: a intensidade do estímulo nervoso recebido, o volume do músculo e o comprimento inicial das fibras musculares em repouso. Quanto mais intenso o estímulo nervoso e maior o volume e comprimento inicial das fibras, maior a força produzida na contração."
+        },
+        {
+          "id": "tonus_muscular",
+          "titulo": "Tónus Muscular e Propriocepção",
+          "descricao": "O tónus muscular é a tensão interna constante a que os músculos estão submetidos, permitindo que o corpo e os seus segmentos se mantenham em equilíbrio tanto em movimento como parados. Está ligado à propriocepção — a capacidade do corpo de reconhecer a sua própria posição e orientação no espaço, o que permite desenvolver movimentos coordenados e precisos."
+        }
+      ]
     }
   ]
 }
