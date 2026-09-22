@@ -552,6 +552,55 @@
           "descricao": "Quando a temperatura do corpo sobe acima do normal, as glândulas sudoríparas produzem suor, que ao evaporar arrefece o corpo. Este processo está ligado ao sistema nervoso simpático, podendo também ocorrer como resposta a stress emocional, sobretudo nas palmas das mãos, plantas dos pés e axilas."
         }
       ]
+    },
+    {
+      "id": "sentidos",
+      "nome": "Órgãos dos Sentidos",
+      "introducao": "Os sentidos permitem ao corpo captar informações do ambiente e transformá-las em impulsos nervosos que o cérebro interpreta. São cinco: tato, visão, audição, olfato e paladar (gosto).",
+      "orgaos": [
+        {
+          "id": "pele_tato",
+          "nome": "Pele (Tato)",
+          "sentido": "Tato",
+          "descricao": "Terminações nervosas na pele, mais concentradas nas pontas dos dedos, geram impulsos nervosos que permitem sentir temperatura e textura das superfícies, estabelecendo uma relação direta com o mundo exterior."
+        },
+        {
+          "id": "olho",
+          "nome": "Olho",
+          "sentido": "Visão",
+          "descricao": "Estrutura externa: cavidade orbitária (aloja o globo ocular), músculos extrínsecos (movimentam o olho), pálpebras (protegem de poeira e impactos), membrana conjuntival e aparelho lacrimal (lubrificam e protegem). Estrutura interna: esclerótica (parte branca, suporte externo), córnea (tecido transparente à frente da íris), íris (regula a quantidade de luz), pupila (abertura por onde entra a luz), cristalino (lente que foca a imagem) e retina (transforma a luz em impulsos nervosos). Os nervos óticos cruzam-se no quiasma ótico, o que explica por que lesões num lado do cérebro podem afetar a visão do olho do lado oposto."
+        },
+        {
+          "id": "ouvido",
+          "nome": "Ouvido",
+          "sentido": "Audição",
+          "descricao": "Dividido em três partes. Ouvido externo: pavilhão auricular (orelha) e canal auditivo externo, que conduzem o som até ao tímpano. Ouvido médio: o tímpano vibra com o som e transmite essa vibração através de três pequenos ossos (martelo, bigorna e estribo). Ouvido interno: contém a cóclea (converte a vibração em impulsos nervosos enviados ao cérebro) e os canais semicirculares, responsáveis por gerar a informação sobre a posição da cabeça no espaço, essencial para o equilíbrio — por isso, doenças do ouvido interno podem causar vertigens."
+        },
+        {
+          "id": "nariz_olfato",
+          "nome": "Nariz (Olfato)",
+          "sentido": "Olfato",
+          "descricao": "Terminais nervosos olfativos nas fossas nasais captam substâncias voláteis transportadas pelo ar e transformam-nas em impulsos nervosos, identificados pelo cérebro como odores."
+        },
+        {
+          "id": "lingua",
+          "nome": "Língua (Paladar)",
+          "sentido": "Paladar",
+          "descricao": "Contém as papilas gustativas, sensores nervosos que detetam substâncias dissolvidas em solução, distinguindo quatro sabores básicos — doce, salgado, ácido e amargo — localizados em zonas específicas da língua. O paladar está intimamente ligado ao olfato: sem o cheiro, muitos sabores não são corretamente identificados."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "principio_geral_sentidos",
+          "titulo": "Como Funcionam os Sentidos",
+          "descricao": "Todos os sentidos seguem o mesmo princípio geral: um estímulo do ambiente (luz, som, substância química, contacto físico) é captado por recetores especializados, convertido em impulso nervoso, e enviado ao cérebro, onde é interpretado e identificado como uma sensação (imagem, som, cheiro, sabor ou toque)."
+        },
+        {
+          "id": "papel_ouvido_equilibrio",
+          "titulo": "O Ouvido e o Equilíbrio",
+          "descricao": "Além da audição, o ouvido interno tem um papel fundamental no equilíbrio do corpo: os canais semicirculares detetam a posição exata da cabeça no espaço. Alterações nesta função explicam por que muitas doenças do ouvido causam vertigens (uma falsa sensação de movimento)."
+        }
+      ]
     }
   ]
 }

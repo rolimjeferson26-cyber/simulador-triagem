@@ -1,0 +1,91 @@
+<svg viewBox="0 0 320 840" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama dos órgãos dos sentidos">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.5; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+  </style>
+
+  <!-- Molduras decorativas dos 5 painéis — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <rect x="20" y="15" width="280" height="160" rx="10"/>
+    <rect x="20" y="195" width="280" height="160" rx="10"/>
+    <rect x="20" y="375" width="280" height="160" rx="10"/>
+    <rect x="20" y="555" width="280" height="130" rx="10"/>
+    <rect x="20" y="705" width="280" height="130" rx="10"/>
+  </g>
+
+  <!-- ===== Pele (Tato): mão e dedos ===== -->
+  <g id="pele_tato" class="organ">
+    <ellipse cx="170" cy="130" rx="58" ry="36"/>
+    <rect x="138" y="55" width="14" height="72" rx="7"/>
+    <rect x="158" y="45" width="14" height="82" rx="7"/>
+    <rect x="178" y="48" width="14" height="79" rx="7"/>
+    <rect x="198" y="58" width="14" height="68" rx="7"/>
+    <rect x="95" y="118" width="14" height="55" rx="7" transform="rotate(-35 102 145)"/>
+  </g>
+
+  <!-- ===== Olho (Visão): córnea, íris, pupila, cristalino, retina ===== -->
+  <g id="olho" class="organ">
+    <circle cx="160" cy="275" r="65"/>
+    <path d="M100,237 C85,250 82,300 100,313 C108,305 112,290 112,275 C112,260 108,245 100,237 Z"/>
+    <circle cx="112" cy="275" r="16"/>
+    <circle cx="112" cy="275" r="7"/>
+    <ellipse cx="128" cy="275" rx="10" ry="18"/>
+    <path d="M160,211 A67,67 0 0 1 227,275 A67,67 0 0 1 160,339 A58,58 0 0 0 160,211 Z"/>
+  </g>
+
+  <!-- ===== Ouvido (Audição): externo, médio e interno ===== -->
+  <g id="ouvido" class="organ">
+    <path d="M60,425 C40,415 35,440 45,460 C52,475 68,480 80,470 C70,460 62,445 65,433 C68,423 75,420 82,423 Z"/>
+    <rect x="82" y="448" width="45" height="14" rx="6"/>
+    <ellipse cx="132" cy="455" rx="4" ry="14" transform="rotate(20 132 455)"/>
+    <rect x="139" y="450" width="12" height="4" rx="2" transform="rotate(-20 145 452)"/>
+    <circle cx="142" cy="450" r="4"/>
+    <rect x="149" y="443" width="12" height="4" rx="2" transform="rotate(-20 155 445)"/>
+    <circle cx="152" cy="443" r="4"/>
+    <circle cx="162" cy="437" r="4"/>
+    <circle cx="193" cy="410" r="5"/>
+    <circle cx="203" cy="403" r="5"/>
+    <circle cx="213" cy="410" r="5"/>
+    <path d="M200,450 C200,438 212,432 222,438 C232,444 232,458 222,464 C214,469 206,465 206,457 C206,451 211,448 216,450 C220,452 220,457 216,458"/>
+  </g>
+
+  <!-- ===== Nariz (Olfato) ===== -->
+  <g id="nariz_olfato" class="organ">
+    <path d="M160,570 C150,590 140,610 140,623 C140,633 150,639 160,639 C170,639 180,633 180,623 C180,610 170,590 160,570 Z"/>
+    <ellipse cx="148" cy="625" rx="8" ry="6"/>
+    <ellipse cx="172" cy="625" rx="8" ry="6"/>
+  </g>
+
+  <!-- ===== Língua (Paladar): papilas gustativas ===== -->
+  <g id="lingua" class="organ">
+    <path d="M160,710 C120,710 95,735 95,770 C95,800 125,820 160,820 C195,820 225,800 225,770 C225,735 200,710 160,710 Z"/>
+    <circle cx="125" cy="735" r="2.5"/>
+    <circle cx="140" cy="728" r="2.5"/>
+    <circle cx="160" cy="724" r="2.5"/>
+    <circle cx="180" cy="728" r="2.5"/>
+    <circle cx="195" cy="735" r="2.5"/>
+    <circle cx="112" cy="755" r="2.5"/>
+    <circle cx="130" cy="750" r="2.5"/>
+    <circle cx="160" cy="746" r="2.5"/>
+    <circle cx="190" cy="750" r="2.5"/>
+    <circle cx="208" cy="755" r="2.5"/>
+    <circle cx="115" cy="778" r="2.5"/>
+    <circle cx="140" cy="775" r="2.5"/>
+    <circle cx="160" cy="772" r="2.5"/>
+    <circle cx="180" cy="775" r="2.5"/>
+    <circle cx="205" cy="778" r="2.5"/>
+    <circle cx="135" cy="798" r="2.5"/>
+    <circle cx="160" cy="802" r="2.5"/>
+    <circle cx="185" cy="798" r="2.5"/>
+  </g>
+</svg>
