@@ -1,0 +1,68 @@
+<svg viewBox="0 0 320 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema digestivo">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:8; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:9; }
+    .organ.organ-tree.selected *{ stroke-width:10; }
+  </style>
+
+  <!-- Silhueta decorativa (cabeça, pescoço, tronco) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <ellipse cx="160" cy="45" rx="34" ry="38"/>
+    <path d="M136,80 L124,130 M184,80 L196,130"/>
+    <path d="M58,170 Q160,135 262,170 L275,520 Q160,558 45,520 Z"/>
+  </g>
+
+  <!-- Fígado -->
+  <g id="figado" class="organ">
+    <path d="M180,205 C210,195 245,200 258,225 C268,245 265,270 245,282 C220,295 190,288 178,268 C170,250 172,222 180,205 Z"/>
+  </g>
+
+  <!-- Vesícula Biliar -->
+  <g id="vesicula_biliar" class="organ">
+    <ellipse cx="228" cy="282" rx="9" ry="13"/>
+  </g>
+
+  <!-- Estômago -->
+  <g id="estomago" class="organ">
+    <path d="M155,232 C130,225 100,235 90,265 C82,290 95,315 125,320 C150,323 168,310 172,290 C176,270 172,245 155,232 Z"/>
+  </g>
+
+  <!-- Pâncreas -->
+  <g id="pancreas" class="organ">
+    <path d="M130,308 C150,298 190,298 215,305 C230,309 232,320 220,326 C195,335 155,333 135,324 C126,320 124,313 130,308 Z"/>
+  </g>
+
+  <!-- Intestino Grosso (moldura: ascendente, transverso, descendente, sigmoide) -->
+  <g id="intestino_grosso" class="organ organ-tree">
+    <path d="M255,455 C258,410 255,370 248,340 C240,330 200,332 160,333 C120,334 85,332 78,345 C72,360 75,400 78,430 C80,450 90,465 105,472 C120,479 135,478 142,468"/>
+  </g>
+
+  <!-- Intestino Delgado (alças centrais) -->
+  <g id="intestino_delgado" class="organ organ-tree">
+    <path d="M120,335 C90,345 90,370 120,378 C150,386 150,408 118,414 C88,420 90,445 122,450 C155,455 190,448 205,430 C218,414 210,392 185,388 C205,382 218,362 200,348 C180,334 145,332 120,335"/>
+  </g>
+
+  <!-- Esófago -->
+  <g id="esofago" class="organ">
+    <rect x="152" y="70" width="16" height="160" rx="8"/>
+  </g>
+
+  <!-- Boca -->
+  <g id="boca" class="organ">
+    <ellipse cx="160" cy="58" rx="14" ry="6"/>
+  </g>
+</svg>

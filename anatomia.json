@@ -129,6 +129,70 @@
           "descricao": "O sangue passa da aurícula direita para o ventrículo direito através da válvula tricúspide, sendo depois bombeado pela artéria pulmonar até aos pulmões. Nos pulmões ocorrem as trocas gasosas (hematose): o sangue liberta dióxido de carbono e capta oxigénio. O sangue já oxigenado regressa então à aurícula esquerda através das veias pulmonares, fechando o ciclo."
         }
       ]
+    },
+    {
+      "id": "digestivo",
+      "nome": "Sistema Digestivo",
+      "introducao": "Responsável por transformar os alimentos em nutrientes que as células do corpo conseguem absorver e usar. É constituído pelo tubo digestivo (da boca ao ânus) e por glândulas anexas que produzem substâncias essenciais para a digestão.",
+      "orgaos": [
+        {
+          "id": "boca",
+          "nome": "Boca",
+          "descricao": "Local onde os alimentos são triturados pelos dentes e misturados com a saliva, que contém uma enzima (amílase salivar) que já começa a quebrar o amido. Três pares de glândulas salivares (parótidas, sublinguais e submaxilares) produzem essa saliva."
+        },
+        {
+          "id": "esofago",
+          "nome": "Esófago",
+          "descricao": "Tubo de cerca de 25 cm que transporta os alimentos da faringe até ao estômago, situado no mediastino. É bem lubrificado por muco e usa contrações musculares (movimentos peristálticos) para empurrar o alimento para baixo."
+        },
+        {
+          "id": "estomago",
+          "nome": "Estômago",
+          "descricao": "Órgão em forma de bolsa, situado abaixo do diafragma. Tem dois esfíncteres: a cárdia (entrada, evita refluxo do esófago) e o piloro (saída, controla a passagem para o intestino delgado). Produz sucos ácidos que ajudam a digerir os alimentos, que aqui passam a chamar-se quimo."
+        },
+        {
+          "id": "intestino_delgado",
+          "nome": "Intestino Delgado",
+          "descricao": "Órgão com 4,6 a 9 metros de comprimento, dividido em duodeno, jejuno e íleo. É onde ocorre a maior parte da digestão e da absorção dos nutrientes para o sangue, ajudado por vilosidades internas que aumentam muito a área de absorção."
+        },
+        {
+          "id": "intestino_grosso",
+          "nome": "Intestino Grosso",
+          "descricao": "Estende-se do fim do intestino delgado até ao ânus, com 1,5 a 1,8 metros, incluindo cego, cólon (ascendente, transverso, descendente), sigmoide, reto e ânus. Tem participação secundária na absorção (principalmente de água), já que a maior parte dela já ocorreu antes."
+        },
+        {
+          "id": "figado",
+          "nome": "Fígado",
+          "descricao": "O maior órgão interno do corpo, localizado do lado direito superior do abdómen. Produz a bílis, que ajuda na digestão de gorduras, e também ajuda a manter os níveis normais de açúcar e proteínas no sangue, além de armazenar energia em forma de glicogénio."
+        },
+        {
+          "id": "vesicula_biliar",
+          "nome": "Vesícula Biliar",
+          "descricao": "Pequena estrutura em forma de saco, localizada por baixo do fígado, responsável por armazenar a bílis produzida pelo fígado até ser necessária na digestão."
+        },
+        {
+          "id": "pancreas",
+          "nome": "Pâncreas",
+          "descricao": "Órgão situado atrás do estômago, dividido em cabeça, corpo e cauda. Tem uma função dupla: produz enzimas que ajudam a digerir os alimentos (função exócrina) e produz hormonas, como a insulina, que regulam o nível de açúcar no sangue (função endócrina)."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "funcoes_digestao",
+          "titulo": "As Cinco Funções da Digestão",
+          "descricao": "O processo digestivo acontece em cinco etapas: ingestão (o alimento entra no trato digestivo), mistura e movimentação (contrações musculares deslocam o alimento), digestão (quebra química e mecânica dos alimentos em moléculas pequenas), absorção (passagem dos nutrientes para o sangue) e dejeção (eliminação do que não foi digerido)."
+        },
+        {
+          "id": "digestao_mecanica_quimica",
+          "titulo": "Digestão Mecânica e Química",
+          "descricao": "A digestão mecânica é feita pelos dentes (que trituram o alimento) e pelo peristaltismo (ondas de contração muscular que movem o alimento ao longo do tubo digestivo). A digestão química acontece através de enzimas e sucos digestivos que quebram hidratos de carbono, proteínas e gorduras em partes pequenas o suficiente para serem absorvidas pelas células."
+        },
+        {
+          "id": "papel_glandulas_anexas",
+          "titulo": "Papel das Glândulas Anexas",
+          "descricao": "Fígado, vesícula biliar e pâncreas não fazem parte do tubo digestivo em si, mas produzem substâncias fundamentais para a digestão: a bílis (produzida no fígado, armazenada na vesícula) ajuda a digerir gorduras, e as enzimas pancreáticas completam a digestão que começou no estômago, já dentro do intestino delgado."
+        }
+      ]
     }
   ]
 }
