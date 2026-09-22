@@ -65,6 +65,70 @@
           "descricao": "A ventilação é controlada automaticamente pelo centro respiratório, no tronco cerebral, com base nos níveis de CO2 e O2 no sangue — por isso não é possível prender a respiração ou hiperventilar de forma prolongada por vontade própria. Normalmente, o CO2 é o principal estímulo: quando sobe, aumenta a frequência e a amplitude da ventilação. Em pessoas com hipoventilação crónica, esse papel passa a ser feito pelo O2, o que exige cuidado com a oxigenoterapia, já que o excesso de oxigénio pode, nesses casos, reduzir o estímulo para respirar."
         }
       ]
+    },
+    {
+      "id": "cardiovascular",
+      "nome": "Sistema Cardiovascular",
+      "introducao": "Responsável por manter o sangue em circulação constante por todo o corpo, levando oxigénio e nutrientes às células e recolhendo dióxido de carbono e outras substâncias para serem eliminados. É formado pelo coração (a bomba) e pelos vasos sanguíneos (os canais de transporte).",
+      "orgaos": [
+        {
+          "id": "coracao",
+          "nome": "Coração",
+          "descricao": "Órgão muscular (miocárdio) do tamanho aproximado de um punho, com forma cónica, localizado na cavidade torácica entre os pulmões. A ponta arredondada chama-se ápex e o lado oposto, mais largo, chama-se base. Junto com a traqueia e o esófago, forma uma região central chamada mediastino. É envolvido por uma membrana em forma de saco, o pericárdio, cujas camadas produzem um líquido que reduz o atrito durante os batimentos."
+        },
+        {
+          "id": "auriculas",
+          "nome": "Aurículas",
+          "descricao": "As duas câmaras superiores do coração. A aurícula direita recebe o sangue venoso vindo de todo o corpo através das veias cavas; a aurícula esquerda recebe o sangue já oxigenado vindo dos pulmões através das veias pulmonares. São separadas entre si pelo septo interauricular."
+        },
+        {
+          "id": "ventriculos",
+          "nome": "Ventrículos",
+          "descricao": "As duas câmaras inferiores do coração, logo abaixo das aurículas. O ventrículo direito recebe sangue da aurícula direita e envia-o para os pulmões (circulação pulmonar). O ventrículo esquerdo recebe sangue da aurícula esquerda e envia-o para todo o corpo (circulação sistémica). São separados pelo septo interventricular, mais espesso e muscular."
+        },
+        {
+          "id": "valvulas_cardiacas",
+          "nome": "Válvulas Cardíacas",
+          "descricao": "Garantem que o sangue circula sempre num único sentido dentro do coração. As válvulas auriculoventriculares separam aurículas de ventrículos: a tricúspide do lado direito e a mitral (ou bicúspide) do lado esquerdo. As válvulas semilunares separam os ventrículos das grandes artérias que saem do coração (pulmonar e aorta)."
+        },
+        {
+          "id": "sistema_eletrico_coracao",
+          "nome": "Sistema Elétrico do Coração",
+          "descricao": "O batimento cardíaco é comandado por um impulso elétrico gerado dentro do próprio coração, sem depender do cérebro. Nasce no nódulo sinusal (o \"marcapasso\" natural), espalha-se pelas aurículas fazendo-as contrair, passa pelo nódulo auriculoventricular (que atrasa ligeiramente o impulso para dar tempo às aurículas de esvaziar), segue pelo feixe de His e por fim pelas fibras de Purkinje, levando a contração a todo o ventrículo de forma coordenada."
+        },
+        {
+          "id": "arterias",
+          "nome": "Artérias",
+          "descricao": "Vasos de paredes espessas e musculosas que transportam o sangue que sai do coração para todos os órgãos do corpo. É nas artérias que se sente o pulso. Na maioria transportam sangue rico em oxigénio, com exceção da artéria pulmonar, que leva sangue venoso do coração para os pulmões. Vão-se ramificando em arteríolas e depois em capilares."
+        },
+        {
+          "id": "veias",
+          "nome": "Veias",
+          "descricao": "Vasos com paredes semelhantes às das artérias, mas mais finas. Como a pressão do sangue é mais baixa no seu interior, o retorno do sangue ao coração é ajudado pela contração dos músculos do corpo, e válvulas internas impedem que o sangue reflua, mantendo o fluxo num único sentido, de volta ao coração."
+        },
+        {
+          "id": "sangue",
+          "nome": "Sangue",
+          "descricao": "Um adulto tem, em média, entre 5,5 e 6 litros de sangue. É composto por uma parte líquida, o plasma, e por três tipos de células: glóbulos vermelhos (transportam oxigénio e ajudam a remover dióxido de carbono), glóbulos brancos (defesa do organismo) e plaquetas (essenciais na coagulação, evitando hemorragias prolongadas)."
+        }
+      ],
+      "fisiologia": [
+        {
+          "id": "hemostase",
+          "titulo": "Hemóstase",
+          "descricao": "Conjunto de mecanismos que o corpo usa para controlar uma hemorragia quando um vaso sanguíneo é lesado: primeiro há um espasmo vascular (o vaso estreita para reduzir a perda de sangue), depois a agregação plaquetária (as plaquetas juntam-se no local) e por fim a coagulação (formação de um coágulo através de proteínas e fibrina)."
+        },
+        {
+          "id": "circulacao_sistemica",
+          "titulo": "Circulação Sistémica (Grande Circulação)",
+          "descricao": "O sangue sai da aurícula esquerda, passa ao ventrículo esquerdo através da válvula mitral e é bombeado pela artéria aorta para todo o corpo (cabeça, membros, tórax, abdómen). Depois de entregar oxigénio e nutrientes aos tecidos nos capilares, o sangue (agora pobre em oxigénio) retorna ao coração pelas veias cavas superior e inferior, entrando de novo na aurícula direita."
+        },
+        {
+          "id": "circulacao_pulmonar",
+          "titulo": "Circulação Pulmonar (Pequena Circulação)",
+          "descricao": "O sangue passa da aurícula direita para o ventrículo direito através da válvula tricúspide, sendo depois bombeado pela artéria pulmonar até aos pulmões. Nos pulmões ocorrem as trocas gasosas (hematose): o sangue liberta dióxido de carbono e capta oxigénio. O sangue já oxigenado regressa então à aurícula esquerda através das veias pulmonares, fechando o ciclo."
+        }
+      ]
     }
   ]
 }

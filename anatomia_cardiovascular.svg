@@ -1,0 +1,93 @@
+<svg viewBox="0 0 320 460" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Diagrama do sistema cardiovascular">
+  <style>
+    /* Cores padrão (usadas se o SVG for aberto isoladamente).
+       Quando injetado na página, as variáveis --brand/--line/--organ-fill
+       do documento hospedeiro assumem o controlo. */
+    .silhouette{ fill:none; stroke:var(--line, #2A3542); stroke-width:2; pointer-events:none; }
+    .fissure{ fill:none; stroke:var(--line, #2A3542); stroke-width:1.2; opacity:.6; pointer-events:none; }
+
+    .organ{ cursor:pointer; }
+    .organ *{ fill:var(--organ-fill, rgba(20,232,196,.28)); stroke:var(--brand, #14E8C4); stroke-width:1.5;
+      transition:fill .15s ease, stroke-width .15s ease, filter .15s ease; }
+    .organ:hover *{ fill:var(--brand, #14E8C4); fill-opacity:.55; }
+    .organ.selected *{ fill:var(--brand, #14E8C4); fill-opacity:.85; stroke-width:2.25; }
+    .organ.selected{ filter:drop-shadow(0 0 5px var(--brand, #14E8C4)); }
+
+    /* Vasos sanguíneos: tubos grossos (só contorno) */
+    .organ.organ-tree *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:8; stroke-linecap:round; stroke-linejoin:round;
+      fill-opacity:0; }
+    .organ.organ-tree:hover *{ stroke-width:9; }
+    .organ.organ-tree.selected *{ stroke-width:10; }
+
+    /* Sistema elétrico: linhas finas tracejadas ("fios") */
+    .organ.organ-wire *{ fill:none; stroke:var(--brand, #14E8C4); stroke-width:3; stroke-linecap:round; stroke-linejoin:round;
+      stroke-dasharray:1 5; fill-opacity:0; }
+    .organ.organ-wire:hover *{ stroke-width:4; }
+    .organ.organ-wire.selected *{ stroke-width:4.5; }
+  </style>
+
+  <!-- Silhueta decorativa (saco pericárdico) — apenas referência visual, não clicável -->
+  <g class="silhouette">
+    <path d="M40,60 Q160,18 280,60 Q303,180 270,335 Q215,415 160,438 Q105,415 50,335 Q17,180 40,60 Z"/>
+  </g>
+
+  <!-- Coração (miocárdio) — contorno geral do órgão -->
+  <g id="coracao" class="organ">
+    <path d="M160,140 C160,95 115,65 75,65 C35,65 15,95 15,140 C15,200 70,250 160,330 C250,250 305,200 305,140 C305,95 285,65 245,65 C205,65 160,95 160,140 Z"/>
+  </g>
+
+  <!-- Veias: cavas + pulmonares -->
+  <g id="veias" class="organ organ-tree">
+    <path d="M225,95 C238,70 246,42 250,18"/>
+    <path d="M215,175 C258,205 282,265 280,330 C279,348 277,358 275,368"/>
+    <path d="M70,95 L33,48"/>
+    <path d="M95,75 L64,24"/>
+  </g>
+
+  <!-- Artérias: aorta + tronco pulmonar -->
+  <g id="arterias" class="organ organ-tree">
+    <path d="M180,85 C180,55 185,38 210,28 C230,20 245,22 260,14"/>
+    <path d="M140,90 L140,48"/>
+    <path d="M140,48 L88,18"/>
+    <path d="M140,48 L176,24"/>
+  </g>
+
+  <!-- Aurículas (câmaras superiores) -->
+  <g id="auriculas" class="organ">
+    <ellipse cx="85" cy="115" rx="48" ry="42"/>
+    <ellipse cx="235" cy="115" rx="48" ry="42"/>
+  </g>
+
+  <!-- Septo interauricular / interventricular — apenas visual -->
+  <g class="fissure">
+    <path d="M160,70 L160,150"/>
+    <path d="M160,152 L160,318"/>
+  </g>
+
+  <!-- Ventrículos (câmaras inferiores) -->
+  <g id="ventriculos" class="organ">
+    <path d="M160,150 C120,150 70,175 65,220 C60,265 105,300 160,318 C215,300 260,265 255,220 C250,175 200,150 160,150 Z"/>
+  </g>
+
+  <!-- Válvulas cardíacas: tricúspide, mitral, pulmonar, aórtica -->
+  <g id="valvulas_cardiacas" class="organ">
+    <circle cx="115" cy="152" r="8"/>
+    <circle cx="205" cy="152" r="8"/>
+    <circle cx="140" cy="92" r="7"/>
+    <circle cx="180" cy="86" r="7"/>
+  </g>
+
+  <!-- Sistema elétrico: nó sinusal -> nó AV -> feixe de His -> fibras de Purkinje -->
+  <g id="sistema_eletrico_coracao" class="organ organ-wire">
+    <path d="M235,105 Q195,95 160,148"/>
+    <path d="M160,148 L160,230"/>
+    <path d="M160,230 L108,278"/>
+    <path d="M160,230 L212,278"/>
+    <path d="M160,230 L160,300"/>
+  </g>
+
+  <!-- Sangue (gota, representação simbólica) -->
+  <g id="sangue" class="organ">
+    <path d="M55,388 C55,388 35,415 35,430 C35,443 44,452 55,452 C66,452 75,443 75,430 C75,415 55,388 55,388 Z"/>
+  </g>
+</svg>
