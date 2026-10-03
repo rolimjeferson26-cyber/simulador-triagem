@@ -17,7 +17,7 @@ IDADE_ADULTO_MESES = 216  # 18 anos: a partir daqui usam-se as regras gerais da 
 
 # Em vítimas pediátricas, estas tags deixam de usar os limites de adulto da
 # taxonomia e passam a usar os limites do grupo etário do INEM...
-TAGS_LIMITES_PEDIATRICOS = {"taquicardia", "bradicardia", "taquipneia", "hipotensao"}
+TAGS_LIMITES_PEDIATRICOS = {"taquicardia", "bradicardia", "taquipneia", "hipotensao", "glicemia_baixa"}
 # ...e estas não se aplicam abaixo dos 18 anos (não ativam).
 TAGS_SO_ADULTO = {"hipertensao", "hipotensao_diastolica", "hipertensao_diastolica"}
 
@@ -34,6 +34,18 @@ def pas_minima(grupo, idade_meses):
     """PAS mínima aceitável: base + por_ano × anos completos (ex.: 4a 11m -> 70 + 2×4 = 78)."""
     return grupo["pas_min_base"] + grupo["pas_min_por_ano"] * (idade_meses // 12)
 
+def pas_normal(grupo, idade_meses):
+    """PAS normal: base + por_ano × anos completos (ex.: 4 anos -> 90 + 2×4 = 98)."""
+    return grupo["pas_normal_base"] + grupo["pas_normal_por_ano"] * (idade_meses // 12)
+
+def peso_estimado(idade_meses):
+    """Peso estimado em kg (Quadro 1), ou None se não se aplicar (recém-nascido e adultos)."""
+    for regra in limites_inem["peso_estimado"]["regras"]:
+        if regra["idade_min_meses"] <= idade_meses <= regra["idade_max_meses"]:
+            idade = idade_meses if regra["unidade"] == "meses" else idade_meses // 12
+            return regra["multiplicador"] * idade + regra["soma"]
+    return None
+
 def tags_dos_vitais(vitais, idade_meses=None):
     grupo = grupo_pediatrico(idade_meses)
     ativas = set()
@@ -49,7 +61,7 @@ def tags_dos_vitais(vitais, idade_meses=None):
             continue
         ativas.add(regra["tag"])
     if grupo is not None:
-        fc, fr, pas = vitais.get("FC"), vitais.get("FR"), vitais.get("PAS")
+        fc, fr, pas, glicemia = vitais.get("FC"), vitais.get("FR"), vitais.get("PAS"), vitais.get("Glicemia")
         if fc is not None and fc > grupo["fc_max"]:
             ativas.add("taquicardia")
         if fc is not None and fc < grupo["fc_min"]:
@@ -58,7 +70,42 @@ def tags_dos_vitais(vitais, idade_meses=None):
             ativas.add("taquipneia")
         if pas is not None and pas < pas_minima(grupo, idade_meses):
             ativas.add("hipotensao")
+        if glicemia is not None and glicemia < grupo["glicemia_min"]:
+            ativas.add("glicemia_baixa")
     return ativas
+
+def _regra(tag):
+    return next(r for r in taxonomia["sinais_vitais"] if r["tag"] == tag)
+
+def referencia_vitais(idade_meses):
+    """Valores de referência e limites de alerta para uma idade, exatamente os
+    que tags_dos_vitais usa. É o que a página de Parâmetros Vitais mostra.
+    idade_meses = None ou >= 216: regras de adulto da taxonomia."""
+    grupo = grupo_pediatrico(idade_meses)
+    comum = {
+        "spo2_max_alerta": _regra("spo2_baixo")["max"],
+        "glicemia_alta_min": _regra("glicemia_alta")["min"],
+        "febre_min": _regra("febre")["min"],
+        "hipotermia_max": _regra("hipotermia_vital")["max"],
+    }
+    if grupo is None:
+        return dict(comum, adulto=True, grupo=None,
+                    fc_alerta_abaixo_de=_regra("bradicardia")["max"] + 1,
+                    fc_alerta_acima_de=_regra("taquicardia")["min"] - 1,
+                    fr_alerta_acima_de=_regra("taquipneia")["min"] - 1,
+                    pas_hipotensao_max=_regra("hipotensao")["max"],
+                    pas_hipertensao_min=_regra("hipertensao")["min"],
+                    pad_baixa_max=_regra("hipotensao_diastolica")["max"],
+                    pad_alta_min=_regra("hipertensao_diastolica")["min"],
+                    glicemia_baixa_max=_regra("glicemia_baixa")["max"])
+    return dict(comum, adulto=False, grupo=grupo["grupo"],
+                fc_min=grupo["fc_min"], fc_max=grupo["fc_max"],
+                fr_min=grupo["fr_min"], fr_max=grupo["fr_max"],
+                pas_normal=pas_normal(grupo, idade_meses),
+                pas_normal_maior_que=bool(grupo.get("pas_normal_maior_que")),
+                pas_min=pas_minima(grupo, idade_meses),
+                glicemia_min=grupo["glicemia_min"],
+                peso_estimado=peso_estimado(idade_meses))
 
 def pontuar_lista(criterios, tags_presentes):
     """

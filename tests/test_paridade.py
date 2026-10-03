@@ -30,7 +30,12 @@ def _motor_js():
         "var contexto = { window: {} }; vm.createContext(contexto);\n"
         "vm.runInContext(fs.readFileSync(%s, 'utf8'), contexto);\n"
         "var M = require(%s)(contexto.window.DADOS);\n"
-        "var cenarios = JSON.parse(fs.readFileSync(0, 'utf8'));\n"
+        "var cenarios = process.argv[2] === 'referencia' ? [] : JSON.parse(fs.readFileSync(0, 'utf8'));\n"
+        "if (process.argv[2] === 'referencia') {\n"
+        "  var idades = JSON.parse(fs.readFileSync(0, 'utf8'));\n"
+        "  process.stdout.write(JSON.stringify(idades.map(function(i){ return M.referenciaVitais(i); })));\n"
+        "  process.exit(0);\n"
+        "}\n"
         "process.stdout.write(JSON.stringify(cenarios.map(function(c){\n"
         "  var tv = M.tagsDosVitais(c.vitais, c.idade_meses);\n"
         "  var todas = new Set(c.tags); tv.forEach(function(t){ todas.add(t); });\n"
@@ -54,6 +59,7 @@ def _cenarios():
                 {"FC": g["fc_max"], "FR": g["fr_max"], "PAS": pas},
                 {"FC": g["fc_max"] + 1, "FR": g["fr_max"] + 1, "PAS": pas - 1},
                 {"FC": g["fc_min"] - 1, "PAD": 50, "SpO2": 93},
+                {"Glicemia": g["glicemia_min"] - 1}, {"Glicemia": g["glicemia_min"]},
             ]
         else:
             valores = [{"FC": 101, "FR": 21, "PAS": 89}, {"FC": 59, "PAS": 140, "PAD": 90}]
@@ -102,3 +108,21 @@ def test_motor_js_igual_ao_python():
     assert len(resultados_js) == len(cenarios)
     for c, js in zip(cenarios, resultados_js):
         assert js == _python(c), c
+
+
+def test_referencia_da_consulta_js_igual_ao_python():
+    # A página de Parâmetros Vitais mostra Motor.referenciaVitais(idade).
+    node = shutil.which("node")
+    if not node:
+        raise unittest.SkipTest("Node.js não encontrado: instale-o para correr o teste de paridade")
+    idades = [None] + list(range(0, 241))
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(_motor_js())
+        caminho = f.name
+    try:
+        saida = subprocess.run([node, caminho, "referencia"], input=json.dumps(idades), capture_output=True,
+                               text=True, check=True).stdout
+    finally:
+        os.unlink(caminho)
+    for idade, js in zip(idades, json.loads(saida)):
+        assert js == m.referencia_vitais(idade), idade

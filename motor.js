@@ -20,7 +20,7 @@
 
     // Em vítimas pediátricas, estas tags deixam de usar os limites de adulto da
     // taxonomia e passam a usar os limites do grupo etário do INEM...
-    var TAGS_LIMITES_PEDIATRICOS = new Set(["taquicardia", "bradicardia", "taquipneia", "hipotensao"]);
+    var TAGS_LIMITES_PEDIATRICOS = new Set(["taquicardia", "bradicardia", "taquipneia", "hipotensao", "glicemia_baixa"]);
     // ...e estas não se aplicam abaixo dos 18 anos (não ativam).
     var TAGS_SO_ADULTO = new Set(["hipertensao", "hipotensao_diastolica", "hipertensao_diastolica"]);
 
@@ -33,6 +33,18 @@
 
     function pasMinima(grupo, idadeMeses){
       return grupo.pas_min_base + grupo.pas_min_por_ano * Math.floor(idadeMeses / 12);
+    }
+
+    function pasNormal(grupo, idadeMeses){
+      return grupo.pas_normal_base + grupo.pas_normal_por_ano * Math.floor(idadeMeses / 12);
+    }
+
+    // Peso estimado em kg (Quadro 1), ou null se não se aplicar (recém-nascido e adultos).
+    function pesoEstimado(idadeMeses){
+      var regra = limitesInem.peso_estimado.regras.find(function(r){ return r.idade_min_meses <= idadeMeses && idadeMeses <= r.idade_max_meses; });
+      if (!regra) return null;
+      var idade = regra.unidade === "meses" ? idadeMeses : Math.floor(idadeMeses / 12);
+      return regra.multiplicador * idade + regra.soma;
     }
 
     function tagsDosVitais(vitais, idadeMeses){
@@ -51,13 +63,52 @@
         ativas.add(regra.tag);
       });
       if (grupo){
-        var fc = valor("FC"), fr = valor("FR"), pas = valor("PAS");
+        var fc = valor("FC"), fr = valor("FR"), pas = valor("PAS"), glicemia = valor("Glicemia");
         if (fc !== null && fc > grupo.fc_max) ativas.add("taquicardia");
         if (fc !== null && fc < grupo.fc_min) ativas.add("bradicardia");
         if (fr !== null && fr > grupo.fr_max) ativas.add("taquipneia");
         if (pas !== null && pas < pasMinima(grupo, idadeMeses)) ativas.add("hipotensao");
+        if (glicemia !== null && glicemia < grupo.glicemia_min) ativas.add("glicemia_baixa");
       }
       return ativas;
+    }
+
+    function regra(tag){
+      return taxonomia.sinais_vitais.find(function(r){ return r.tag === tag; });
+    }
+
+    // Valores de referência e limites de alerta para uma idade, exatamente os
+    // que tagsDosVitais usa. É o que a página de Parâmetros Vitais mostra.
+    // idadeMeses = null ou >= 216: regras de adulto da taxonomia.
+    function referenciaVitais(idadeMeses){
+      var grupo = grupoPediatrico(idadeMeses);
+      var ref = {
+        spo2_max_alerta: regra("spo2_baixo").max,
+        glicemia_alta_min: regra("glicemia_alta").min,
+        febre_min: regra("febre").min,
+        hipotermia_max: regra("hipotermia_vital").max
+      };
+      if (!grupo){
+        ref.adulto = true; ref.grupo = null;
+        ref.fc_alerta_abaixo_de = regra("bradicardia").max + 1;
+        ref.fc_alerta_acima_de = regra("taquicardia").min - 1;
+        ref.fr_alerta_acima_de = regra("taquipneia").min - 1;
+        ref.pas_hipotensao_max = regra("hipotensao").max;
+        ref.pas_hipertensao_min = regra("hipertensao").min;
+        ref.pad_baixa_max = regra("hipotensao_diastolica").max;
+        ref.pad_alta_min = regra("hipertensao_diastolica").min;
+        ref.glicemia_baixa_max = regra("glicemia_baixa").max;
+        return ref;
+      }
+      ref.adulto = false; ref.grupo = grupo.grupo;
+      ref.fc_min = grupo.fc_min; ref.fc_max = grupo.fc_max;
+      ref.fr_min = grupo.fr_min; ref.fr_max = grupo.fr_max;
+      ref.pas_normal = pasNormal(grupo, idadeMeses);
+      ref.pas_normal_maior_que = !!grupo.pas_normal_maior_que;
+      ref.pas_min = pasMinima(grupo, idadeMeses);
+      ref.glicemia_min = grupo.glicemia_min;
+      ref.peso_estimado = pesoEstimado(idadeMeses);
+      return ref;
     }
 
     function pontuarLista(criterios, tagsPresentes){
@@ -132,6 +183,10 @@
       TAGS_BANDEIRA: TAGS_BANDEIRA,
       grupoPediatrico: grupoPediatrico,
       pasMinima: pasMinima,
+      pasNormal: pasNormal,
+      pesoEstimado: pesoEstimado,
+      referenciaVitais: referenciaVitais,
+      limitesInem: limitesInem,
       tagsDosVitais: tagsDosVitais,
       pontuarLista: pontuarLista,
       variantesDaFicha: variantesDaFicha,

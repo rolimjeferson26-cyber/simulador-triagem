@@ -30,7 +30,7 @@ Criei este projeto a partir da minha experiência como Bombeiro EIP, para ter um
 | **Lista de casos** | <img src="docs/screenshots/02-casos-desktop.webp" width="480" alt="Lista de casos de treino"> | <img src="docs/screenshots/02-casos-mobile.webp" width="180" alt="Lista de casos no telemóvel"> |
 | **Avaliação a meio** | <img src="docs/screenshots/03-avaliacao-desktop.webp" width="480" alt="Formulário com sinais vitais e sintomas preenchidos"> | <img src="docs/screenshots/03-avaliacao-mobile.webp" width="180" alt="Avaliação no telemóvel"> |
 | **Resultado da triagem** | <img src="docs/screenshots/04-resultado-desktop.webp" width="480" alt="Resultado: Asma (crise moderada), 91% de compatibilidade"> | <img src="docs/screenshots/04-resultado-mobile.webp" width="180" alt="Resultado no telemóvel"> |
-| **Parâmetros Vitais (5 anos)** | <img src="docs/screenshots/05-parametros-vitais-desktop.webp" width="480" alt="Parâmetros vitais de referência para 5 anos"> | <img src="docs/screenshots/05-parametros-vitais-mobile.webp" width="180" alt="Parâmetros vitais no telemóvel"> |
+| **Parâmetros Vitais (4 anos)** | <img src="docs/screenshots/05-parametros-vitais-desktop.webp" width="480" alt="Parâmetros vitais do grupo 1-5 anos para uma criança de 4 anos"> | <img src="docs/screenshots/05-parametros-vitais-mobile.webp" width="180" alt="Parâmetros vitais no telemóvel"> |
 | **Avaliação ABCDE: início** | <img src="docs/screenshots/06-abcde-inicio-desktop.webp" width="480" alt="Escolha entre avaliação livre e casos de treino"> | <img src="docs/screenshots/06-abcde-inicio-mobile.webp" width="180" alt="Início da avaliação ABCDE no telemóvel"> |
 | **Avaliação ABCDE: letra B** | <img src="docs/screenshots/07-abcde-letra-b-desktop.webp" width="480" alt="Letra B com sinais vitais e achados marcados, e indicador de progresso"> | <img src="docs/screenshots/07-abcde-letra-b-mobile.webp" width="180" alt="Letra B no telemóvel"> |
 | **Avaliação ABCDE: ações da letra** | <img src="docs/screenshots/08-abcde-acoes-desktop.webp" width="480" alt="Card de ações da letra B e caixa Ações realizadas"> | <img src="docs/screenshots/08-abcde-acoes-mobile.webp" width="180" alt="Ações da letra B no telemóvel"> |
@@ -67,7 +67,9 @@ Criei este projeto a partir da minha experiência como Bombeiro EIP, para ter um
 - **Dois modos:** avaliação livre, ou um dos casos de treino com cenário. No fim, o caso mostra a comparação com o gabarito: o diagnóstico e, por letra, os achados esperados vs. os marcados, com destaque para as letras onde havia achados e foi escolhido "Nada encontrado".
 
 **Parâmetros Vitais**
-- **Pesquisa por idade (anos + meses)** que devolve a faixa de referência correspondente: peso, FC, FR, TA, SpO2, glicemia e temperatura. São 12 faixas, do recém-nascido ao adulto.
+- **Pesquisa por idade (anos + meses)** que devolve o grupo etário e, para esse grupo, os mesmos valores que o motor usa: FC, FR (com o aviso de bradipneia abaixo do mínimo), PAS normal e PAS mínima aceitável, SpO2, glicemia, temperatura e peso estimado. Para adultos, mostra as regras de adulto do motor.
+- **Tabela de resumo dos 5 grupos etários**, para ver todos os valores de uma vez.
+- **Uma só fonte de dados:** a consulta e o motor leem os mesmos limites (`limites_alerta_inem`, através da mesma função do `motor.js`), por isso nunca podem mostrar valores diferentes.
 
 ## Como funciona o motor de pontuação
 
@@ -125,23 +127,26 @@ Depois de ordenar por F1, o motor descarta as variantes com menos de 2 critério
 ### 7. Sinais vitais em vítimas pediátricas
 Abaixo dos 18 anos (216 meses), a FC, a FR e a PAS são avaliadas com os **limites de alerta do INEM** para o grupo etário da vítima. Estes limites estão guardados no bloco `limites_alerta_inem` de [`parametros_vitais.json`](parametros_vitais.json) e são usados só pelo motor.
 
-| Grupo (INEM) | Idade | FC normal | FR máx. | PAS mínima |
-|---|---|---|---|---|
-| Recém-nascido | < 1 mês | 100–180 | 60 | 60 |
-| 1-12 meses | 1–11 meses | 80–180 | 40 | 70 |
-| 1-5 anos | 12–71 meses | 70–140 | 40 | 70 + 2 × anos completos |
-| 6-10 anos | 72–131 meses | 60–120 | 30 | 70 + 2 × anos completos |
-| > 10 anos | 132–215 meses | 60–100 | 18 | 90 |
+| Grupo (INEM) | Idade | FC normal | FR máx. | PAS mínima | Hipoglicemia |
+|---|---|---|---|---|---|
+| Recém-nascido | < 1 mês | 100–180 | 60 | 60 | < 40 |
+| 1-12 meses | 1–11 meses | 80–180 | 40 | 70 | < 60 |
+| 1-5 anos | 12–71 meses | 70–140 | 40 | 70 + 2 × anos completos | < 60 |
+| 6-10 anos | 72–131 meses | 60–120 | 30 | 70 + 2 × anos completos | < 60 |
+| > 10 anos | 132–215 meses | 60–100 | 18 | 90 | < 60 |
 
-- **Taquicardia** com FC > máximo, **bradicardia** com FC < mínimo, **taquipneia** com FR > máximo, **hipotensão** com PAS < PAS mínima. O valor do próprio limite ainda é aceitável.
-- **SpO2 ≤ 93, Glasgow ≤ 8, glicemia, temperatura e apneia** usam as mesmas regras que nos adultos.
+- **Taquicardia** com FC > máximo, **bradicardia** com FC < mínimo, **taquipneia** com FR > máximo, **hipotensão** com PAS < PAS mínima, **hipoglicemia** com glicemia abaixo do valor do grupo. O valor do próprio limite ainda é aceitável.
+- **SpO2 ≤ 93, Glasgow ≤ 8, hiperglicemia (≥ 201), temperatura e apneia** usam as mesmas regras que nos adultos.
 - **A PAD e a hipertensão sistólica não ativam tags** abaixo dos 18 anos.
 - A partir dos 18 anos, ou sem idade indicada, aplicam-se as regras de adulto sem nenhuma alteração.
 
 Exemplo: um bebé de 6 meses com FC 140, FR 30 e PAS 80 está dentro dos limites do grupo "1-12 meses" e não gera nenhuma tag. Com as regras de adulto gerava taquicardia, taquipneia e hipotensão.
 
 **Decisões registadas:**
-- **Fonte:** todos os limites pediátricos vêm do manual INEM "TAS – Emergências Pediátricas" (2024), e não da tabela de 12 faixas mostrada na página de consulta. Em várias faixas, essa tabela tem valores de FR e FC que diferem do INEM.
+- **Fonte:** todos os limites pediátricos vêm do manual INEM "TAS – Emergências Pediátricas" (2024). A página de consulta dos Parâmetros Vitais mostra exatamente os mesmos valores.
+- **Glicemia:** hipoglicemia < 40 mg/dL no recém-nascido (p. 51) e < 60 mg/dL nas outras idades pediátricas.
+- **Peso estimado** (Quadro 1, p. 9): (meses + 9) / 2 dos 1 aos 11 meses, 2 × anos + 8 dos 1 aos 10 anos, 3 × anos acima dos 10 anos, sempre com os anos completos. No recém-nascido não se aplica: usa-se o peso ao nascer, se conhecido. A PAS normal (Quadro 4) segue a mesma lógica: 90 + 2 × anos completos dos 1 aos 10 anos.
+- **Febre:** além do limite ≥ 38 °C, a consulta mostra a nota da p. 40: retal/timpânica ≥ 38 °C; axilar/oral ≥ 37,6 °C.
 - **Recém-nascido:** usa-se 60, o valor mais alto do intervalo 50-60 indicado pelo INEM.
 - **Dos 1 aos 10 anos:** a PAS mínima é calculada com os anos completos (por exemplo, 4 anos e 11 meses → 78).
 - **SpO2:** mantém-se ≤ 93 nas crianças, por ser a regra mais sensível.
@@ -159,7 +164,7 @@ Exemplo: um bebé de 6 meses com FC 140, FR 30 e PAS 80 está dentro dos limites
 simulador-triagem/
 ├── index.html               # Caso Treino
 ├── abcde.html               # Avaliação ABCDE
-├── parametros_vitais.html   # Pesquisa de parâmetros vitais por idade
+├── parametros_vitais.html   # Consulta dos parâmetros vitais por idade (mesma fonte que o motor)
 ├── motor.js                 # Motor de pontuação em JS (partilhado)
 ├── ui.js                    # Componentes de interface partilhados (sinais vitais, chips, resultado)
 ├── dados.js                 # Gerado a partir dos JSON (não editar à mão)
@@ -169,7 +174,7 @@ simulador-triagem/
 ├── criterios.json           # 47 fichas com critérios, pesos e bandeiras vermelhas
 ├── atuacoes.json            # Atuação recomendada para cada uma das 47 fichas
 ├── casos_ficticios.json     # 5 casos de treino com cenário e gabarito
-├── parametros_vitais.json   # 12 faixas de referência + limites de alerta pediátricos (INEM)
+├── parametros_vitais.json   # Limites de referência pediátricos (INEM), usados pelo motor e pela consulta
 ├── abcde.json               # Letras A–E: achados, tags, sinais vitais, ações e objetivos
 ├── motor_pontuacao.py       # Motor de pontuação em Python + 4 cenários de exemplo
 ├── demo_score_teste.py      # Versão inicial do motor, com a amostra de teste
@@ -182,7 +187,7 @@ simulador-triagem/
 └── LICENSE                  # Licença MIT
 ```
 
-As páginas carregam os dados com `<script src="dados.js">`. O `dados.js` é gerado a partir dos ficheiros JSON, que continuam a ser a fonte (e que o motor em Python lê diretamente). O `parametros_vitais.html` vai buscar o `parametros_vitais.json` com `fetch`.
+As páginas carregam os dados com `<script src="dados.js">`. O `dados.js` é gerado a partir dos ficheiros JSON, que continuam a ser a fonte (e que o motor em Python lê diretamente).
 
 ### Atualizar os dados
 
@@ -204,7 +209,7 @@ python3 -m http.server 8000
 
 Depois abre <http://localhost:8000> no browser.
 
-**Porque não basta abrir o ficheiro com duplo clique (`file://`):** a página de Parâmetros Vitais carrega os dados com `fetch('parametros_vitais.json')`, e os browsers bloqueiam pedidos `fetch` a ficheiros locais abertos por `file://`. O Caso Treino e a Avaliação ABCDE funcionam por `file://`, porque carregam os dados com `<script src>` e não com `fetch`. Ainda assim, usar sempre o servidor local evita surpresas.
+**Abrir os ficheiros diretamente (`file://`):** todas as páginas funcionam também com duplo clique, porque carregam os dados com `<script src>` e não com `fetch`. Ainda assim, usar o servidor local reproduz melhor o GitHub Pages.
 
 Para correr os cenários de exemplo do motor em Python:
 
@@ -226,7 +231,8 @@ python3 tests/correr_testes.py
   - que os resultados de adulto são **exatamente iguais** aos de antes desta alteração. A comparação é feita com uma fotografia guardada em `tests/baseline_adulto.json`: os 5 casos incluídos em todos os contextos, mais 300 cenários aleatórios.
 - **`test_dados.py`** confirma que o `dados.js` está atualizado em relação aos ficheiros JSON e que as páginas usam os ficheiros partilhados, sem cópias embutidas.
 - **`test_abcde.py`** confirma que todos os achados do `abcde.json` apontam para tags que existem na taxonomia, que cada tag e cada sinal vital pertence a uma só letra, e que os 5 casos, avaliados com ABCDE + história, dão o mesmo ranking que no Caso Treino.
-- **`test_paridade.py`** carrega o `dados.js` e o `motor.js` no Node.js, tal como as páginas os usam, e compara tags e ranking com o motor Python em 2 270 cenários. Sem Node.js, este teste é ignorado e aparece como `IGNORADO`.
+- **`test_consulta.py`** confirma, para várias idades e para as fronteiras entre grupos, que os valores mostrados na consulta dos Parâmetros Vitais são exatamente os limites a que o motor reage (por exemplo, FC no máximo do grupo → sem tag; máximo + 1 → taquicardia). Verifica também a PAS e o peso (4 anos → PAS mínima 78, PAS normal 98, peso estimado 16 kg).
+- **`test_paridade.py`** carrega o `dados.js` e o `motor.js` no Node.js, tal como as páginas os usam, e compara tags e ranking com o motor Python em 2 270 cenários, e compara mês a mês os valores de referência que a consulta mostra. Sem Node.js, este teste é ignorado e aparece como `IGNORADO`.
 
 Os testes são funções com `assert`, por isso também correm com o pytest (`pip install pytest`, depois `pytest tests`).
 
@@ -234,15 +240,14 @@ Os testes são funções com `assert`, por isso também correm com o pytest (`pi
 
 - As fichas, critérios e atuações foram anotados a partir das fichas de consulta do projeto [Guia de Emergências](https://github.com/rolimjeferson26-cyber/guia-emergencias). O campo `fonte` desse projeto descreve-as como *"compiladas a partir de conhecimento clínico geral (…) amplamente reconhecido na literatura de emergência médica"*, e não como reprodução de nenhum manual ou entidade formadora.
 - Os **pesos (1–3) e as bandeiras vermelhas** foram atribuídos por julgamento clínico durante a anotação, e não por cálculo estatístico. O próprio `taxonomia.json` regista isto no campo `limitacoes`.
-- A tabela de **parâmetros vitais por idade** mostrada na página de consulta foi extraída da ficha "Abordagem e Avaliação da Vítima Pediátrica" do Guia de Emergências, com os valores iguais.
-- Os **limites de alerta pediátricos usados pelo motor** vêm do manual INEM, "TAS – Emergências Pediátricas", versão 1.0, março de 2024, capítulo II "Abordagem e Avaliação da Vítima Pediátrica" (Quadro 4, p. 10; Quadro 7, p. 18; Quadros 8 e 9, p. 20).
+- A **página de consulta dos Parâmetros Vitais** mostra os mesmos limites que o motor usa, calculados pela mesma função.
+- Os **limites de referência pediátricos** (motor e consulta) vêm do manual INEM, "TAS – Emergências Pediátricas", versão 1.0, março de 2024, capítulo II "Abordagem e Avaliação da Vítima Pediátrica" (Quadro 1, p. 9; Quadro 4, p. 10; Quadro 7, p. 18; Quadros 8 e 9, p. 20; temperatura, p. 40; glicemia, p. 51).
 - Os achados e as ações da **Avaliação ABCDE** (`abcde.json`) foram escritos por palavras próprias, a partir da abordagem ABCDE usada na formação em emergência pré-hospitalar.
 - Todo o conteúdo está em ficheiros JSON separados do código, o que permite revê-lo ou corrigi-lo sem mexer na lógica.
 - Projeto independente, sem afiliação a qualquer instituição oficial.
 
 ## Limitações conhecidas
 
-- **A tabela de Parâmetros Vitais mostrada na consulta não coincide com os limites usados pelo motor.** O motor segue o INEM, mas a página de consulta ainda mostra as 12 faixas antigas, cujos valores de FR e FC diferem da fonte oficial em várias faixas.
 - **Uma FR baixa para a idade não é detetada:** ainda não existe a tag `bradipneia`.
 - **O modo instrutor não é uma proteção real.** A verificação do código de acesso é feita no browser, e a escolha de modo fica guardada no `localStorage`. Serve para separar as vistas de formando e de formador em aula, mas não controla acessos.
 - **Os casos criados pelo formador ficam só no browser onde foram criados** (`localStorage`). Para os passar para outro computador é preciso exportá-los e importá-los em JSON. Limpar os dados do browser apaga-os.
@@ -256,11 +261,10 @@ Os testes são funções com `assert`, por isso também correm com o pytest (`pi
 
 Por ordem de prioridade, a partir das limitações acima:
 
-1. **Alinhar a tabela de Parâmetros Vitais mostrada na consulta com o manual TAS – Emergências Pediátricas (INEM, 2024):** os valores de FR e FC atuais diferem da fonte oficial em várias faixas, e a coluna da PAS mistura valores normais com mínimos.
-2. **Tag `bradipneia`**, para o motor detetar uma frequência respiratória abaixo do normal para a idade, usando o `fr_min` já guardado.
-3. **Criar tags e critérios para os achados ABCDE sem tag** (prioridade: TPC aumentado, pulso fraco, pele fria, pupilas anisocóricas/não reativas, enfisema subcutâneo).
-4. **Unificar as tags duplicadas de rash petequial** (`rash_petequial` e `rash_hemorragico`).
-5. **Mais casos de treino**, incluindo casos pediátricos com idade, de várias categorias e níveis de dificuldade.
+1. **Tag `bradipneia`**, para o motor detetar uma frequência respiratória abaixo do normal para a idade, usando o `fr_min` já guardado.
+2. **Criar tags e critérios para os achados ABCDE sem tag** (prioridade: TPC aumentado, pulso fraco, pele fria, pupilas anisocóricas/não reativas, enfisema subcutâneo).
+3. **Unificar as tags duplicadas de rash petequial** (`rash_petequial` e `rash_hemorragico`).
+4. **Mais casos de treino**, incluindo casos pediátricos com idade, de várias categorias e níveis de dificuldade.
 
 ## Projeto relacionado
 

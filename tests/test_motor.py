@@ -128,6 +128,48 @@ def test_hipotensao_usa_a_pas_minima_da_idade():
 
 
 # ---------------------------------------------------------------------------
+# Glicemia pediátrica: hipoglicemia < 40 no recém-nascido e < 60 nas outras idades
+# ---------------------------------------------------------------------------
+
+def test_glicemia_recem_nascido():
+    assert m.tags_dos_vitais({"Glicemia": 45}, 0) == set()
+    assert m.tags_dos_vitais({"Glicemia": 40}, 0) == set()
+    assert m.tags_dos_vitais({"Glicemia": 39}, 0) == {"glicemia_baixa"}
+
+
+def test_glicemia_outras_idades_pediatricas():
+    for idade in (1, 11, 12, meses(4), meses(10, 11), meses(17, 11)):
+        assert m.tags_dos_vitais({"Glicemia": 59}, idade) == {"glicemia_baixa"}, idade
+        assert m.tags_dos_vitais({"Glicemia": 60}, idade) == set(), idade
+    # hiperglicemia mantém a regra geral
+    assert m.tags_dos_vitais({"Glicemia": 201}, 0) == {"glicemia_alta"}
+
+
+def test_glicemia_adulto_sem_alteracao():
+    assert m.tags_dos_vitais({"Glicemia": 45}, meses(18)) == {"glicemia_baixa"}
+    assert m.tags_dos_vitais({"Glicemia": 59}) == {"glicemia_baixa"}
+    assert m.tags_dos_vitais({"Glicemia": 60}) == set()
+
+
+# ---------------------------------------------------------------------------
+# PAS normal (Quadro 4) e peso estimado (Quadro 1)
+# ---------------------------------------------------------------------------
+
+def test_pas_normal():
+    esperado = {0: 60, 6: 80, 11: 80, 12: 92, meses(4): 98, meses(4, 11): 98, meses(10, 11): 110, meses(11): 120, meses(17, 11): 120}
+    for idade, pas in esperado.items():
+        assert m.pas_normal(m.grupo_pediatrico(idade), idade) == pas, (idade, pas)
+    assert m.grupo_pediatrico(0)["pas_normal_maior_que"] is True  # recém-nascido: > 60
+
+
+def test_peso_estimado():
+    esperado = {0: None, 1: 5, 6: 7.5, 11: 10, 12: 10, meses(4): 16, meses(4, 11): 16,
+                meses(10, 11): 28, meses(11): 33, meses(12): 36, meses(17, 11): 51, meses(18): None}
+    for idade, peso in esperado.items():
+        assert m.peso_estimado(idade) == peso, (idade, peso)
+
+
+# ---------------------------------------------------------------------------
 # Regras que mudam ou se mantêm abaixo dos 18 anos
 # ---------------------------------------------------------------------------
 

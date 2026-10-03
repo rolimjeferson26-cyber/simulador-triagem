@@ -56,6 +56,22 @@
   .vital-item .vlabel{ font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; }
   .vital-item .vval{ font-size:17px; font-weight:800; color:var(--ink); margin-top:3px; line-height:1.25; }
   .vital-item .vsub{ font-size:11px; color:var(--ink-soft); margin-top:2px; line-height:1.4; }
+  .vital-item .valerta{ font-size:11px; color:var(--ink-soft); margin-top:6px; line-height:1.45; }
+  .vital-item .valerta b{ color:var(--amber); font-weight:800; }
+  .vital-item.largo{ grid-column:1 / -1; }
+
+  .fonte{ font-size:11px; color:var(--ink-soft); line-height:1.45; margin:4px 2px 12px; }
+
+  /* ---------- tabela de resumo dos grupos ---------- */
+  .resumo{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 14px 4px; margin-bottom:16px; }
+  .resumo-titulo{ font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:var(--ink-soft); margin-bottom:10px; }
+  .resumo-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .resumo table{ width:100%; border-collapse:collapse; min-width:560px; }
+  .resumo th, .resumo td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); font-size:12px; line-height:1.35; vertical-align:top; }
+  .resumo th{ font-size:10px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); }
+  .resumo td:first-child{ font-weight:800; color:var(--ink); white-space:nowrap; }
+  .resumo tr.atual td{ background:var(--brand-bg); }
+  .resumo-nota{ font-size:11px; color:var(--ink-soft); line-height:1.5; margin:10px 2px 6px; }
 
   .empty{
     text-align:center; color:var(--ink-soft); padding:40px 20px; font-size:14px;
@@ -68,7 +84,7 @@
 
 <header>
   <h1 class="display">Parâmetros Vitais</h1>
-  <div class="tag">Busque a faixa de referência por idade</div>
+  <div class="tag">Valores de referência por idade</div>
   <nav class="app-nav">
     <a href="index.html">Caso Treino</a>
     <a href="abcde.html">Avaliação ABCDE</a>
@@ -101,6 +117,8 @@
   <div id="resultadoWrap">
     <div class="empty">Informe a idade e toque em Buscar para ver os valores de referência.</div>
   </div>
+
+  <div id="resumoWrap"></div>
 
 </main>
 
@@ -144,17 +162,20 @@
 })();
 </script>
 
+<script src="dados.js"></script>
+<script src="motor.js"></script>
 <script>
 (function(){
   "use strict";
 
-  // Os valores de referência vêm de parametros_vitais.json
-  // (parametros_referencia_por_idade), lido em tempo de execução. A tabela
-  // foi extraída do emergencias_medicas.json (categoria "Emergências
-  // Pediátricas" → "Abordagem e Avaliação da Vítima Pediátrica"), que agora
-  // vive no projeto Guia de Emergências; corrigir um valor aqui não o
-  // atualiza lá, e vice-versa.
-  let FAIXAS = null; // ordenado da maior idade_min_meses para a menor
+  // Os valores vêm de Motor.referenciaVitais(idade) (motor.js), a mesma
+  // função e os mesmos dados (limites_alerta_inem em parametros_vitais.json,
+  // via dados.js) que o motor usa para transformar sinais vitais em tags.
+  // A consulta e o motor não podem, por isso, mostrar valores diferentes.
+  const FONTE = 'Valores de referência: INEM, TAS – Emergências Pediátricas (2024)';
+  let M = null;
+
+  function num(x){ return String(x).replace('.', ','); }
 
   function showError(msg){
     const el = document.getElementById('searchError');
@@ -170,30 +191,100 @@
     document.getElementById('inMeses').classList.remove('field-error');
   }
 
-  function buscarFaixa(totalMeses){
-    for(let i = 0; i < FAIXAS.length; i++){
-      if(FAIXAS[i].idade_min_meses <= totalMeses) return FAIXAS[i];
-    }
-    return null;
+  function formatarIdade(totalMeses){
+    const anos = Math.floor(totalMeses / 12), meses = totalMeses % 12;
+    const partes = [];
+    if (anos) partes.push(anos + (anos === 1 ? ' ano' : ' anos'));
+    if (meses || !anos) partes.push(meses + (meses === 1 ? ' mês' : ' meses'));
+    return partes.join(' e ');
   }
 
-  function renderResultado(faixa){
-    const wrap = document.getElementById('resultadoWrap');
-    wrap.innerHTML = `
-      <div class="resultado">
-        <div class="resultado-label">Faixa correspondente</div>
-        <div class="resultado-titulo">${faixa.idade}</div>
-        <div class="vitais-grid">
-          <div class="vital-item"><div class="vlabel">Peso</div><div class="vval">${faixa.peso_kg} kg</div></div>
-          <div class="vital-item"><div class="vlabel">FC</div><div class="vval">${faixa.fc_bpm}</div><div class="vsub">bpm</div></div>
-          <div class="vital-item"><div class="vlabel">FR</div><div class="vval">${faixa.fr_cpm}</div><div class="vsub">cpm</div></div>
-          <div class="vital-item"><div class="vlabel">TA (PAS/PAD)</div><div class="vval">${faixa.TA_sistolica_mmHg} / ${faixa.TA_diastolica_mmHg}</div><div class="vsub">mmHg</div></div>
-          <div class="vital-item"><div class="vlabel">SpO2</div><div class="vval">${faixa.spo2_percent}</div><div class="vsub">%</div></div>
-          <div class="vital-item"><div class="vlabel">Glicemia</div><div class="vval">${faixa.glicemia_mg_dl}</div><div class="vsub">mg/dL</div></div>
-          <div class="vital-item"><div class="vlabel">Temperatura</div><div class="vval">${faixa.temperatura_c}</div><div class="vsub">°C</div></div>
-        </div>
-      </div>
-    `;
+  function cartao(label, valor, sub, alerta, largo){
+    return '<div class="vital-item' + (largo ? ' largo' : '') + '"><div class="vlabel">' + label + '</div>' +
+      '<div class="vval">' + valor + '</div>' + (sub ? '<div class="vsub">' + sub + '</div>' : '') +
+      (alerta ? '<div class="valerta">' + alerta + '</div>' : '') + '</div>';
+  }
+
+  function cartoesPediatricos(ref, totalMeses){
+    const pe = M.limitesInem.peso_estimado;
+    const regraPeso = pe.regras.find(r => r.idade_min_meses <= totalMeses && totalMeses <= r.idade_max_meses);
+    const temperatura = 'febre ≥ ' + num(ref.febre_min) + ' °C · hipotermia ≤ ' + num(ref.hipotermia_max) + ' °C';
+    return [
+      ref.peso_estimado === null
+        ? cartao('Peso estimado', '—', '', pe.recem_nascido, true)
+        : cartao('Peso estimado', num(ref.peso_estimado) + ' kg', '', 'estimado: ' + regraPeso.formula),
+      cartao('FC', ref.fc_min + ' – ' + ref.fc_max, 'bpm', '<b>alerta:</b> &lt; ' + ref.fc_min + ' ou &gt; ' + ref.fc_max),
+      cartao('FR', ref.fr_min + ' – ' + ref.fr_max, 'cpm',
+        '<b>alerta:</b> &gt; ' + ref.fr_max + ' · abaixo de ' + ref.fr_min + ': bradipneia — sinal grave<br>(ainda não avaliado automaticamente pelo simulador)', true),
+      cartao('PAS normal', (ref.pas_normal_maior_que ? '&gt; ' : '') + ref.pas_normal, 'mmHg', ''),
+      cartao('PAS mínima aceitável', String(ref.pas_min), 'mmHg', '<b>hipotensão</b> abaixo de ' + ref.pas_min),
+      cartao('SpO2', 'alerta se ≤ ' + ref.spo2_max_alerta, '%', ''),
+      cartao('Glicemia', '&lt; ' + ref.glicemia_min + ' · ≥ ' + ref.glicemia_alta_min, 'mg/dL',
+        '<b>hipoglicemia</b> &lt; ' + ref.glicemia_min + ' · <b>hiperglicemia</b> ≥ ' + ref.glicemia_alta_min),
+      cartao('Temperatura', temperatura, '', M.limitesInem.nota_febre, true)
+    ].join('');
+  }
+
+  function cartoesAdulto(ref){
+    return [
+      cartao('FC', ref.fc_alerta_abaixo_de + ' – ' + ref.fc_alerta_acima_de, 'bpm',
+        '<b>alerta:</b> &lt; ' + ref.fc_alerta_abaixo_de + ' ou &gt; ' + ref.fc_alerta_acima_de),
+      cartao('FR', 'até ' + ref.fr_alerta_acima_de, 'cpm',
+        '<b>alerta:</b> &gt; ' + ref.fr_alerta_acima_de + ' · FR baixa (bradipneia): sinal grave<br>(ainda não avaliado automaticamente pelo simulador)', true),
+      cartao('PAS', '≤ ' + ref.pas_hipotensao_max + ' · ≥ ' + ref.pas_hipertensao_min, 'mmHg',
+        '<b>hipotensão</b> ≤ ' + ref.pas_hipotensao_max + ' · <b>hipertensão</b> ≥ ' + ref.pas_hipertensao_min),
+      cartao('PAD', '≤ ' + ref.pad_baixa_max + ' · ≥ ' + ref.pad_alta_min, 'mmHg',
+        '<b>alerta:</b> ≤ ' + ref.pad_baixa_max + ' ou ≥ ' + ref.pad_alta_min),
+      cartao('SpO2', 'alerta se ≤ ' + ref.spo2_max_alerta, '%', ''),
+      cartao('Glicemia', '≤ ' + ref.glicemia_baixa_max + ' · ≥ ' + ref.glicemia_alta_min, 'mg/dL',
+        '<b>hipoglicemia</b> ≤ ' + ref.glicemia_baixa_max + ' · <b>hiperglicemia</b> ≥ ' + ref.glicemia_alta_min),
+      cartao('Temperatura', 'febre ≥ ' + num(ref.febre_min) + ' °C · hipotermia ≤ ' + num(ref.hipotermia_max) + ' °C', '', '', true)
+    ].join('');
+  }
+
+  function renderResultado(totalMeses){
+    const ref = M.referenciaVitais(totalMeses);
+    document.getElementById('resultadoWrap').innerHTML =
+      '<div class="resultado">' +
+        '<div class="resultado-label">Grupo etário</div>' +
+        '<div class="resultado-titulo">' + (ref.adulto ? 'Adulto (≥ 18 anos)' : ref.grupo) +
+          ' <span class="vsub" style="font-size:13px;font-weight:600;">· idade ' + formatarIdade(totalMeses) + '</span></div>' +
+        '<div class="vitais-grid">' + (ref.adulto ? cartoesAdulto(ref) : cartoesPediatricos(ref, totalMeses)) + '</div>' +
+        '<div class="fonte">' + (ref.adulto ? 'Valores de adulto usados pelo motor do simulador.' : FONTE) + '</div>' +
+      '</div>';
+    document.querySelectorAll('#resumoWrap tr[data-grupo]').forEach(tr => {
+      tr.classList.toggle('atual', !ref.adulto && tr.dataset.grupo === ref.grupo);
+    });
+  }
+
+  function intervaloIdade(g){
+    if (g.idade_max_meses === 0) return '&lt; 1 mês';
+    if (g.idade_max_meses < 12) return g.idade_min_meses + '–' + g.idade_max_meses + ' meses';
+    return Math.floor(g.idade_min_meses / 12) + '–' + Math.floor(g.idade_max_meses / 12) + ' anos';
+  }
+  function formulaPas(base, porAno, maiorQue){
+    return porAno ? base + ' + ' + porAno + ' × idade' : (maiorQue ? '&gt; ' : '') + base;
+  }
+
+  function renderResumo(){
+    const L = M.limitesInem, adulto = M.referenciaVitais(null);
+    const linhas = L.grupos.map(g => {
+      const regraPeso = L.peso_estimado.regras.find(r => r.idade_min_meses <= g.idade_min_meses && g.idade_max_meses <= r.idade_max_meses);
+      return '<tr data-grupo="' + g.grupo + '"><td>' + g.grupo + '</td><td>' + intervaloIdade(g) + '</td>' +
+        '<td>' + g.fc_min + '–' + g.fc_max + '</td><td>' + g.fr_min + '–' + g.fr_max + '</td>' +
+        '<td>' + formulaPas(g.pas_normal_base, g.pas_normal_por_ano, g.pas_normal_maior_que) + '</td>' +
+        '<td>' + formulaPas(g.pas_min_base, g.pas_min_por_ano, false) + '</td>' +
+        '<td>&lt; ' + g.glicemia_min + '</td><td>' + (regraPeso ? regraPeso.formula : '—') + '</td></tr>';
+    }).join('');
+    document.getElementById('resumoWrap').innerHTML =
+      '<div class="resumo"><div class="resumo-titulo">Resumo dos grupos etários</div>' +
+      '<div class="resumo-scroll"><table><thead><tr><th>Grupo</th><th>Idade</th><th>FC (bpm)</th><th>FR (cpm)</th>' +
+      '<th>PAS normal</th><th>PAS mínima</th><th>Hipoglicemia</th><th>Peso estimado (kg)</th></tr></thead><tbody>' + linhas + '</tbody></table></div>' +
+      '<div class="resumo-nota">Em todos os grupos: SpO2 alerta se ≤ ' + adulto.spo2_max_alerta + ' % · hiperglicemia ≥ ' + adulto.glicemia_alta_min +
+      ' mg/dL · febre ≥ ' + num(adulto.febre_min) + ' °C · hipotermia ≤ ' + num(adulto.hipotermia_max) + ' °C. ' + L.nota_febre + '. ' +
+      'Abaixo da FR mínima do grupo: bradipneia (ainda não avaliada automaticamente pelo simulador). ' +
+      'A partir dos 18 anos aplicam-se as regras de adulto.</div>' +
+      '<div class="fonte">' + FONTE + '</div></div>';
   }
 
   function onBuscar(){
@@ -222,25 +313,17 @@
       return;
     }
 
-    const totalMeses = anos * 12 + meses;
-    const faixa = buscarFaixa(totalMeses);
-    if(!faixa){
-      showError('Não foi possível encontrar uma faixa para esta idade.');
-      return;
-    }
-    renderResultado(faixa);
+    renderResultado(anos * 12 + meses);
   }
 
-  async function init(){
+  function init(){
     const wrap = document.getElementById('resultadoWrap');
     try{
-      const res = await fetch('parametros_vitais.json');
-      if(!res.ok) throw new Error('Falha ao carregar JSON');
-      const dados = await res.json();
-      if(!dados || !Array.isArray(dados.parametros_referencia_por_idade)){
-        throw new Error('Tabela de referência não encontrada na fonte.');
+      if(!window.DADOS || !window.Motor || !window.Motor.limitesInem){
+        throw new Error('Dados de referência não carregados.');
       }
-      FAIXAS = dados.parametros_referencia_por_idade.slice().sort((a, b) => b.idade_min_meses - a.idade_min_meses);
+      M = window.Motor;
+      renderResumo();
 
       document.getElementById('btnBuscar').addEventListener('click', onBuscar);
       [document.getElementById('inAnos'), document.getElementById('inMeses')].forEach(inp => {
@@ -248,8 +331,7 @@
       });
     } catch(err){
       wrap.innerHTML = '<div class="empty">Não foi possível carregar os dados de referência.<br>' +
-        'Esta página precisa de ser aberta através de um servidor (http/https) — não abra o arquivo ' +
-        'diretamente do disco.</div>';
+        'Confirme que os ficheiros dados.js e motor.js estão na mesma pasta que esta página.</div>';
       document.getElementById('btnBuscar').disabled = true;
     }
   }
