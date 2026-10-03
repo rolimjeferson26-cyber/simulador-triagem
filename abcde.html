@@ -604,9 +604,7 @@
     LETRAS.forEach(function(l){ html += resumoLetra(l); });
     html += resumoHistoria();
 
-    // O ranking vai num contentor próprio para que nada do que vem a seguir
-    // fique dentro do aviso de empate.
-    html += '<div class="ab-section-title">Hipótese mais provável</div><div class="ab-ranking">' + U.renderRanking(candidatos) + '</div>';
+    html += '<div class="ab-section-title">Hipótese mais provável</div>' + U.renderRanking(candidatos);
 
     if (casoAtivo && casoAtivo.gabarito){
       html += '<div class="ab-section-title">Comparação com o gabarito</div>';

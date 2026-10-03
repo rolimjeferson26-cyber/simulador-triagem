@@ -285,7 +285,7 @@
           html += '<div class="warn-box"><div class="warn-top">' + ICON_WARN +
             '<div><div class="warn-title">Achados insuficientes para diferenciar</div>' +
             '<div class="warn-body">' + diff.empatados.length + ' hipóteses ficaram próximas entre si (diferença ≤ ' + margem + ' pontos). ' +
-            '<b>Candidatos:</b> ' + nomesEmp + '. Considere avaliar achados adicionais antes de decidir conduta.</div></div></div>';
+            '<b>Candidatos:</b> ' + nomesEmp + '. Considere avaliar achados adicionais antes de decidir conduta.</div></div></div></div>';
 
           html += '<div class="tied-label">' + diff.empatados.length + ' hipóteses empatadas — nenhuma destacada</div>';
           diff.empatados.forEach(function(c){
