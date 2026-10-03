@@ -1,6 +1,6 @@
 # Simulador de Triagem Pré-Hospitalar
 
-Simulador de treino em que o formando regista os sinais vitais e os sinais/sintomas de uma vítima fictícia, e um motor de pontuação sugere as situações clínicas mais compatíveis, com a atuação recomendada.
+Simulador de treino em que o formando regista os sinais vitais e os sinais/sintomas de uma vítima fictícia, livremente ou passo a passo pela abordagem ABCDE, e um motor de pontuação sugere as situações clínicas mais compatíveis, com a atuação recomendada.
 
 **[Abrir a versão online →](https://rolimjeferson26-cyber.github.io/simulador-triagem/)**
 
@@ -31,6 +31,12 @@ Criei este projeto a partir da minha experiência como Bombeiro EIP, para ter um
 | **Avaliação a meio** | <img src="docs/screenshots/03-avaliacao-desktop.webp" width="480" alt="Formulário com sinais vitais e sintomas preenchidos"> | <img src="docs/screenshots/03-avaliacao-mobile.webp" width="180" alt="Avaliação no telemóvel"> |
 | **Resultado da triagem** | <img src="docs/screenshots/04-resultado-desktop.webp" width="480" alt="Resultado: Asma (crise moderada), 91% de compatibilidade"> | <img src="docs/screenshots/04-resultado-mobile.webp" width="180" alt="Resultado no telemóvel"> |
 | **Parâmetros Vitais (5 anos)** | <img src="docs/screenshots/05-parametros-vitais-desktop.webp" width="480" alt="Parâmetros vitais de referência para 5 anos"> | <img src="docs/screenshots/05-parametros-vitais-mobile.webp" width="180" alt="Parâmetros vitais no telemóvel"> |
+| **Avaliação ABCDE: início** | <img src="docs/screenshots/06-abcde-inicio-desktop.webp" width="480" alt="Escolha entre avaliação livre e casos de treino"> | <img src="docs/screenshots/06-abcde-inicio-mobile.webp" width="180" alt="Início da avaliação ABCDE no telemóvel"> |
+| **Avaliação ABCDE: letra B** | <img src="docs/screenshots/07-abcde-letra-b-desktop.webp" width="480" alt="Letra B com sinais vitais e achados marcados, e indicador de progresso"> | <img src="docs/screenshots/07-abcde-letra-b-mobile.webp" width="180" alt="Letra B no telemóvel"> |
+| **Avaliação ABCDE: ações da letra** | <img src="docs/screenshots/08-abcde-acoes-desktop.webp" width="480" alt="Card de ações da letra B e caixa Ações realizadas"> | <img src="docs/screenshots/08-abcde-acoes-mobile.webp" width="180" alt="Ações da letra B no telemóvel"> |
+| **Avaliação ABCDE: história e sintomas** | <img src="docs/screenshots/09-abcde-historia-desktop.webp" width="480" alt="Etapa História e sintomas com o seletor completo"> | <img src="docs/screenshots/09-abcde-historia-mobile.webp" width="180" alt="História e sintomas no telemóvel"> |
+| **Avaliação ABCDE: resultado** | <img src="docs/screenshots/10-abcde-resultado-desktop.webp" width="480" alt="Resultado do motor no fim da avaliação ABCDE"> | <img src="docs/screenshots/10-abcde-resultado-mobile.webp" width="180" alt="Resultado no telemóvel"> |
+| **Avaliação ABCDE: comparação com o gabarito** | <img src="docs/screenshots/11-abcde-comparacao-desktop.webp" width="480" alt="Comparação por letra entre achados esperados e marcados"> | <img src="docs/screenshots/11-abcde-comparacao-mobile.webp" width="180" alt="Comparação com o gabarito no telemóvel"> |
 
 ## Funcionalidades
 
@@ -51,12 +57,21 @@ Criei este projeto a partir da minha experiência como Bombeiro EIP, para ter um
 - **Editor de casos:** permite criar casos com resposta definida ou ambíguos (com vários candidatos válidos), e indicar a idade da vítima nos casos pediátricos.
 - **Exportar e importar** os casos criados em ficheiro JSON, para os partilhar entre computadores.
 
+**Avaliação ABCDE**
+- **Avaliação guiada letra a letra:** A (via aérea), B (ventilação e oxigenação), C (circulação), D (função neurológica) e E (outras lesões e temperatura). Cada letra só abre depois de concluída a anterior.
+- **Achados para selecionar em cada letra** (53 no total), os campos numéricos dessa letra e, no D, o estado de consciência em AVDS. Um sinal vital fora dos limites conta como achado e aparece como aviso no campo.
+- **Ações no fim de cada letra:** sem achados, o botão "Nada encontrado" conclui a letra. Com achados, aparecem todas as ações da letra, e a letra só fica concluída depois de marcar "Ações realizadas".
+- **Indicador de progresso** (A B C D E e história), com o estado de cada letra: bloqueada, em curso, concluída sem achados ou concluída com ações. Pode-se voltar a uma letra concluída. Se algo mudar, essa letra reabre e tem de ser concluída outra vez, e as seguintes mantêm os dados.
+- **Etapa final "História e sintomas (CHAMU)"**, com o seletor completo de sinais e sintomas. Os sinais já marcados nas letras aparecem aí marcados, sem contar duas vezes.
+- **Resultado:** resumo por letra (achados e ações realizadas) e o mesmo ranking e explicação do Caso Treino.
+- **Dois modos:** avaliação livre, ou um dos casos de treino com cenário. No fim, o caso mostra a comparação com o gabarito: o diagnóstico e, por letra, os achados esperados vs. os marcados, com destaque para as letras onde havia achados e foi escolhido "Nada encontrado".
+
 **Parâmetros Vitais**
 - **Pesquisa por idade (anos + meses)** que devolve a faixa de referência correspondente: peso, FC, FR, TA, SpO2, glicemia e temperatura. São 12 faixas, do recém-nascido ao adulto.
 
 ## Como funciona o motor de pontuação
 
-O motor está em [`motor_pontuacao.py`](motor_pontuacao.py) e foi replicado em JavaScript no `index.html`, com as mesmas constantes e a mesma lógica. A página corre no browser, e o script Python serve para testar e afinar o motor com casos de exemplo.
+O motor está em [`motor_pontuacao.py`](motor_pontuacao.py) e foi replicado em JavaScript em [`motor.js`](motor.js), com as mesmas constantes e a mesma lógica. O `motor.js` é partilhado pelo Caso Treino e pela Avaliação ABCDE e corre no browser. O script Python serve para testar e afinar o motor, e um teste automático confirma que as duas versões dão os mesmos resultados.
 
 ```mermaid
 flowchart LR
@@ -135,31 +150,49 @@ Exemplo: um bebé de 6 meses com FC 140, FR 30 e PAS 80 está dentro dos limites
 ## Arquitetura e tecnologias
 
 - **HTML, CSS e JavaScript puros**, sem frameworks, sem dependências e sem passo de build.
-- **Dados em JSON:** taxonomia, critérios, atuações, casos e parâmetros vitais.
+- **Dados em JSON:** taxonomia, critérios, atuações, casos, parâmetros vitais e avaliação ABCDE.
+- **Código partilhado entre páginas:** o motor (`motor.js`), os componentes de interface (`ui.js`), os estilos (`simulador.css`) e os dados (`dados.js`) existem uma só vez e são usados pelo Caso Treino e pela Avaliação ABCDE.
 - **Python 3** (só a biblioteca padrão) para o motor de pontuação e os testes automatizados. O teste de paridade com o motor JavaScript usa também o **Node.js**.
 - **GitHub Pages** para a publicação.
 
 ```
 simulador-triagem/
-├── index.html               # Caso Treino: interface + motor de pontuação em JS
+├── index.html               # Caso Treino
+├── abcde.html               # Avaliação ABCDE
 ├── parametros_vitais.html   # Pesquisa de parâmetros vitais por idade
-├── estilo.css               # Estilos partilhados pelas duas páginas
+├── motor.js                 # Motor de pontuação em JS (partilhado)
+├── ui.js                    # Componentes de interface partilhados (sinais vitais, chips, resultado)
+├── dados.js                 # Gerado a partir dos JSON (não editar à mão)
+├── estilo.css               # Estilos base de todas as páginas
+├── simulador.css            # Estilos partilhados pelo Caso Treino e pela Avaliação ABCDE
 ├── taxonomia.json           # Tags: 107 sinais/sintomas + 14 regras de sinais vitais
 ├── criterios.json           # 47 fichas com critérios, pesos e bandeiras vermelhas
 ├── atuacoes.json            # Atuação recomendada para cada uma das 47 fichas
 ├── casos_ficticios.json     # 5 casos de treino com cenário e gabarito
 ├── parametros_vitais.json   # 12 faixas de referência + limites de alerta pediátricos (INEM)
+├── abcde.json               # Letras A–E: achados, tags, sinais vitais, ações e objetivos
 ├── motor_pontuacao.py       # Motor de pontuação em Python + 4 cenários de exemplo
 ├── demo_score_teste.py      # Versão inicial do motor, com a amostra de teste
 ├── taxonomia_teste.json     # Amostra inicial (4 fichas) usada pelo demo
 ├── criterios_teste.json     #   "
-├── tests/                   # Testes automatizados (motor, dados embutidos, paridade Python ↔ JS)
+├── ferramentas/             # gerar_dados_js.py: gera o dados.js a partir dos JSON
+├── tests/                   # Testes automatizados (motor, dados, ABCDE, paridade Python ↔ JS)
 ├── docs/screenshots/        # Capturas de ecrã deste README
 ├── wireframe/               # Protótipos de design (não usados pela aplicação)
 └── LICENSE                  # Licença MIT
 ```
 
-O `index.html` traz os dados de `taxonomia.json`, `criterios.json`, `atuacoes.json`, `casos_ficticios.json` e `parametros_vitais.json` embutidos em blocos `<script type="application/json">`. Por isso o Caso Treino não precisa de pedidos de rede. O `parametros_vitais.html` vai buscar o `parametros_vitais.json` com `fetch`.
+As páginas carregam os dados com `<script src="dados.js">`. O `dados.js` é gerado a partir dos ficheiros JSON, que continuam a ser a fonte (e que o motor em Python lê diretamente). O `parametros_vitais.html` vai buscar o `parametros_vitais.json` com `fetch`.
+
+### Atualizar os dados
+
+Depois de editar qualquer ficheiro JSON, gera de novo o `dados.js` e faz commit dele juntamente com o JSON (o GitHub Pages não corre scripts):
+
+```bash
+python3 ferramentas/gerar_dados_js.py
+```
+
+Se te esqueceres, o `test_dados.py` falha e indica o comando.
 
 ## Como executar localmente
 
@@ -171,7 +204,7 @@ python3 -m http.server 8000
 
 Depois abre <http://localhost:8000> no browser.
 
-**Porque não basta abrir o ficheiro com duplo clique (`file://`):** a página de Parâmetros Vitais carrega os dados com `fetch('parametros_vitais.json')`, e os browsers bloqueiam pedidos `fetch` a ficheiros locais abertos por `file://`. O Caso Treino funciona por `file://`, porque tem os dados embutidos. Ainda assim, usar sempre o servidor local evita surpresas.
+**Porque não basta abrir o ficheiro com duplo clique (`file://`):** a página de Parâmetros Vitais carrega os dados com `fetch('parametros_vitais.json')`, e os browsers bloqueiam pedidos `fetch` a ficheiros locais abertos por `file://`. O Caso Treino e a Avaliação ABCDE funcionam por `file://`, porque carregam os dados com `<script src>` e não com `fetch`. Ainda assim, usar sempre o servidor local evita surpresas.
 
 Para correr os cenários de exemplo do motor em Python:
 
@@ -191,8 +224,9 @@ python3 tests/correr_testes.py
   - os limites pediátricos de cada grupo e as fronteiras entre grupos (11 vs 12 meses, 5a 11m vs 6 anos, 10a 11m vs 11 anos, 17a 11m vs 18 anos);
   - a fórmula da PAS mínima;
   - que os resultados de adulto são **exatamente iguais** aos de antes desta alteração. A comparação é feita com uma fotografia guardada em `tests/baseline_adulto.json`: os 5 casos incluídos em todos os contextos, mais 300 cenários aleatórios.
-- **`test_dados.py`** confirma que os blocos embutidos no `index.html` são iguais aos ficheiros JSON.
-- **`test_paridade.py`** corre o motor JavaScript do `index.html` no Node.js e compara tags e ranking com o motor Python em 2 270 cenários. Sem Node.js, este teste é ignorado e aparece como `IGNORADO`.
+- **`test_dados.py`** confirma que o `dados.js` está atualizado em relação aos ficheiros JSON e que as páginas usam os ficheiros partilhados, sem cópias embutidas.
+- **`test_abcde.py`** confirma que todos os achados do `abcde.json` apontam para tags que existem na taxonomia, que cada tag e cada sinal vital pertence a uma só letra, e que os 5 casos, avaliados com ABCDE + história, dão o mesmo ranking que no Caso Treino.
+- **`test_paridade.py`** carrega o `dados.js` e o `motor.js` no Node.js, tal como as páginas os usam, e compara tags e ranking com o motor Python em 2 270 cenários. Sem Node.js, este teste é ignorado e aparece como `IGNORADO`.
 
 Os testes são funções com `assert`, por isso também correm com o pytest (`pip install pytest`, depois `pytest tests`).
 
@@ -202,7 +236,9 @@ Os testes são funções com `assert`, por isso também correm com o pytest (`pi
 - Os **pesos (1–3) e as bandeiras vermelhas** foram atribuídos por julgamento clínico durante a anotação, e não por cálculo estatístico. O próprio `taxonomia.json` regista isto no campo `limitacoes`.
 - A tabela de **parâmetros vitais por idade** mostrada na página de consulta foi extraída da ficha "Abordagem e Avaliação da Vítima Pediátrica" do Guia de Emergências, com os valores iguais.
 - Os **limites de alerta pediátricos usados pelo motor** vêm do manual INEM, "TAS – Emergências Pediátricas", versão 1.0, março de 2024, capítulo II "Abordagem e Avaliação da Vítima Pediátrica" (Quadro 4, p. 10; Quadro 7, p. 18; Quadros 8 e 9, p. 20).
+- Os achados e as ações da **Avaliação ABCDE** (`abcde.json`) foram escritos por palavras próprias, a partir da abordagem ABCDE usada na formação em emergência pré-hospitalar.
 - Todo o conteúdo está em ficheiros JSON separados do código, o que permite revê-lo ou corrigi-lo sem mexer na lógica.
+- Projeto independente, sem afiliação a qualquer instituição oficial.
 
 ## Limitações conhecidas
 
@@ -211,7 +247,8 @@ Os testes são funções com `assert`, por isso também correm com o pytest (`pi
 - **O modo instrutor não é uma proteção real.** A verificação do código de acesso é feita no browser, e a escolha de modo fica guardada no `localStorage`. Serve para separar as vistas de formando e de formador em aula, mas não controla acessos.
 - **Os casos criados pelo formador ficam só no browser onde foram criados** (`localStorage`). Para os passar para outro computador é preciso exportá-los e importá-los em JSON. Limpar os dados do browser apaga-os.
 - **Os pesos dos critérios não foram validados estatisticamente**, como descrito em *Dados e fontes*.
-- **Os dados existem em duplicado:** os ficheiros JSON e as cópias embutidas no `index.html`. Uma alteração num JSON tem de ser copiada à mão para o HTML. O `test_dados.py` falha se as cópias ficarem diferentes.
+- **Na Avaliação ABCDE, 14 achados não têm tag na taxonomia** (por exemplo, tempo de preenchimento capilar aumentado, pulso fraco, pele fria, pupilas anisocóricas ou não reativas, enfisema subcutâneo). Ficam registados no resumo e obrigam a fazer as ações da letra, mas não entram no motor.
+- **Na Avaliação ABCDE, o gabarito do caso aparece a todos no fim**, como correção da avaliação. No Caso Treino, só aparece no modo instrutor.
 - **Os testes cobrem o motor e os dados, mas não a interface** (formulário, cliques, editor de casos), e ainda não correm automaticamente a cada push.
 - **Há apenas 5 casos incluídos.** O resto do treino depende de casos criados pelo formador ou do caso livre.
 
@@ -221,8 +258,9 @@ Por ordem de prioridade, a partir das limitações acima:
 
 1. **Alinhar a tabela de Parâmetros Vitais mostrada na consulta com o manual TAS – Emergências Pediátricas (INEM, 2024):** os valores de FR e FC atuais diferem da fonte oficial em várias faixas, e a coluna da PAS mistura valores normais com mínimos.
 2. **Tag `bradipneia`**, para o motor detetar uma frequência respiratória abaixo do normal para a idade, usando o `fr_min` já guardado.
-3. **Acabar com os JSON duplicados dentro do HTML**, para cada conjunto de dados ter uma única fonte.
-4. **Mais casos de treino**, incluindo casos pediátricos com idade, de várias categorias e níveis de dificuldade.
+3. **Criar tags e critérios para os achados ABCDE sem tag** (prioridade: TPC aumentado, pulso fraco, pele fria, pupilas anisocóricas/não reativas, enfisema subcutâneo).
+4. **Unificar as tags duplicadas de rash petequial** (`rash_petequial` e `rash_hemorragico`).
+5. **Mais casos de treino**, incluindo casos pediátricos com idade, de várias categorias e níveis de dificuldade.
 
 ## Projeto relacionado
 
@@ -232,10 +270,10 @@ Por ordem de prioridade, a partir das limitações acima:
 
 **Jeferson Rolim**, Bombeiro EIP
 - GitHub: [@rolimjeferson26-cyber](https://github.com/rolimjeferson26-cyber)
-- LinkedIn: em breve
+- LinkedIn: [Jeferson Rolim](https://www.linkedin.com/in/jeferson-rolim-023348437)
 
 ## Licença
 
 O código deste projeto está disponível sob a [licença MIT](LICENSE).
 
-A licença cobre o código. Os conteúdos clínicos (fichas, critérios, atuações, casos e valores de referência) são material educativo e não substituem os protocolos oficiais em vigor nem a formação certificada.
+A licença cobre o código. Os conteúdos clínicos (fichas, critérios, atuações, casos, avaliação ABCDE e valores de referência) são material educativo e não substituem os protocolos oficiais em vigor nem a formação certificada.

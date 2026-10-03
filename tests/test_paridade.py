@@ -1,12 +1,11 @@
-"""Paridade entre o motor em Python e o motor em JavaScript do index.html.
+"""Paridade entre o motor em Python (motor_pontuacao.py) e o motor em
+JavaScript (motor.js, partilhado pelo Caso Treino e pela Avaliação ABCDE).
 
-Extrai do index.html o código entre os marcadores // <motor> e // </motor>,
-corre-o no Node.js com os dados embutidos na própria página, e compara tags e
-ranking com o motor_pontuacao.py nos mesmos cenários."""
+Carrega no Node.js o dados.js e o motor.js tal como as páginas os usam, e
+compara tags e ranking com o motor Python nos mesmos cenários."""
 import json
 import os
 import random
-import re
 import shutil
 import subprocess
 import sys
@@ -25,25 +24,21 @@ PARAMETROS_GERADOS = {
 
 
 def _motor_js():
-    with open(os.path.join(RAIZ, "index.html"), encoding="utf-8") as f:
-        html = f.read()
-    motor = re.search(r"// <motor>(.*?)// </motor>", html, re.S)
-    assert motor, "marcadores // <motor> e // </motor> não encontrados no index.html"
-
-    def bloco(bloco_id):
-        return re.search(r'<script type="application/json" id="%s"[^>]*>(.*?)</script>' % bloco_id, html, re.S).group(1)
-
+    caminho = lambda nome: json.dumps(os.path.join(RAIZ, nome))
     return (
-        "var taxonomia = %s;\nvar fichas = %s;\nvar limitesInem = (%s).limites_alerta_inem;\n%s\n"
-        "var cenarios = JSON.parse(require('fs').readFileSync(0, 'utf8'));\n"
+        "var fs = require('fs'), vm = require('vm');\n"
+        "var contexto = { window: {} }; vm.createContext(contexto);\n"
+        "vm.runInContext(fs.readFileSync(%s, 'utf8'), contexto);\n"
+        "var M = require(%s)(contexto.window.DADOS);\n"
+        "var cenarios = JSON.parse(fs.readFileSync(0, 'utf8'));\n"
         "process.stdout.write(JSON.stringify(cenarios.map(function(c){\n"
-        "  contextoTrauma = c.contexto_trauma; contextoPediatrico = c.contexto_pediatrico;\n"
-        "  var tv = tagsDosVitais(c.vitais, c.idade_meses);\n"
+        "  var tv = M.tagsDosVitais(c.vitais, c.idade_meses);\n"
         "  var todas = new Set(c.tags); tv.forEach(function(t){ todas.add(t); });\n"
-        "  return { tags_vitais: Array.from(tv).sort(), ranking: rankear(todas).map(function(r){\n"
-        "    return [r.nome, r.variante, r.precisao, r.cobertura, r.f1]; }) };\n"
+        "  var r = M.rankear(todas, { contextoTrauma: c.contexto_trauma, contextoPediatrico: c.contexto_pediatrico });\n"
+        "  return { tags_vitais: Array.from(tv).sort(), ranking: r.map(function(x){\n"
+        "    return [x.nome, x.variante, x.precisao, x.cobertura, x.f1]; }) };\n"
         "})));\n"
-    ) % (bloco("taxonomia-source"), bloco("criterios-source"), bloco("parametros-source"), motor.group(1))
+    ) % (caminho("dados.js"), caminho("motor.js"))
 
 
 def _cenarios():
