@@ -1,14 +1,45 @@
 import json
+import os
 
-taxonomia = json.load(open("taxonomia.json", encoding="utf-8"))
-fichas = json.load(open("criterios.json", encoding="utf-8"))
+_PASTA = os.path.dirname(os.path.abspath(__file__))
+
+def _carregar(nome):
+    with open(os.path.join(_PASTA, nome), encoding="utf-8") as f:
+        return json.load(f)
+
+taxonomia = _carregar("taxonomia.json")
+fichas = _carregar("criterios.json")
+limites_inem = _carregar("parametros_vitais.json")["limites_alerta_inem"]
 
 BONUS_BANDEIRA = 2  # multiplicador extra quando um achado bandeira_vermelha bate
 LIMIAR_DIFERENCIACAO_PONTOS = 12  # diferença mínima de F1 (em pontos %) pra considerar o 1º colocado destacado
+IDADE_ADULTO_MESES = 216  # 18 anos: a partir daqui usam-se as regras gerais da taxonomia
 
-def tags_dos_vitais(vitais):
+# Em vítimas pediátricas, estas tags deixam de usar os limites de adulto da
+# taxonomia e passam a usar os limites do grupo etário do INEM...
+TAGS_LIMITES_PEDIATRICOS = {"taquicardia", "bradicardia", "taquipneia", "hipotensao"}
+# ...e estas não se aplicam abaixo dos 18 anos (não ativam).
+TAGS_SO_ADULTO = {"hipertensao", "hipotensao_diastolica", "hipertensao_diastolica"}
+
+def grupo_pediatrico(idade_meses):
+    """Grupo etário do INEM para a idade, ou None se não houver idade ou for >= 18 anos."""
+    if idade_meses is None or idade_meses >= IDADE_ADULTO_MESES:
+        return None
+    for grupo in limites_inem["grupos"]:
+        if grupo["idade_min_meses"] <= idade_meses <= grupo["idade_max_meses"]:
+            return grupo
+    raise ValueError(f"idade sem grupo pediátrico: {idade_meses} meses")
+
+def pas_minima(grupo, idade_meses):
+    """PAS mínima aceitável: base + por_ano × anos completos (ex.: 4a 11m -> 70 + 2×4 = 78)."""
+    return grupo["pas_min_base"] + grupo["pas_min_por_ano"] * (idade_meses // 12)
+
+def tags_dos_vitais(vitais, idade_meses=None):
+    grupo = grupo_pediatrico(idade_meses)
     ativas = set()
     for regra in taxonomia["sinais_vitais"]:
+        if grupo is not None and regra["tag"] in TAGS_LIMITES_PEDIATRICOS | TAGS_SO_ADULTO:
+            continue
         v = vitais.get(regra["parametro"])
         if v is None:
             continue
@@ -17,6 +48,16 @@ def tags_dos_vitais(vitais):
         if regra["max"] is not None and v > regra["max"]:
             continue
         ativas.add(regra["tag"])
+    if grupo is not None:
+        fc, fr, pas = vitais.get("FC"), vitais.get("FR"), vitais.get("PAS")
+        if fc is not None and fc > grupo["fc_max"]:
+            ativas.add("taquicardia")
+        if fc is not None and fc < grupo["fc_min"]:
+            ativas.add("bradicardia")
+        if fr is not None and fr > grupo["fr_max"]:
+            ativas.add("taquipneia")
+        if pas is not None and pas < pas_minima(grupo, idade_meses):
+            ativas.add("hipotensao")
     return ativas
 
 def pontuar_lista(criterios, tags_presentes):

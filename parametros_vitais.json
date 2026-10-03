@@ -144,5 +144,73 @@
       "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
       "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
     }
-  ]
+  ],
+  "limites_alerta_inem": {
+    "fonte": "INEM, \"TAS – Emergências Pediátricas\", versão 1.0, março de 2024, capítulo II \"Abordagem e Avaliação da Vítima Pediátrica\" (Quadro 4, p. 10; Quadro 7, p. 18; Quadros 8 e 9, p. 20).",
+    "uso": "Limites usados só pelo motor de pontuação para transformar sinais vitais em tags em vítimas com menos de 18 anos (216 meses). A partir dos 18 anos o motor usa as regras gerais da taxonomia.",
+    "regras": {
+      "taquicardia": "FC > fc_max",
+      "bradicardia": "FC < fc_min",
+      "taquipneia": "FR > fr_max",
+      "hipotensao": "PAS < pas_min, com pas_min = pas_min_base + pas_min_por_ano × anos completos",
+      "fr_min": "guardado, mas não usado até existir a tag bradipneia"
+    },
+    "grupos": [
+      {
+        "grupo": "Recém-nascido",
+        "idade_min_meses": 0,
+        "idade_max_meses": 0,
+        "fc_min": 100,
+        "fc_max": 180,
+        "fr_min": 40,
+        "fr_max": 60,
+        "pas_min_base": 60,
+        "pas_min_por_ano": 0
+      },
+      {
+        "grupo": "1-12 meses",
+        "idade_min_meses": 1,
+        "idade_max_meses": 11,
+        "fc_min": 80,
+        "fc_max": 180,
+        "fr_min": 25,
+        "fr_max": 40,
+        "pas_min_base": 70,
+        "pas_min_por_ano": 0
+      },
+      {
+        "grupo": "1-5 anos",
+        "idade_min_meses": 12,
+        "idade_max_meses": 71,
+        "fc_min": 70,
+        "fc_max": 140,
+        "fr_min": 20,
+        "fr_max": 40,
+        "pas_min_base": 70,
+        "pas_min_por_ano": 2
+      },
+      {
+        "grupo": "6-10 anos",
+        "idade_min_meses": 72,
+        "idade_max_meses": 131,
+        "fc_min": 60,
+        "fc_max": 120,
+        "fr_min": 15,
+        "fr_max": 30,
+        "pas_min_base": 70,
+        "pas_min_por_ano": 2
+      },
+      {
+        "grupo": "> 10 anos",
+        "idade_min_meses": 132,
+        "idade_max_meses": 215,
+        "fc_min": 60,
+        "fc_max": 100,
+        "fr_min": 12,
+        "fr_max": 18,
+        "pas_min_base": 90,
+        "pas_min_por_ano": 0
+      }
+    ]
+  }
 }
