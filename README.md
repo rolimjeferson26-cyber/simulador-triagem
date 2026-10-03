@@ -44,7 +44,7 @@ Criei este projeto a partir da minha experiência como Bombeiro EIP, para ter um
 - **5 casos de treino incluídos** (2 de nível iniciante, 1 intermédio e 2 avançados, um deles propositadamente ambíguo), cada um com cenário escrito e gabarito.
 - **Caso livre:** permite avaliar uma vítima sem cenário pré-definido.
 - **Registo de 8 sinais vitais** (FC, FR, PAS, PAD, SpO2, temperatura, glicemia e Glasgow). Cada valor é traduzido de imediato num achado (por exemplo, "Taquicardia"), para o formando ver como o valor foi interpretado.
-- **107 sinais e sintomas** organizados por grupos, com pesquisa sem acentos e destaque para os achados de alta relevância clínica.
+- **107 sinais e sintomas** organizados por grupos, com pesquisa sem acentos e por sinónimos comuns (ex.: "desmaio", "dor no peito"; lista em [`docs/sinonimos.md`](docs/sinonimos.md)), e destaque para os achados de alta relevância clínica.
 - **Contexto da vítima:** os interruptores "trauma / sem trauma" e "adulto / pediátrico" decidem que fichas entram na análise.
 - **Idade da vítima pediátrica:** no modo pediátrico, a idade (anos e meses) é obrigatória. Os sinais vitais passam a ser avaliados com os limites do grupo etário do INEM, e o resultado indica o grupo usado (por exemplo, "Sinais vitais avaliados para: 1-12 meses (INEM)").
 - **Resultado com ranking** de até 4 hipóteses. Cada uma mostra a percentagem de compatibilidade, os achados que bateram e a indicação de bandeiras vermelhas.
@@ -58,11 +58,12 @@ Criei este projeto a partir da minha experiência como Bombeiro EIP, para ter um
 - **Exportar e importar** os casos criados em ficheiro JSON, para os partilhar entre computadores.
 
 **Avaliação ABCDE**
+- **Ecrã "Antes de começar":** contexto de trauma, faixa etária e idade. Durante a avaliação fica só um resumo discreto no topo (ex.: "Pediátrico · 4 anos · Sem trauma"), com um link para alterar.
 - **Avaliação guiada letra a letra:** A (via aérea), B (ventilação e oxigenação), C (circulação), D (função neurológica) e E (outras lesões e temperatura). Cada letra só abre depois de concluída a anterior.
 - **Achados para selecionar em cada letra** (53 no total), os campos numéricos dessa letra e, no D, o estado de consciência em AVDS. Um sinal vital fora dos limites conta como achado e aparece como aviso no campo.
-- **Ações no fim de cada letra:** sem achados, o botão "Nada encontrado" conclui a letra. Com achados, aparecem todas as ações da letra, e a letra só fica concluída depois de marcar "Ações realizadas".
+- **Uma letra de cada vez, com um só botão principal** (fixo no fundo do ecrã no telemóvel): "Nada encontrado" sem achados, ou "Ver ações" com achados. As ações abrem por baixo dos achados, e "Ações realizadas — avançar" conclui a letra.
 - **Indicador de progresso** (A B C D E e história), com o estado de cada letra: bloqueada, em curso, concluída sem achados ou concluída com ações. Pode-se voltar a uma letra concluída. Se algo mudar, essa letra reabre e tem de ser concluída outra vez, e as seguintes mantêm os dados.
-- **Etapa final "História e sintomas (CHAMU)"**, com o seletor completo de sinais e sintomas. Os sinais já marcados nas letras aparecem aí marcados, sem contar duas vezes.
+- **Etapa final "História e sintomas (CHAMU)"** com uma caixa de pesquisa: sugestões a partir de 2 letras, sem acentos e por sinónimos. O que se escolhe aparece como chips com "×". Os sinais já marcados nas letras não aparecem, e os que pertencem a uma letra aparecem apagados, com "ir para B".
 - **Resultado:** resumo por letra (achados e ações realizadas) e o mesmo ranking e explicação do Caso Treino.
 - **Dois modos:** avaliação livre, ou um dos casos de treino com cenário. No fim, o caso mostra a comparação com o gabarito: o diagnóstico e, por letra, os achados esperados vs. os marcados, com destaque para as letras onde havia achados e foi escolhido "Nada encontrado".
 
@@ -231,6 +232,7 @@ python3 tests/correr_testes.py
   - que os resultados de adulto são **exatamente iguais** aos de antes desta alteração. A comparação é feita com uma fotografia guardada em `tests/baseline_adulto.json`: os 5 casos incluídos em todos os contextos, mais 300 cenários aleatórios.
 - **`test_dados.py`** confirma que o `dados.js` está atualizado em relação aos ficheiros JSON e que as páginas usam os ficheiros partilhados, sem cópias embutidas.
 - **`test_abcde.py`** confirma que todos os achados do `abcde.json` apontam para tags que existem na taxonomia, que cada tag e cada sinal vital pertence a uma só letra, e que os 5 casos, avaliados com ABCDE + história, dão o mesmo ranking que no Caso Treino.
+- **`test_pesquisa.py`** corre a pesquisa real do `ui.js` no Node.js: acentos e maiúsculas, sinónimos, mínimo de 2 letras, tags já marcadas excluídas e sinónimos sem ambiguidade.
 - **`test_consulta.py`** confirma, para várias idades e para as fronteiras entre grupos, que os valores mostrados na consulta dos Parâmetros Vitais são exatamente os limites a que o motor reage (por exemplo, FC no máximo do grupo → sem tag; máximo + 1 → taquicardia). Verifica também a PAS e o peso (4 anos → PAS mínima 78, PAS normal 98, peso estimado 16 kg).
 - **`test_paridade.py`** carrega o `dados.js` e o `motor.js` no Node.js, tal como as páginas os usam, e compara tags e ranking com o motor Python em 2 270 cenários, e compara mês a mês os valores de referência que a consulta mostra. Sem Node.js, este teste é ignorado e aparece como `IGNORADO`.
 

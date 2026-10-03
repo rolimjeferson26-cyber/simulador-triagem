@@ -34,6 +34,13 @@ def test_dados_js_tem_todos_os_ficheiros_json():
             assert json.loads(linha.group(1)) == json.load(f), chave
 
 
+def test_docs_sinonimos_md_esta_atualizado():
+    with open(os.path.join(RAIZ, "docs", "sinonimos.md"), encoding="utf-8") as f:
+        assert f.read() == gerar_dados_js.conteudo_sinonimos_md(), (
+            "o docs/sinonimos.md está desatualizado: corra  python3 ferramentas/gerar_dados_js.py"
+        )
+
+
 def test_paginas_usam_ficheiros_partilhados_sem_copias_embutidas():
     for pagina in PAGINAS_SIMULADOR:
         with open(os.path.join(RAIZ, pagina), encoding="utf-8") as f:

@@ -30,6 +30,32 @@
       if (!v) return "";
       return v.split("_").map(function(w){ return w.charAt(0).toUpperCase() + w.slice(1); }).join(" ");
     }
+    // ------------------------------------------------------------------
+    // Pesquisa de sinais e sintomas (Caso Treino e Avaliação ABCDE): procura no
+    // rótulo e nos sinónimos da taxonomia, sem acentos nem maiúsculas.
+    // ------------------------------------------------------------------
+    function textoPesquisa(t){
+      return normalizar([t.label].concat(t.sinonimos || []).join(" | "));
+    }
+
+    // Sugestões para o termo escrito (a partir de 2 letras). opts.excluir: Set de
+    // tags que não devem aparecer; opts.limite: máximo de sugestões (por omissão 8).
+    // Devolve [{ tag, label, sinonimo }], com o sinónimo que correspondeu (ou null).
+    function pesquisarTags(termo, opts){
+      opts = opts || {};
+      var q = normalizar((termo || "").trim());
+      if (q.length < 2) return [];
+      var excluir = opts.excluir || new Set(), limite = opts.limite || 8;
+      var noRotulo = [], noSinonimo = [];
+      taxonomia.sinais_sintomas.forEach(function(t){
+        if (excluir.has(t.tag)) return;
+        if (normalizar(t.label).indexOf(q) !== -1){ noRotulo.push({ tag: t.tag, label: t.label, sinonimo: null }); return; }
+        var sin = (t.sinonimos || []).find(function(s){ return normalizar(s).indexOf(q) !== -1; });
+        if (sin) noSinonimo.push({ tag: t.tag, label: t.label, sinonimo: sin });
+      });
+      return noRotulo.concat(noSinonimo).slice(0, limite);
+    }
+
     function formatarIdade(totalMeses){
       var anos = Math.floor(totalMeses / 12), meses = totalMeses % 12;
       var partes = [];
@@ -116,7 +142,7 @@
         card.dataset.grupo = grupo;
         var chipsHtml = tags.map(function(t){
           var flagged = motor.TAGS_BANDEIRA.has(t.tag);
-          return '<div class="sym-chip" data-tag="' + t.tag + '" data-label="' + normalizar(t.label) + '">' +
+          return '<div class="sym-chip" data-tag="' + t.tag + '" data-label="' + textoPesquisa(t) + '">' +
             (flagged ? '<span class="flagdot"></span>' : '') + ICON_CHECK + '<span>' + t.label + '</span></div>';
         }).join("");
         card.innerHTML =
@@ -343,6 +369,8 @@
       ICON_FLAG: ICON_FLAG, ICON_CHECK: ICON_CHECK, ICON_WARN: ICON_WARN, ICON_STEP: ICON_STEP,
       ICON_EMPTY: ICON_EMPTY, ICON_OK: ICON_OK, ICON_X: ICON_X,
       normalizar: normalizar,
+      textoPesquisa: textoPesquisa,
+      pesquisarTags: pesquisarTags,
       formatarVariante: formatarVariante,
       formatarIdade: formatarIdade,
       validarIdade: validarIdade,

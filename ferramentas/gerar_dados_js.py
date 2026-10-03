@@ -1,4 +1,4 @@
-"""Gera o dados.js a partir dos ficheiros JSON do projeto.
+"""Gera o dados.js (e o docs/sinonimos.md) a partir dos ficheiros JSON do projeto.
 
 As páginas (Caso Treino e Avaliação ABCDE) carregam os dados com
 <script src="dados.js">, o que funciona também ao abrir os ficheiros por
@@ -42,11 +42,38 @@ def conteudo_dados_js():
     return CABECALHO + "window.DADOS = {\n" + ",\n".join(linhas) + "\n};\n"
 
 
+def conteudo_sinonimos_md():
+    with open(os.path.join(RAIZ, "taxonomia.json"), encoding="utf-8") as f:
+        taxonomia = json.load(f)
+    linhas = [
+        "# Sinónimos das tags",
+        "",
+        "Expressões que a pesquisa de sinais e sintomas reconhece, além do rótulo de cada tag",
+        "(Caso Treino e etapa «História e sintomas» da Avaliação ABCDE). A pesquisa ignora",
+        "acentos e maiúsculas. Os sinónimos não mudam o motor de pontuação.",
+        "",
+        "Este ficheiro é **gerado** a partir do campo `sinonimos` de `taxonomia.json` por",
+        "`python3 ferramentas/gerar_dados_js.py`. Para acrescentar expressões, edite esse campo",
+        "e corra o gerador (ou anote-as aqui e peça a atualização: este ficheiro é reescrito).",
+        "",
+        "| Tag | Rótulo | Sinónimos |",
+        "|---|---|---|",
+    ]
+    for t in taxonomia["sinais_sintomas"]:
+        if t.get("sinonimos"):
+            linhas.append(f"| `{t['tag']}` | {t['label']} | {', '.join(t['sinonimos'])} |")
+    return "\n".join(linhas) + "\n"
+
+
 def main():
     caminho = os.path.join(RAIZ, "dados.js")
     with open(caminho, "w", encoding="utf-8", newline="\n") as f:
         f.write(conteudo_dados_js())
     print(f"dados.js gerado ({os.path.getsize(caminho) // 1024} KB)")
+    os.makedirs(os.path.join(RAIZ, "docs"), exist_ok=True)
+    with open(os.path.join(RAIZ, "docs", "sinonimos.md"), "w", encoding="utf-8", newline="\n") as f:
+        f.write(conteudo_sinonimos_md())
+    print("docs/sinonimos.md gerado")
     return 0
 
 

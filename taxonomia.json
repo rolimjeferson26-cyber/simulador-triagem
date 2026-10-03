@@ -120,7 +120,12 @@
       "tag": "dispneia",
       "label": "Dispneia / falta de ar",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "dificuldade respiratória",
+        "dificuldade em respirar",
+        "respiração difícil"
+      ]
     },
     {
       "tag": "dispneia_impede_falar",
@@ -132,7 +137,12 @@
       "tag": "pieira",
       "label": "Pieira (sibilos expiratórios)",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "chiadeira",
+        "chiado no peito",
+        "sibilância"
+      ]
     },
     {
       "tag": "tiragem_musculos_acessorios",
@@ -162,43 +172,80 @@
       "tag": "dor_toracica_opressiva",
       "label": "Dor/desconforto retroesternal em aperto ou peso",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "dor no peito",
+        "aperto no peito",
+        "peso no peito",
+        "dor torácica"
+      ]
     },
     {
       "tag": "dor_irradiada_msuperior_mandibula",
       "label": "Dor irradiada para MS esquerdo, pescoço ou mandíbula",
       "tipo": "subjetivo",
-      "categoria": "Cardiovascular"
+      "categoria": "Cardiovascular",
+      "sinonimos": [
+        "dor no braço esquerdo",
+        "dor no maxilar",
+        "dor que vai para o braço"
+      ]
     },
     {
       "tag": "dor_epigastrica",
       "label": "Dor epigástrica",
       "tipo": "subjetivo",
-      "categoria": "Cardiovascular"
+      "categoria": "Cardiovascular",
+      "sinonimos": [
+        "dor no estômago",
+        "dor na boca do estômago",
+        "azia"
+      ]
     },
     {
       "tag": "palpitacoes",
       "label": "Palpitações",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "coração acelerado",
+        "coração aos saltos",
+        "batimentos irregulares"
+      ]
     },
     {
       "tag": "sincope_lipotimia",
       "label": "Síncope ou lipotimia",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "desmaio",
+        "desmaiou",
+        "perda de sentidos",
+        "quase desmaio"
+      ]
     },
     {
       "tag": "fadiga_inicio_subito",
       "label": "Cansaço de início súbito",
       "tipo": "subjetivo",
-      "categoria": "Cardiovascular"
+      "categoria": "Cardiovascular",
+      "sinonimos": [
+        "fraqueza súbita",
+        "cansaço repentino"
+      ]
     },
     {
       "tag": "alteracao_consciencia",
       "label": "Alteração do estado de consciência",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "confuso",
+        "confusão",
+        "desorientado",
+        "sonolento"
+      ]
     },
     {
       "tag": "pele_fria_palida_sudorese",
@@ -210,25 +257,47 @@
       "tag": "assimetria_facial",
       "label": "Assimetria facial / desvio da comissura labial",
       "tipo": "objetivo",
-      "categoria": "Neurológico"
+      "categoria": "Neurológico",
+      "sinonimos": [
+        "boca ao lado",
+        "boca torta",
+        "cara descaída"
+      ]
     },
     {
       "tag": "hemiparesia_hemiplegia",
       "label": "Perda de força/sensibilidade num lado do corpo",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "falta de força num lado",
+        "braço sem força",
+        "perna sem força",
+        "paralisia"
+      ]
     },
     {
       "tag": "disartria_afasia",
       "label": "Alteração da fala (disartria/afasia)",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "fala arrastada",
+        "fala enrolada",
+        "dificuldade em falar"
+      ]
     },
     {
       "tag": "alteracao_visual",
       "label": "Alterações da visão",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "visão turva",
+        "vista turva",
+        "ver a dobrar",
+        "perda de visão"
+      ]
     },
     {
       "tag": "desvio_olhar",
@@ -240,7 +309,11 @@
       "tag": "cefaleia_intensa",
       "label": "Cefaleia intensa",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "dor de cabeça",
+        "enxaqueca"
+      ]
     },
     {
       "tag": "ataxia",
@@ -252,49 +325,88 @@
       "tag": "vertigem_tonturas",
       "label": "Vertigem / tonturas",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "cabeça à roda",
+        "vertigens"
+      ]
     },
     {
       "tag": "palidez",
       "label": "Palidez",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "pálido",
+        "pálida"
+      ]
     },
     {
       "tag": "sudorese",
       "label": "Sudorese",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "suores",
+        "suor frio",
+        "transpiração"
+      ]
     },
     {
       "tag": "nauseas_vomitos",
       "label": "Náuseas e/ou vómitos",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "vómito",
+        "vomitar",
+        "enjoo",
+        "enjoado",
+        "maldisposto"
+      ]
     },
     {
       "tag": "ansiedade",
       "label": "Ansiedade / agitação",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "nervoso",
+        "ansioso",
+        "agitado",
+        "pânico"
+      ]
     },
     {
       "tag": "tosse",
       "label": "Tosse",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "tossir"
+      ]
     },
     {
       "tag": "expetoracao_purulenta",
       "label": "Expetoração purulenta",
       "tipo": "objetivo",
-      "categoria": "Respiratório"
+      "categoria": "Respiratório",
+      "sinonimos": [
+        "catarro",
+        "escarro",
+        "expetoração"
+      ]
     },
     {
       "tag": "cianose",
       "label": "Cianose",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "lábios roxos",
+        "pele azulada",
+        "arroxeado"
+      ]
     },
     {
       "tag": "estridor",
@@ -318,7 +430,11 @@
       "tag": "ortopneia",
       "label": "Ortopneia (piora deitado)",
       "tipo": "subjetivo",
-      "categoria": "Respiratório"
+      "categoria": "Respiratório",
+      "sinonimos": [
+        "falta de ar deitado",
+        "não consegue estar deitado"
+      ]
     },
     {
       "tag": "fervores_pulmonares",
@@ -360,7 +476,11 @@
       "tag": "dor_abdominal",
       "label": "Dor abdominal",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "dor de barriga",
+        "dor na barriga"
+      ]
     },
     {
       "tag": "dor_fossa_iliaca_direita",
@@ -378,7 +498,11 @@
       "tag": "dor_lombar",
       "label": "Dor lombar",
       "tipo": "subjetivo",
-      "categoria": "Gastrointestinal"
+      "categoria": "Gastrointestinal",
+      "sinonimos": [
+        "dor nas costas",
+        "dor de rins"
+      ]
     },
     {
       "tag": "distensao_abdominal",
@@ -390,25 +514,40 @@
       "tag": "obstipacao",
       "label": "Obstipação",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "prisão de ventre",
+        "intestino preso"
+      ]
     },
     {
       "tag": "diarreia",
       "label": "Diarreia",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "fezes líquidas",
+        "soltura"
+      ]
     },
     {
       "tag": "hematuria",
       "label": "Hematúria (sangue na urina)",
       "tipo": "objetivo",
-      "categoria": "Gastrointestinal"
+      "categoria": "Gastrointestinal",
+      "sinonimos": [
+        "sangue na urina",
+        "urina com sangue"
+      ]
     },
     {
       "tag": "disuria",
       "label": "Dor/ardor a urinar",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "ardor ao urinar"
+      ]
     },
     {
       "tag": "icterícia",
@@ -420,7 +559,14 @@
       "tag": "hemorragia_digestiva_visivel",
       "label": "Vómito ou dejeção com sangue",
       "tipo": "objetivo",
-      "categoria": "Gastrointestinal"
+      "categoria": "Gastrointestinal",
+      "sinonimos": [
+        "vomitar sangue",
+        "fezes com sangue",
+        "fezes pretas",
+        "melenas",
+        "hematemese"
+      ]
     },
     {
       "tag": "dor_abdominal_rigidez",
@@ -444,7 +590,12 @@
       "tag": "rash_petequial",
       "label": "Rash petequial/hemorrágico",
       "tipo": "objetivo",
-      "categoria": "Pediatria"
+      "categoria": "Pediatria",
+      "sinonimos": [
+        "petéquias",
+        "pintas vermelhas",
+        "manchas que não desaparecem"
+      ]
     },
     {
       "tag": "fontanela_hipertensa",
@@ -456,7 +607,12 @@
       "tag": "convulsao_presente",
       "label": "Convulsão presenciada",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "crise convulsiva",
+        "ataque epilético",
+        "epilepsia"
+      ]
     },
     {
       "tag": "postura_anomala_membros",
@@ -480,7 +636,12 @@
       "tag": "letargia",
       "label": "Letargia / menos ativo que o habitual",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "mole",
+        "sem energia",
+        "pouco reativo"
+      ]
     },
     {
       "tag": "irritabilidade",
@@ -492,7 +653,12 @@
       "tag": "parestesias",
       "label": "Parestesias / formigueiro",
       "tipo": "subjetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "dormência",
+        "picadas",
+        "adormecimento"
+      ]
     },
     {
       "tag": "fraqueza_muscular",
@@ -528,13 +694,24 @@
       "tag": "urticaria_eritema_prurido",
       "label": "Urticária, eritema ou prurido",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "comichão",
+        "manchas vermelhas",
+        "vergões",
+        "alergia na pele"
+      ]
     },
     {
       "tag": "edema_mucosas_labios",
       "label": "Edema de mucosas, lábios ou língua",
       "tipo": "objetivo",
-      "categoria": "Geral"
+      "categoria": "Geral",
+      "sinonimos": [
+        "lábios inchados",
+        "língua inchada",
+        "cara inchada"
+      ]
     },
     {
       "tag": "sialorreia",
@@ -564,13 +741,20 @@
       "tag": "poliuria_polidipsia",
       "label": "Poliúria e/ou polidipsia (sede excessiva)",
       "tipo": "subjetivo",
-      "categoria": "Endócrino"
+      "categoria": "Endócrino",
+      "sinonimos": [
+        "muita sede",
+        "urinar muito"
+      ]
     },
     {
       "tag": "xerostomia",
       "label": "Xerostomia (boca seca)",
       "tipo": "subjetivo",
-      "categoria": "Endócrino"
+      "categoria": "Endócrino",
+      "sinonimos": [
+        "secura na boca"
+      ]
     },
     {
       "tag": "perda_peso_inexplicada",
@@ -594,19 +778,31 @@
       "tag": "hemorragia_vaginal",
       "label": "Hemorragia vaginal",
       "tipo": "objetivo",
-      "categoria": "Obstetrícia"
+      "categoria": "Obstetrícia",
+      "sinonimos": [
+        "sangramento vaginal",
+        "perdas de sangue"
+      ]
     },
     {
       "tag": "contracoes_uterinas_frequentes",
       "label": "Contrações uterinas frequentes/dolorosas",
       "tipo": "subjetivo",
-      "categoria": "Obstetrícia"
+      "categoria": "Obstetrícia",
+      "sinonimos": [
+        "contrações",
+        "dores de parto"
+      ]
     },
     {
       "tag": "rotura_membranas",
       "label": "Rotura de membranas amnióticas",
       "tipo": "objetivo",
-      "categoria": "Obstetrícia"
+      "categoria": "Obstetrícia",
+      "sinonimos": [
+        "rebentaram as águas",
+        "perda de líquido"
+      ]
     },
     {
       "tag": "perturbacao_visual",
@@ -618,19 +814,32 @@
       "tag": "hemorragia_externa_visivel",
       "label": "Hemorragia externa visível",
       "tipo": "objetivo",
-      "categoria": "Trauma"
+      "categoria": "Trauma",
+      "sinonimos": [
+        "sangramento",
+        "ferida a sangrar"
+      ]
     },
     {
       "tag": "deformidade_membro",
       "label": "Deformidade de membro/osso",
       "tipo": "objetivo",
-      "categoria": "Trauma"
+      "categoria": "Trauma",
+      "sinonimos": [
+        "osso partido",
+        "fratura",
+        "membro torto"
+      ]
     },
     {
       "tag": "dor_a_palpacao_local",
       "label": "Dor à palpação ou movimentação local",
       "tipo": "objetivo",
-      "categoria": "Trauma"
+      "categoria": "Trauma",
+      "sinonimos": [
+        "dor ao tocar",
+        "dor ao mexer"
+      ]
     },
     {
       "tag": "crepitacao_ossea",
@@ -720,13 +929,20 @@
       "tag": "otorragia",
       "label": "Saída de sangue pelo ouvido",
       "tipo": "objetivo",
-      "categoria": "Trauma"
+      "categoria": "Trauma",
+      "sinonimos": [
+        "sangue no ouvido"
+      ]
     },
     {
       "tag": "hemoptises",
       "label": "Hemoptises (sangue pela boca de origem respiratória)",
       "tipo": "objetivo",
-      "categoria": "Trauma"
+      "categoria": "Trauma",
+      "sinonimos": [
+        "tossir sangue",
+        "sangue na tosse"
+      ]
     },
     {
       "tag": "marca_picada_local",
