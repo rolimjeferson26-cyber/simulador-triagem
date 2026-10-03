@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="estilo.css">
 <style>
   :root{
-    /* mesma identidade da aba Consultas: os dados vêm da mesma fonte */
+    /* identidade deste app dentro da central: azul */
     --brand: #4FC3F7; --brand-bg: #0E1E29; --brand-ink: #0E1E29;
   }
   header{
@@ -70,10 +70,8 @@
   <h1 class="display">Parâmetros Vitais</h1>
   <div class="tag">Busque a faixa de referência por idade</div>
   <nav class="app-nav">
-    <a href="emergencias_medicas.html">Consultas</a>
     <a href="index.html">Caso Treino</a>
     <a href="parametros_vitais.html" class="active">Parâmetros Vitais</a>
-    <a href="anatomia.html">Anatomia</a>
     <button type="button" class="about-btn" data-about-open>Sobre</button>
   </nav>
 </header>
@@ -117,7 +115,7 @@
       <button type="button" class="modal-close" id="aboutModalClose" aria-label="Fechar">&times;</button>
     </div>
     <div class="about-dev">Desenvolvido por <b>Jeferson Rolim</b></div>
-    <div class="about-text">Este é um projeto de treino/simulado para apoio ao estudo, pensado para uso em sala de aula e formação de socorristas/TAS — não é um produto médico nem uma ferramenta de trabalho.</div>
+    <div class="about-text">O Simulador de Triagem é um projeto de treino/simulado para apoio ao estudo, pensado para uso em sala de aula e formação de socorristas/TAS: casos de treino de triagem pré-hospitalar com pontuação por sinais/sintomas e consulta dos parâmetros vitais de referência por idade — não é um produto médico nem uma ferramenta de trabalho.</div>
     <div class="about-warning">
       <svg viewBox="0 0 24 24" fill="none" stroke="#FFB454" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1 1 0 00.9 1.5h18.6a1 1 0 00.9-1.5L13.7 3.9a1 1 0 00-1.7 0z"/></svg>
       <div><b>Atenção:</b> não deve ser usado para apoio a decisão em ocorrência real. Uso exclusivamente educacional.</div>
@@ -152,22 +150,13 @@
 (function(){
   "use strict";
 
-  // Este motor de busca NÃO duplica os valores de referência: ele lê, em
-  // tempo de execução, o mesmo emergencias_medicas.json que alimenta a aba
-  // Consultas (categoria "Emergências Pediátricas" → "Abordagem e Avaliação
-  // da Vítima Pediátrica" → parametros_referencia_por_idade). Corrigir um
-  // valor nesse arquivo atualiza automaticamente as duas páginas.
-  const CONDICAO_ID = "abordagem_avaliacao_pediatrica";
-
+  // Os valores de referência vêm de parametros_vitais.json
+  // (parametros_referencia_por_idade), lido em tempo de execução. A tabela
+  // foi extraída do emergencias_medicas.json (categoria "Emergências
+  // Pediátricas" → "Abordagem e Avaliação da Vítima Pediátrica"), que agora
+  // vive no projeto Guia de Emergências; corrigir um valor aqui não o
+  // atualiza lá, e vice-versa.
   let FAIXAS = null; // ordenado da maior idade_min_meses para a menor
-
-  function encontrarCondicao(emerg){
-    let achada = null;
-    emerg.categorias.forEach(cat => {
-      cat.condicoes.forEach(c => { if(c.id === CONDICAO_ID) achada = c; });
-    });
-    return achada;
-  }
 
   function showError(msg){
     const el = document.getElementById('searchError');
@@ -247,14 +236,13 @@
   async function init(){
     const wrap = document.getElementById('resultadoWrap');
     try{
-      const res = await fetch('emergencias_medicas.json');
+      const res = await fetch('parametros_vitais.json');
       if(!res.ok) throw new Error('Falha ao carregar JSON');
-      const emerg = await res.json();
-      const cond = encontrarCondicao(emerg);
-      if(!cond || !Array.isArray(cond.parametros_referencia_por_idade)){
+      const dados = await res.json();
+      if(!dados || !Array.isArray(dados.parametros_referencia_por_idade)){
         throw new Error('Tabela de referência não encontrada na fonte.');
       }
-      FAIXAS = cond.parametros_referencia_por_idade.slice().sort((a, b) => b.idade_min_meses - a.idade_min_meses);
+      FAIXAS = dados.parametros_referencia_por_idade.slice().sort((a, b) => b.idade_min_meses - a.idade_min_meses);
 
       document.getElementById('btnBuscar').addEventListener('click', onBuscar);
       [document.getElementById('inAnos'), document.getElementById('inMeses')].forEach(inp => {

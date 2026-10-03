@@ -1,0 +1,148 @@
+{
+  "parametros_referencia_por_idade": [
+    {
+      "idade": "RN termo (0-1 mês)",
+      "idade_min_meses": 0,
+      "peso_kg": 3.5,
+      "fc_bpm": "100-180",
+      "fr_cpm": "40-60",
+      "TA_sistolica_mmHg": ">60",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "3 meses",
+      "idade_min_meses": 1,
+      "peso_kg": 6,
+      "fc_bpm": "90-180",
+      "fr_cpm": "35",
+      "TA_sistolica_mmHg": ">70",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "6 meses",
+      "idade_min_meses": 5,
+      "peso_kg": 7.5,
+      "fc_bpm": "90-180",
+      "fr_cpm": "30",
+      "TA_sistolica_mmHg": ">70",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "1 ano",
+      "idade_min_meses": 9,
+      "peso_kg": 10,
+      "fc_bpm": "90-170",
+      "fr_cpm": "24",
+      "TA_sistolica_mmHg": ">70",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "2 anos",
+      "idade_min_meses": 18,
+      "peso_kg": 12,
+      "fc_bpm": "90-140",
+      "fr_cpm": "22",
+      "TA_sistolica_mmHg": ">94",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "3 anos",
+      "idade_min_meses": 30,
+      "peso_kg": 14,
+      "fc_bpm": "80-140",
+      "fr_cpm": "20",
+      "TA_sistolica_mmHg": ">96",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "5 anos",
+      "idade_min_meses": 48,
+      "peso_kg": 18,
+      "fc_bpm": "70-120",
+      "fr_cpm": "16-20",
+      "TA_sistolica_mmHg": ">100",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "7 anos",
+      "idade_min_meses": 72,
+      "peso_kg": 22,
+      "fc_bpm": "70-120",
+      "fr_cpm": "16-20",
+      "TA_sistolica_mmHg": ">104",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "10 anos",
+      "idade_min_meses": 102,
+      "peso_kg": 33,
+      "fc_bpm": "60-110",
+      "fr_cpm": "16-20",
+      "TA_sistolica_mmHg": ">110",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "12 anos",
+      "idade_min_meses": 132,
+      "peso_kg": 40,
+      "fc_bpm": "60-100",
+      "fr_cpm": "14-18",
+      "TA_sistolica_mmHg": ">120",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "15-17 anos",
+      "idade_min_meses": 162,
+      "peso_kg": 50,
+      "fc_bpm": "60-100",
+      "fr_cpm": "14-16",
+      "TA_sistolica_mmHg": ">120",
+      "TA_diastolica_mmHg": "60-89",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    },
+    {
+      "idade": "Adulto (≥18 anos)",
+      "idade_min_meses": 216,
+      "peso_kg": "≥50",
+      "fc_bpm": "60-100",
+      "fr_cpm": "12-20",
+      "TA_sistolica_mmHg": "120",
+      "TA_diastolica_mmHg": "60-90",
+      "spo2_percent": "92-98",
+      "glicemia_mg_dl": "60-200 (≤59 baixa / ≥201 alta)",
+      "temperatura_c": "36-37.9 (≥38 febre / ≤34.9 hipotermia)"
+    }
+  ]
+}

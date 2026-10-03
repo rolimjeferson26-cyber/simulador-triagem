@@ -24,8 +24,8 @@
 }
 
 /* ------------------------------------------------------------------
-   Navegação entre apps da central (Consultas / Caso Treino / Parâmetros
-   Vitais) — centralizada no cabeçalho de cada página, ativo = cor de
+   Navegação entre apps da central (Caso Treino / Parâmetros Vitais) —
+   centralizada no cabeçalho de cada página, ativo = cor de
    identidade daquela página (--brand/--brand-bg definidos por página).
    ------------------------------------------------------------------ */
 .app-nav{
@@ -103,8 +103,7 @@ html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
 
 /* ------------------------------------------------------------------
    Renderizador de conteúdo (cards / seções / tabelas / listas) —
-   compartilhado entre as páginas de consulta (Consultas e Parâmetros
-   Vitais), que exibem dados de referência a partir do mesmo JSON.
+   compartilhado entre as páginas (ex.: Parâmetros Vitais).
    ------------------------------------------------------------------ */
 main{ padding: 14px 12px 60px; max-width:720px; margin:0 auto; }
 
