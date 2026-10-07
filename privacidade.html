@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Privacidade — Simulador de Triagem</title>
 <link rel="stylesheet" href="estilo.css">
 <style>
@@ -23,10 +23,10 @@
 <main class="priv">
   <a class="voltar" href="index.html">← Voltar ao simulador</a>
   <h1>Política de Privacidade</h1>
-  <p class="data">Última atualização: 7 de outubro de 2026</p>
+  <p class="data">Última atualização: 7 de outubro de 2026 (estatísticas de visitas)</p>
 
   <h2>Resumo</h2>
-  <p><b>Não recolhemos dados pessoais.</b> O Simulador de Triagem não tem contas, formulários de contacto, cookies nem ferramentas de estatística. Tudo o que cria fica apenas no seu dispositivo.</p>
+  <p><b>Não recolhemos dados pessoais.</b> Contamos visitas de forma anónima, sem cookies (ver "Estatísticas de visitas"). O Simulador de Triagem não tem contas, formulários de contacto nem cookies. Tudo o que cria fica apenas no seu dispositivo.</p>
 
   <h2>Responsável</h2>
   <p>Jeferson Rolim, criador deste projeto. Contacto: <a href="https://www.linkedin.com/in/jeferson-rolim-023348437" rel="noopener noreferrer" target="_blank">LinkedIn</a>.</p>
@@ -39,6 +39,15 @@
   </ul>
   <p>Pode apagá-los a qualquer momento: use "Eliminar caso" no modo Instrutor, ou apague os dados deste site nas definições do seu browser. Não escreva dados reais de vítimas nos casos: o simulador destina-se apenas a cenários fictícios.</p>
 
+  <h2>Estatísticas de visitas</h2>
+  <p>Para saber se o simulador está a ser útil, contamos visitas com o <a href="https://www.goatcounter.com" rel="noopener noreferrer" target="_blank">GoatCounter</a>, um serviço de estatísticas sem cookies e de código aberto. O script é servido a partir deste próprio site.</p>
+  <ul>
+    <li><b>O que é enviado:</b> a página visitada, a página de onde veio (se houver), o tipo de browser e sistema, o tamanho do ecrã e o país (calculado a partir do endereço IP).</li>
+    <li><b>O que não é guardado:</b> o endereço IP, cookies ou qualquer dado que identifique a pessoa. Não há perfis de utilizador nem acompanhamento entre sites.</li>
+    <li><b>Para quê:</b> só para contar visitas e ver que páginas são usadas. Os números não são vendidos nem partilhados.</li>
+    <li><b>Desativar neste browser:</b> abra <a href="index.html#toggle-goatcounter">esta ligação</a> (abrir de novo volta a ativar).</li>
+  </ul>
+
   <h2>Alojamento</h2>
   <p>O site é alojado no GitHub Pages. Como qualquer servidor web, o GitHub pode registar dados técnicos das visitas (por exemplo, o endereço IP) para fins de segurança e funcionamento do serviço. Esse tratamento é feito pelo GitHub, de acordo com a <a href="https://docs.github.com/pt/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener noreferrer" target="_blank">declaração de privacidade do GitHub</a>. Nós não temos acesso a esses registos.</p>
 
@@ -49,7 +58,9 @@
   <p>Ao abrigo do RGPD, tem direito de acesso, retificação e apagamento dos seus dados. Como não guardamos dados pessoais, não há nada a apagar do nosso lado. Se tiver alguma dúvida, contacte-nos pelo LinkedIn. Pode também apresentar reclamação à <a href="https://www.cnpd.pt" rel="noopener noreferrer" target="_blank">Comissão Nacional de Proteção de Dados (CNPD)</a>.</p>
 
   <h2>Alterações</h2>
-  <p>Se o simulador passar a recolher algum dado (por exemplo, estatísticas de visitas sem cookies, ou contas de utilizador), esta página será atualizada <b>antes</b> dessa mudança entrar em funcionamento.</p>
+  <p>Se o simulador passar a recolher algum dado (por exemplo, contas de utilizador), esta página será atualizada <b>antes</b> dessa mudança entrar em funcionamento.</p>
 </main>
+<!-- Estatísticas de visitas sem cookies (GoatCounter); ver privacidade.html -->
+<script data-goatcounter="https://simulador-triagem.goatcounter.com/count" async src="count.js"></script>
 </body>
 </html>

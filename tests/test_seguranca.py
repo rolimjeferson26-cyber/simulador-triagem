@@ -114,3 +114,18 @@ def test_importacao_rejeita_casos_invalidos_e_descarta_campos_desconhecidos():
 def test_csp_presente_e_atualizada():
     problemas = atualizar_csp.verificar(RAIZ)
     assert not problemas, "\n".join(problemas) + "\nCorra: python3 ferramentas/atualizar_csp.py"
+
+
+def test_codigo_instrutor_guardado_so_como_hash():
+    """O código de instrutor nunca está no site: só sal + hash PBKDF2 com muitas iterações.
+    O antigo "código do dia" (DDMM), fácil de adivinhar, já não pode existir."""
+    import re
+    with open(os.path.join(RAIZ, "codigo_instrutor.js"), encoding="utf-8") as f:
+        cfg = f.read()
+    m = re.search(r'sal: "([A-Za-z0-9+/=]{20,})", iteracoes: (\d+), hash: "([A-Za-z0-9+/=]{40,})"', cfg)
+    assert m, "codigo_instrutor.js com formato inesperado: corra ferramentas/definir_codigo_instrutor.py"
+    assert int(m.group(2)) >= 100_000
+    with open(os.path.join(RAIZ, "index.html"), encoding="utf-8") as f:
+        html = f.read()
+    assert "codigoDoDia" not in html
+    assert '<script src="codigo_instrutor.js"></script>' in html

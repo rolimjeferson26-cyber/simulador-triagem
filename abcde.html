@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-CbID+izVPON0YfiacljofVMAGb/LKUEESuMSGSP6VjA=' 'sha256-j8PYlUrM+g3pUWffnWMw3RbC5C02rbA96xMHZZtvFGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-CbID+izVPON0YfiacljofVMAGb/LKUEESuMSGSP6VjA=' 'sha256-j8PYlUrM+g3pUWffnWMw3RbC5C02rbA96xMHZZtvFGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Avaliação ABCDE — Simulador de Treino</title>
 <link rel="stylesheet" href="estilo.css">
 <link rel="stylesheet" href="simulador.css">
@@ -827,5 +827,7 @@
   document.addEventListener('keydown', e => { if(e.key === 'Escape' && !modal.hidden) modal.hidden = true; });
 })();
 </script>
+<!-- Estatísticas de visitas sem cookies (GoatCounter); ver privacidade.html -->
+<script data-goatcounter="https://simulador-triagem.goatcounter.com/count" async src="count.js"></script>
 </body>
 </html>
