@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-CbID+izVPON0YfiacljofVMAGb/LKUEESuMSGSP6VjA=' 'sha256-j8PYlUrM+g3pUWffnWMw3RbC5C02rbA96xMHZZtvFGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Avaliação ABCDE — Simulador de Treino</title>
 <link rel="stylesheet" href="estilo.css">
 <link rel="stylesheet" href="simulador.css">
@@ -210,7 +211,7 @@
 
 <footer class="app-footer">
   <b>Material de estudo para formação.</b> Não substitui a formação certificada, os protocolos oficiais em vigor, nem deve ser usado para apoio a decisão em ocorrência real. Confirmar sempre junto de fontes e protocolos atualizados.
-  <div class="app-footer-author">Criado por Jeferson Rolim</div>
+  <div class="app-footer-author">Criado por Jeferson Rolim · <a href="privacidade.html">Privacidade</a></div>
 </footer>
 
 <div class="modal-overlay" id="aboutModal" hidden>
@@ -688,16 +689,16 @@
   }
 
   function carregarCasosCustom(){
-    try { return JSON.parse(localStorage.getItem(LS_CASOS) || "[]"); } catch(e){ return []; }
+    try { return U.validarCasosImportados(JSON.parse(localStorage.getItem(LS_CASOS) || "[]")).validos; } catch(e){ return []; }
   }
   function todosCasos(){ return DADOS.casos.concat(carregarCasosCustom()); }
 
   function renderCasos(){
     document.getElementById("abCasos").innerHTML = todosCasos().map(function(c, i){
-      return '<div class="caso-card" data-idx="' + i + '" data-nivel="' + (c.nivel_dificuldade || '') + '" role="button" tabindex="0">' +
-        '<div class="caso-card-top"><div class="caso-titulo">' + c.titulo + '</div>' +
-        (c.nivel_dificuldade ? '<span class="caso-badge">' + c.nivel_dificuldade + '</span>' : '') + '</div>' +
-        (c.categoria_alvo ? '<div class="caso-cat">' + c.categoria_alvo + '</div>' : '') + '</div>';
+      return '<div class="caso-card" data-idx="' + i + '" data-nivel="' + esc(c.nivel_dificuldade || '') + '" role="button" tabindex="0">' +
+        '<div class="caso-card-top"><div class="caso-titulo">' + esc(c.titulo) + '</div>' +
+        (c.nivel_dificuldade ? '<span class="caso-badge">' + esc(c.nivel_dificuldade) + '</span>' : '') + '</div>' +
+        (c.categoria_alvo ? '<div class="caso-cat">' + esc(c.categoria_alvo) + '</div>' : '') + '</div>';
     }).join("");
   }
 

@@ -235,8 +235,15 @@ python3 tests/correr_testes.py
 - **`test_pesquisa.py`** corre a pesquisa real do `ui.js` no Node.js: acentos e maiúsculas, sinónimos, mínimo de 2 letras, tags já marcadas excluídas e sinónimos sem ambiguidade.
 - **`test_consulta.py`** confirma, para várias idades e para as fronteiras entre grupos, que os valores mostrados na consulta dos Parâmetros Vitais são exatamente os limites a que o motor reage (por exemplo, FC no máximo do grupo → sem tag; máximo + 1 → taquicardia). Verifica também a PAS e o peso (4 anos → PAS mínima 78, PAS normal 98, peso estimado 16 kg).
 - **`test_paridade.py`** carrega o `dados.js` e o `motor.js` no Node.js, tal como as páginas os usam, e compara tags e ranking com o motor Python em 2 270 cenários, e compara mês a mês os valores de referência que a consulta mostra. Sem Node.js, este teste é ignorado e aparece como `IGNORADO`.
+- **`test_seguranca.py`** corre no Node.js o `esc()` e o `validarCasosImportados` do `ui.js` com casos maliciosos (HTML no título e na nota, fichas inexistentes, campos estranhos) e confirma que nada chega à página como HTML e que os 5 casos incluídos passam sem alterações. Verifica também que a CSP de cada página está atualizada.
 
 Os testes são funções com `assert`, por isso também correm com o pytest (`pip install pytest`, depois `pytest tests`).
+
+## Segurança e privacidade
+
+- **Content-Security-Policy:** cada página tem uma CSP numa etiqueta `<meta>` (o GitHub Pages não permite cabeçalhos HTTP). Só correm scripts do próprio site e os scripts embutidos autorizados pelo seu hash SHA-256. **Se editar um `<script>` dentro de um `.html`, corra `python3 ferramentas/atualizar_csp.py`**; o teste `tests/test_seguranca.py` falha se a CSP ficar desatualizada.
+- **Casos importados são tratados como não confiáveis:** `validarCasosImportados` (em `ui.js`) reconstrói cada caso só com os campos conhecidos, nos tipos certos e com tamanho máximo, e rejeita casos com fichas inexistentes. Todo o texto vindo de casos passa por `esc()` antes de entrar em `innerHTML`.
+- **Privacidade:** sem contas, cookies nem estatísticas. Os casos criados e o modo escolhido ficam só no `localStorage` do dispositivo. Ver [`privacidade.html`](privacidade.html).
 
 ## Dados e fontes
 
