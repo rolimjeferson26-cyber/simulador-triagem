@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-unrZ+e63+ycf6/GqA0aQOsOdO/dP1yyieyZOTHUZjx4=' 'sha256-Qtn4B6x61Cfye+FD3+yfupjk5d+aQQMFnC3xp2eKmHI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-unrZ+e63+ycf6/GqA0aQOsOdO/dP1yyieyZOTHUZjx4=' 'sha256-Qtn4B6x61Cfye+FD3+yfupjk5d+aQQMFnC3xp2eKmHI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Parâmetros Vitais — Consulta Rápida</title>
 <link rel="stylesheet" href="estilo.css">
 <style>
@@ -340,5 +340,7 @@
   init();
 })();
 </script>
+<!-- Estatísticas de visitas sem cookies (GoatCounter); ver privacidade.html -->
+<script data-goatcounter="https://simulador-triagem.goatcounter.com/count" async src="count.js"></script>
 </body>
 </html>

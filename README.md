@@ -243,7 +243,8 @@ Os testes são funções com `assert`, por isso também correm com o pytest (`pi
 
 - **Content-Security-Policy:** cada página tem uma CSP numa etiqueta `<meta>` (o GitHub Pages não permite cabeçalhos HTTP). Só correm scripts do próprio site e os scripts embutidos autorizados pelo seu hash SHA-256. **Se editar um `<script>` dentro de um `.html`, corra `python3 ferramentas/atualizar_csp.py`**; o teste `tests/test_seguranca.py` falha se a CSP ficar desatualizada.
 - **Casos importados são tratados como não confiáveis:** `validarCasosImportados` (em `ui.js`) reconstrói cada caso só com os campos conhecidos, nos tipos certos e com tamanho máximo, e rejeita casos com fichas inexistentes. Todo o texto vindo de casos passa por `esc()` antes de entrar em `innerHTML`.
-- **Privacidade:** sem contas, cookies nem estatísticas. Os casos criados e o modo escolhido ficam só no `localStorage` do dispositivo. Ver [`privacidade.html`](privacidade.html).
+- **Código de instrutor:** escolhido por si e guardado só como hash PBKDF2-SHA256 com sal (310 000 iterações) em `codigo_instrutor.js`; o browser verifica-o com a Web Crypto API. Para mudar: `python3 ferramentas/definir_codigo_instrutor.py` (o código nunca vai para o repositório).
+- **Privacidade:** sem contas nem cookies; visitas contadas com o GoatCounter (sem cookies, `count.js` servido pelo próprio site, licença ISC). Os casos criados e o modo escolhido ficam só no `localStorage` do dispositivo. Ver [`privacidade.html`](privacidade.html).
 
 ## Dados e fontes
 
@@ -258,7 +259,7 @@ Os testes são funções com `assert`, por isso também correm com o pytest (`pi
 ## Limitações conhecidas
 
 - **Uma FR baixa para a idade não é detetada:** ainda não existe a tag `bradipneia`.
-- **O modo instrutor não é uma proteção real.** A verificação do código de acesso é feita no browser, e a escolha de modo fica guardada no `localStorage`. Serve para separar as vistas de formando e de formador em aula, mas não controla acessos.
+- **O modo instrutor protege o código, não os dados.** O código de instrutor é guardado só como hash PBKDF2-SHA256 (`codigo_instrutor.js`), por isso não se adivinha nem se tira do código-fonte. Mas os casos e o gabarito continuam no `dados.js`, visíveis para quem souber ler o código-fonte, e a escolha de modo fica no `localStorage`. Proteção completa só com servidor (fase 2).
 - **Os casos criados pelo formador ficam só no browser onde foram criados** (`localStorage`). Para os passar para outro computador é preciso exportá-los e importá-los em JSON. Limpar os dados do browser apaga-os.
 - **Os pesos dos critérios não foram validados estatisticamente**, como descrito em *Dados e fontes*.
 - **Na Avaliação ABCDE, 14 achados não têm tag na taxonomia** (por exemplo, tempo de preenchimento capilar aumentado, pulso fraco, pele fria, pupilas anisocóricas ou não reativas, enfisema subcutâneo). Ficam registados no resumo e obrigam a fazer as ações da letra, mas não entram no motor.

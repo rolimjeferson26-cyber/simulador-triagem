@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Goa2yPKiodSZj9f1ZTxB4BwB+W2d8DTwVSEXWB5oH9k=' 'sha256-j8PYlUrM+g3pUWffnWMw3RbC5C02rbA96xMHZZtvFGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Oge7Cof8xF5QczElYbMPiNe4OyxI1Pf38wKE2f8wHMQ=' 'sha256-j8PYlUrM+g3pUWffnWMw3RbC5C02rbA96xMHZZtvFGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Triagem — Simulador de Treino</title>
 <link rel="stylesheet" href="estilo.css">
 <link rel="stylesheet" href="simulador.css">
@@ -41,8 +41,8 @@
         </button>
       </div>
       <div class="pin-box" id="pinBox" hidden>
-        <label class="field-label">Código do dia (fornecido pelo instrutor responsável)</label>
-        <input id="pinInput" class="field-input" type="tel" inputmode="numeric" maxlength="4" placeholder="____">
+        <label class="field-label" for="pinInput">Código de instrutor (fornecido ao formador responsável)</label>
+        <input id="pinInput" class="field-input" type="password" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" placeholder="••••••••••">
         <div class="pin-error" id="pinError" hidden>Código incorreto.</div>
         <button class="cta-btn" id="btnConfirmarPin" style="margin-top:6px;">Confirmar</button>
       </div>
@@ -267,6 +267,7 @@
 <script src="dados.js"></script>
 <script src="motor.js"></script>
 <script src="ui.js"></script>
+<script src="codigo_instrutor.js"></script>
 <script>
 (function(){
   "use strict";
@@ -310,7 +311,7 @@
   // ------------------------------------------------------------------
   // Estado: modo instrutor/aluno + casos personalizados (localStorage)
   // ------------------------------------------------------------------
-  var LS_MODO = "bombeiros_modo_instrutor";
+  var LS_MODO = "bombeiros_modo_v2";  // v2: com o código de instrutor novo, quem entrou com o antigo código do dia tem de escolher o modo outra vez
   var LS_CASOS = "bombeiros_casos_custom";
   var modoInstrutor = false;
   var casoAtivo = null;
@@ -332,9 +333,30 @@
     return CASOS_EMBUTIDOS.concat(carregarCasosCustom());
   }
 
-  function codigoDoDia(){
-    var d = new Date();
-    return String(d.getDate()).padStart(2,"0") + String(d.getMonth()+1).padStart(2,"0");
+  // Segurança: o código de instrutor nunca está no site, só o seu hash
+  // PBKDF2-SHA256 (ficheiro codigo_instrutor.js). O browser calcula o hash do
+  // que foi escrito e compara. Para mudar o código:
+  //   python3 ferramentas/definir_codigo_instrutor.py
+  function base64ParaBytes(b64){
+    return Uint8Array.from(atob(b64), function(c){ return c.charCodeAt(0); });
+  }
+  function verificarCodigoInstrutor(codigo){
+    var cfg = window.CODIGO_INSTRUTOR;
+    if (!cfg || !window.crypto || !crypto.subtle) return Promise.resolve(false);
+    var texto = new TextEncoder().encode(codigo.trim().toUpperCase());
+    return crypto.subtle.importKey("raw", texto, "PBKDF2", false, ["deriveBits"])
+      .then(function(chave){
+        return crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256",
+          salt: base64ParaBytes(cfg.sal), iterations: cfg.iteracoes }, chave, 256);
+      })
+      .then(function(bits){
+        var a = new Uint8Array(bits), b = base64ParaBytes(cfg.hash);
+        if (a.length !== b.length) return false;
+        var dif = 0;
+        for (var i = 0; i < a.length; i++) dif |= a[i] ^ b[i];
+        return dif === 0;
+      })
+      .catch(function(){ return false; });
   }
 
   // ---- gate de treino ----
@@ -366,12 +388,20 @@
     document.getElementById("pinBox").hidden = false;
     document.getElementById("pinInput").focus();
   });
-  document.getElementById("btnConfirmarPin").addEventListener("click", function(){
-    if (document.getElementById("pinInput").value === codigoDoDia()){
-      escolherModo(true);
-    } else {
-      document.getElementById("pinError").hidden = false;
-    }
+  function confirmarCodigo(){
+    var btn = document.getElementById("btnConfirmarPin");
+    if (btn.disabled) return;
+    btn.disabled = true;
+    document.getElementById("pinError").hidden = true;
+    verificarCodigoInstrutor(document.getElementById("pinInput").value).then(function(ok){
+      btn.disabled = false;
+      if (ok) escolherModo(true);
+      else document.getElementById("pinError").hidden = false;
+    });
+  }
+  document.getElementById("btnConfirmarPin").addEventListener("click", confirmarCodigo);
+  document.getElementById("pinInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") confirmarCodigo();
   });
   document.getElementById("linkTrocarModo").addEventListener("click", function(){ mostrarView("view-mode"); });
 
@@ -761,5 +791,7 @@
   document.addEventListener('keydown', e => { if(e.key === 'Escape' && !modal.hidden) modal.hidden = true; });
 })();
 </script>
+<!-- Estatísticas de visitas sem cookies (GoatCounter); ver privacidade.html -->
+<script data-goatcounter="https://simulador-triagem.goatcounter.com/count" async src="count.js"></script>
 </body>
 </html>

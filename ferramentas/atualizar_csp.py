@@ -34,10 +34,11 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #  - script-src                 ficheiros .js do próprio site + scripts embutidos autorizados
 #  - style-src 'unsafe-inline'  necessário para estilos escritos no HTML (risco baixo)
 #  - img-src data:              imagens embutidas nos estilos
+#  - *.goatcounter.com          envio das estatísticas de visitas (count.js), sem cookies
 #  - object-src 'none'          sem plugins (Flash, etc.)
 #  - base-uri / form-action     impedem redirecionar links e formulários para fora
 POLITICA = ("default-src 'self'; script-src 'self'{scripts}; style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; "
+            "img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; font-src 'self'; object-src 'none'; "
             "base-uri 'self'; form-action 'self'")
 
 RE_SCRIPT = re.compile(r"<script>(.*?)</script>", re.S)
