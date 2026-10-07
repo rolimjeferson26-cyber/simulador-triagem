@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Goa2yPKiodSZj9f1ZTxB4BwB+W2d8DTwVSEXWB5oH9k=' 'sha256-j8PYlUrM+g3pUWffnWMw3RbC5C02rbA96xMHZZtvFGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Triagem — Simulador de Treino</title>
 <link rel="stylesheet" href="estilo.css">
 <link rel="stylesheet" href="simulador.css">
@@ -238,7 +239,7 @@
 </div>
 
 <footer class="app-footer">
-  <div class="app-footer-author">Criado por Jeferson Rolim</div>
+  <div class="app-footer-author">Criado por Jeferson Rolim · <a href="privacidade.html">Privacidade</a></div>
 </footer>
 
 <div class="modal-overlay" id="aboutModal" hidden>
@@ -319,8 +320,10 @@
     document.querySelectorAll("#modoLabel").forEach(function(el){ el.textContent = modoInstrutor ? "Instrutor" : "Aluno"; });
   }
 
+  // Os casos guardados no dispositivo voltam a ser validados ao carregar,
+  // para que dados antigos ou alterados à mão não entrem crus na página.
   function carregarCasosCustom(){
-    try { return JSON.parse(localStorage.getItem(LS_CASOS) || "[]"); } catch(e){ return []; }
+    try { return U.validarCasosImportados(JSON.parse(localStorage.getItem(LS_CASOS) || "[]")).validos; } catch(e){ return []; }
   }
   function salvarCasosCustom(lista){
     localStorage.setItem(LS_CASOS, JSON.stringify(lista));
@@ -379,10 +382,11 @@
     var casos = todosCasos();
     el.innerHTML = casos.map(function(c, i){
       var custom = i >= embutidosN;
-      return '<div class="caso-card" data-idx="' + i + '" data-nivel="' + (c.nivel_dificuldade || '') + '">' +
-        '<div class="caso-card-top"><div class="caso-titulo">' + c.titulo + '</div>' +
-        (c.nivel_dificuldade ? '<span class="caso-badge">' + c.nivel_dificuldade + '</span>' : '') + '</div>' +
-        (c.categoria_alvo ? '<div class="caso-cat">' + c.categoria_alvo + '</div>' : '') +
+      // Títulos e categorias podem vir de casos importados: passam por U.esc().
+      return '<div class="caso-card" data-idx="' + i + '" data-nivel="' + U.esc(c.nivel_dificuldade || '') + '">' +
+        '<div class="caso-card-top"><div class="caso-titulo">' + U.esc(c.titulo) + '</div>' +
+        (c.nivel_dificuldade ? '<span class="caso-badge">' + U.esc(c.nivel_dificuldade) + '</span>' : '') + '</div>' +
+        (c.categoria_alvo ? '<div class="caso-cat">' + U.esc(c.categoria_alvo) + '</div>' : '') +
         (custom ? '<div class="caso-del" data-del="' + i + '" data-instrutor-only style="display:' + (modoInstrutor ? 'inline-block':'none') + '">Eliminar caso</div>' : '') +
         '</div>';
     }).join("");
@@ -434,13 +438,18 @@
     var reader = new FileReader();
     reader.onload = function(){
       try {
-        var novos = JSON.parse(reader.result);
-        if (!Array.isArray(novos)) throw new Error("formato inválido");
+        var lidos = JSON.parse(reader.result);
+        if (!Array.isArray(lidos)) throw new Error("formato inválido");
+        // Só entram casos que passam a validação (ver validarCasosImportados em ui.js).
+        var res = U.validarCasosImportados(lidos);
         var atuais = carregarCasosCustom();
         var idsExistentes = new Set(atuais.map(function(c){ return c.id; }));
-        novos.forEach(function(c){ if (!idsExistentes.has(c.id)) atuais.push(c); });
+        var adicionados = 0;
+        res.validos.forEach(function(c){ if (!idsExistentes.has(c.id)){ atuais.push(c); adicionados++; } });
         salvarCasosCustom(atuais);
         renderCasosList();
+        alert(adicionados + " caso(s) importado(s)." +
+          (res.rejeitados ? " " + res.rejeitados + " ignorado(s) por estarem incompletos ou inválidos." : ""));
       } catch(err){
         alert("Não foi possível importar este arquivo: " + err.message);
       }

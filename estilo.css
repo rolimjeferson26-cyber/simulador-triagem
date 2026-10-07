@@ -198,3 +198,6 @@ table.cmp th{ background:var(--panel-2); color:var(--ink-soft); font-size:11px; 
 footer{
   text-align:center; color:var(--ink-soft); font-size:11px; padding:18px 16px 30px;
 }
+
+/* Ligação "Privacidade" no rodapé */
+.app-footer-author a{ color: inherit; text-decoration: underline; }

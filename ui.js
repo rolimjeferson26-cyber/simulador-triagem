@@ -7,6 +7,17 @@
 (function(raiz){
   "use strict";
 
+  // Segurança: converte texto em HTML inofensivo antes de o colocar na
+  // página com innerHTML. Sem isto, um caso importado com um título como
+  // <img src=x onerror=...> correria código no browser de quem o importa.
+  // Regra: qualquer texto que venha do utilizador ou de um ficheiro
+  // importado passa por esc() antes de entrar em innerHTML.
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
   function criarUI(dados, motor){
     var taxonomia = dados.taxonomia;
     var fichas = dados.criterios;
@@ -263,15 +274,73 @@
       return nome + (alvo.variante ? " (" + formatarVariante(alvo.variante) + ")" : "");
     }
 
-    function renderGabaritoConteudo(gabarito, titulo){
-      var html = '<div class="gabarito-label">' + (titulo || "Gabarito (só instrutor)") + '</div>';
-      if (gabarito.tipo === "ambiguo"){
-        html += '<div class="gabarito-resposta">Caso ambíguo — válidos: ' +
-          gabarito.candidatos_validos.map(nomeDoAlvo).join(" · ") + '</div>';
-      } else {
-        html += '<div class="gabarito-resposta">' + nomeDoAlvo({ficha_id: gabarito.ficha_id, variante: gabarito.variante}) + '</div>';
+    // Segurança: um ficheiro de casos importado é tratado como "não
+    // confiável". Em vez de guardar o que vier, reconstruímos cada caso só
+    // com os campos que conhecemos, nos tipos certos e com tamanho máximo.
+    // Campos desconhecidos são descartados; casos inválidos são rejeitados.
+    // Devolve { validos: [...], rejeitados: N }.
+    function validarCasosImportados(lista){
+      var NIVEIS = ["iniciante", "intermediario", "avancado"];
+      function texto(v, max){ return typeof v === "string" && v.trim() && v.length <= max ? v.trim() : null; }
+      function alvo(a){
+        if (!a || typeof a !== "object" || !fichas[a.ficha_id]) return null;
+        return { ficha_id: a.ficha_id, variante: texto(a.variante, 80) };
       }
-      if (gabarito.nota_instrutor) html += '<div class="gabarito-nota">' + gabarito.nota_instrutor + '</div>';
+      var validos = [], rejeitados = 0;
+      (Array.isArray(lista) ? lista : []).forEach(function(c){
+        try {
+          if (!c || typeof c !== "object" || !c.gabarito || typeof c.gabarito !== "object") throw 0;
+          var titulo = texto(c.titulo, 150), vinheta = texto(c.vinheta, 3000);
+          if (!titulo || !vinheta) throw 0;
+          var g = c.gabarito, gab;
+          if (g.tipo === "ambiguo"){
+            var cands = (Array.isArray(g.candidatos_validos) ? g.candidatos_validos : []).map(alvo).filter(Boolean);
+            if (cands.length < 2) throw 0;
+            gab = { tipo: "ambiguo", candidatos_validos: cands };
+          } else {
+            var a = alvo(g);
+            if (!a) throw 0;
+            gab = { tipo: "definido", ficha_id: a.ficha_id, variante: a.variante };
+          }
+          var vitais = {};
+          if (g.vitais_esperados && typeof g.vitais_esperados === "object"){
+            Object.keys(g.vitais_esperados).forEach(function(k){
+              var n = g.vitais_esperados[k];
+              if (/^[A-Za-z0-9_]{1,20}$/.test(k) && typeof n === "number" && isFinite(n)) vitais[k] = n;
+            });
+          }
+          gab.vitais_esperados = vitais;
+          gab.tags_esperadas = (Array.isArray(g.tags_esperadas) ? g.tags_esperadas : [])
+            .filter(function(t){ return typeof t === "string" && /^[a-z0-9_]{1,60}$/.test(t); });
+          var nota = texto(g.nota_instrutor, 2000);
+          if (nota) gab.nota_instrutor = nota;
+
+          var caso = {
+            id: texto(c.id, 80) && /^[A-Za-z0-9_-]+$/.test(c.id) ? c.id : "custom_" + Date.now() + "_" + validos.length,
+            titulo: titulo,
+            categoria_alvo: texto(c.categoria_alvo, 60),
+            nivel_dificuldade: NIVEIS.indexOf(c.nivel_dificuldade) >= 0 ? c.nivel_dificuldade : "iniciante",
+            vinheta: vinheta,
+            gabarito: gab
+          };
+          if (Number.isInteger(c.idade_meses) && c.idade_meses >= 0 && c.idade_meses <= 216) caso.idade_meses = c.idade_meses;
+          validos.push(caso);
+        } catch(e){ rejeitados++; }
+      });
+      return { validos: validos, rejeitados: rejeitados };
+    }
+
+    function renderGabaritoConteudo(gabarito, titulo){
+      // O gabarito pode vir de um caso importado: tudo passa por esc().
+      var html = '<div class="gabarito-label">' + esc(titulo || "Gabarito (só instrutor)") + '</div>';
+      if (gabarito.tipo === "ambiguo"){
+        var validos = Array.isArray(gabarito.candidatos_validos) ? gabarito.candidatos_validos : [];
+        html += '<div class="gabarito-resposta">Caso ambíguo — válidos: ' +
+          validos.map(function(a){ return esc(nomeDoAlvo(a)); }).join(" · ") + '</div>';
+      } else {
+        html += '<div class="gabarito-resposta">' + esc(nomeDoAlvo({ficha_id: gabarito.ficha_id, variante: gabarito.variante})) + '</div>';
+      }
+      if (gabarito.nota_instrutor) html += '<div class="gabarito-nota">' + esc(gabarito.nota_instrutor) + '</div>';
       return html;
     }
 
@@ -364,6 +433,8 @@
     }
 
     return {
+      esc: esc,
+      validarCasosImportados: validarCasosImportados,
       GRUPOS_ORDEM: GRUPOS_ORDEM,
       PARAM_ORDEM: PARAM_ORDEM,
       ICON_FLAG: ICON_FLAG, ICON_CHECK: ICON_CHECK, ICON_WARN: ICON_WARN, ICON_STEP: ICON_STEP,
